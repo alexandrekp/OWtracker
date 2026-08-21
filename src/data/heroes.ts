@@ -12,6 +12,18 @@ const statsByHero = new Map(
   ),
 );
 
+function publicAssetPath(
+  path: string,
+) {
+  const cleanPath =
+    path.replace(
+      /^\/+/,
+      "",
+    );
+
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+}
+
 export const heroes: Hero[] =
   generatedHeroes.map((hero) => {
     const stats =
@@ -21,6 +33,11 @@ export const heroes: Hero[] =
 
     return {
       ...hero,
+
+      image:
+        publicAssetPath(
+          hero.image,
+        ),
 
       winRate:
         stats?.winRate ??

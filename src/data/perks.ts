@@ -3,20 +3,17 @@ import { generatedPerkPopularity } from "./generatedPerkPopularity";
 
 import type { HeroPerks } from "../types/perk";
 
-/*
-  OWtracker perk data architecture
+function publicAssetPath(
+  path: string,
+) {
+  const cleanPath =
+    path.replace(
+      /^\/+/,
+      "",
+    );
 
-  generatedPerks:
-  - perk names
-  - descriptions
-  - icons
-  - Minor / Major tier
-
-  generatedPerkPopularity:
-  - community pick percentages
-
-  Both datasets are generated automatically.
-*/
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+}
 
 export const heroPerks: HeroPerks[] =
   generatedPerks.map((hero) => {
@@ -26,18 +23,25 @@ export const heroPerks: HeroPerks[] =
       ] ?? {};
 
     return {
-      heroId: hero.heroId,
+      heroId:
+        hero.heroId,
 
-      perks: hero.perks.map(
-        (perk) => ({
-          ...perk,
+      perks:
+        hero.perks.map(
+          (perk) => ({
+            ...perk,
 
-          popularity:
-            popularity[
-              perk.id
-            ],
-        }),
-      ),
+            icon:
+              publicAssetPath(
+                perk.icon,
+              ),
+
+            popularity:
+              popularity[
+                perk.id
+              ],
+          }),
+        ),
     };
   });
 
