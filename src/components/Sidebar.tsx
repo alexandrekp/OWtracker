@@ -36,10 +36,6 @@ function Sidebar({
           <div className="brand-name">
             OWtracker
           </div>
-
-          <div className="brand-subtitle">
-            Overwatch companion
-          </div>
         </div>
       </div>
 
