@@ -1,7 +1,5 @@
 import {
-  ArrowRight,
   RefreshCw,
-  Search,
 } from "lucide-react";
 
 import {
@@ -35,11 +33,6 @@ type StatsPageProps = {
   onOpenHero:
     (hero: Hero) => void;
 };
-
-type SortMetric =
-  | "winRate"
-  | "pickRate"
-  | "banRate";
 
 type MetaTier =
   | "S"
@@ -107,19 +100,6 @@ const CACHE_MAX_AGE =
 function StatsPage({
   onOpenHero,
 }: StatsPageProps) {
-  const [
-    search,
-    setSearch,
-  ] = useState("");
-
-  const [
-    sortBy,
-    setSortBy,
-  ] =
-    useState<SortMetric>(
-      "winRate",
-    );
-
   /* ========================================
      FILTERS
   ======================================== */
@@ -218,51 +198,7 @@ function StatsPage({
         : null,
     );
 
-  /* ========================================
-     CACHE
-  ======================================== */
-
-  function applySelectedDataset() {
-    const cached =
-      loadCachedDataset(
-        selectedRegion,
-        selectedTier,
-        selectedRole,
-      );
-
-    if (!cached) {
-      return false;
-    }
-
-    setCurrentHeroes(
-      cached.heroes,
-    );
-
-    setActiveRegion(
-      cached.region,
-    );
-
-    setActiveTier(
-      cached.tier,
-    );
-
-    setActiveRole(
-      cached.role,
-    );
-
-    setLastUpdated(
-      new Date(
-        cached.updatedAt,
-      ),
-    );
-
-    setRefreshError(
-      null,
-    );
-
-    return true;
-  }
-
+ 
   /* ========================================
      REFRESH
   ======================================== */
@@ -405,43 +341,6 @@ function StatsPage({
   }
 
   /* ========================================
-     TABLE
-  ======================================== */
-
-  const filteredHeroes =
-    useMemo(() => {
-      return [
-        ...currentHeroes,
-      ]
-        .filter(
-          (hero) =>
-            hero.name
-              .toLowerCase()
-              .includes(
-                search.toLowerCase(),
-              ),
-        )
-        .sort(
-          (a, b) => {
-            const aValue =
-              a[sortBy] ?? -1;
-
-            const bValue =
-              b[sortBy] ?? -1;
-
-            return (
-              bValue -
-              aValue
-            );
-          },
-        );
-    }, [
-      currentHeroes,
-      search,
-      sortBy,
-    ]);
-
-  /* ========================================
      META
   ======================================== */
 
@@ -549,17 +448,6 @@ function StatsPage({
       activeTier ||
     selectedRole !==
       activeRole;
-
-  const selectedCachedDataset =
-    loadCachedDataset(
-      selectedRegion,
-      selectedTier,
-      selectedRole,
-    );
-
-  const selectedHasCache =
-    selectedCachedDataset !==
-    null;
 
   const currentCacheAge =
     lastUpdated
@@ -797,7 +685,7 @@ function StatsPage({
       </section>
 
       {/* ===================================
-          UNIFIED FILTERS + SORT + SEARCH
+          TIER LIST FILTERS
       ==================================== */}
 
       <section className="stats-unified-controls">
@@ -901,103 +789,7 @@ function StatsPage({
               )}
             </select>
           </div>
-
-          <div className="stats-ranking-control">
-            <span className="stats-control-label">
-              Rank heroes by
-            </span>
-
-            <div className="metric-filters">
-              <MetricButton
-                active={
-                  sortBy ===
-                  "winRate"
-                }
-                label="Win Rate"
-                onClick={() =>
-                  setSortBy(
-                    "winRate",
-                  )
-                }
-              />
-
-              <MetricButton
-                active={
-                  sortBy ===
-                  "pickRate"
-                }
-                label="Pick Rate"
-                onClick={() =>
-                  setSortBy(
-                    "pickRate",
-                  )
-                }
-              />
-
-              <MetricButton
-                active={
-                  sortBy ===
-                  "banRate"
-                }
-                label="Ban Rate"
-                onClick={() =>
-                  setSortBy(
-                    "banRate",
-                  )
-                }
-              />
-            </div>
           </div>
-        </div>
-
-        <div className="stats-unified-bottom">
-          <div className="stats-toolbar">
-            <div className="search-wrapper">
-              <Search
-                size={14}
-              />
-
-              <input
-                type="text"
-                placeholder="Search hero..."
-                value={search}
-                onChange={(
-                  event,
-                ) =>
-                  setSearch(
-                    event.target
-                      .value,
-                  )
-                }
-              />
-            </div>
-          </div>
-
-          <div className="stats-dataset-status">
-            {filtersChanged ? (
-              selectedHasCache ? (
-                <button
-                  className="stats-load-cache-button"
-                  type="button"
-                  onClick={
-                    applySelectedDataset
-                  }
-                >
-                  Load cached dataset
-                </button>
-              ) : (
-                <small>
-                  No cache · refresh required
-                </small>
-              )
-            ) : (
-              <small className="stats-filter-applied">
-                <span className="status-dot" />
-                Active dataset
-              </small>
-            )}
-          </div>
-        </div>
       </section>
 
       {/* ===================================
@@ -1065,149 +857,6 @@ function StatsPage({
         </div>
       </section>
 
-      {/* ===================================
-          TABLE
-      ==================================== */}
-
-      <section className="stats-table">
-        <div className="stats-table-header">
-          <span>
-            Hero
-          </span>
-
-          <span>
-            Role
-          </span>
-
-          <span
-            className={
-              sortBy ===
-              "winRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Win rate
-          </span>
-
-          <span
-            className={
-              sortBy ===
-              "pickRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Pick rate
-          </span>
-
-          <span
-            className={
-              sortBy ===
-              "banRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Ban rate
-          </span>
-
-          <span />
-        </div>
-
-        {filteredHeroes.map(
-          (
-            hero,
-            index,
-          ) => (
-            <button
-              className="stats-row"
-              key={
-                hero.id
-              }
-              onClick={() =>
-                onOpenHero(
-                  hero,
-                )
-              }
-            >
-              <div className="stats-hero">
-                <span className="stats-rank">
-                  {index + 1}
-                </span>
-
-                <div className="stats-avatar">
-                  <img
-                    src={
-                      hero.image
-                    }
-                    alt={
-                      hero.name
-                    }
-                  />
-                </div>
-
-                <strong>
-                  {hero.name}
-                </strong>
-              </div>
-
-              <div>
-                <span
-                  className={`stats-role ${hero.role.toLowerCase()}`}
-                >
-                  {hero.role}
-                </span>
-              </div>
-
-              <strong
-                className={
-                  sortBy ===
-                  "winRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.winRate,
-                )}
-              </strong>
-
-              <strong
-                className={
-                  sortBy ===
-                  "pickRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.pickRate,
-                )}
-              </strong>
-
-              <strong
-                className={
-                  sortBy ===
-                  "banRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.banRate,
-                )}
-              </strong>
-
-              <div className="stats-open">
-                <ArrowRight
-                  size={15}
-                />
-              </div>
-            </button>
-          ),
-        )}
-      </section>
     </div>
   );
 }
@@ -1480,44 +1129,6 @@ function MetaTierRow({
         )}
       </div>
     </div>
-  );
-}
-
-/* ========================================
-   METRIC BUTTON
-======================================== */
-
-type MetricButtonProps = {
-  active: boolean;
-
-  label: string;
-
-  onClick:
-    () => void;
-};
-
-function MetricButton({
-  active,
-  label,
-  onClick,
-}: MetricButtonProps) {
-  return (
-    <button
-      className={
-        active
-          ? "metric-filter active"
-          : "metric-filter"
-      }
-      onClick={onClick}
-    >
-      {label}
-
-      {active && (
-        <span className="metric-sort-direction">
-          ↓
-        </span>
-      )}
-    </button>
   );
 }
 

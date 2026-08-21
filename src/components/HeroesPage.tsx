@@ -1,0 +1,863 @@
+import {
+  ArrowRight,
+  RefreshCw,
+  Search,
+  SearchX,
+} from "lucide-react";
+
+import {
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  heroes,
+} from "../data/heroes";
+
+import {
+  refreshBlizzardStats,
+} from "../services/blizzardStats";
+
+import type {
+  Hero,
+  HeroRole,
+} from "../types/hero";
+
+import HeroCard from "./HeroCard";
+import RoleFilter from "./RoleFilter";
+
+import "./StatsPage.css";
+import "./StatsRefresh.css";
+
+type HeroesPageProps = {
+  onOpenHero:
+    (hero: Hero) => void;
+};
+
+type SortMetric =
+  | "winRate"
+  | "pickRate"
+  | "banRate";
+
+type CachedStatsDataset = {
+  region: "Europe";
+  tier: "All";
+  role: "All";
+
+  heroes: Hero[];
+
+  rq: number | null;
+
+  updatedAt: number;
+};
+
+const CACHE_KEY =
+  "owtracker.blizzardStats.Europe.All.All";
+
+function HeroesPage({
+  onOpenHero,
+}: HeroesPageProps) {
+  const initialCache =
+    loadCachedDataset();
+
+  const [
+    currentHeroes,
+    setCurrentHeroes,
+  ] =
+    useState<Hero[]>(
+      initialCache?.heroes ??
+        heroes,
+    );
+
+  const [
+    search,
+    setSearch,
+  ] = useState("");
+
+  const [
+    activeRole,
+    setActiveRole,
+  ] =
+    useState<
+      "All" | HeroRole
+    >("All");
+
+  const [
+    sortBy,
+    setSortBy,
+  ] =
+    useState<SortMetric>(
+      "winRate",
+    );
+
+  const [
+    refreshing,
+    setRefreshing,
+  ] = useState(false);
+
+  const [
+    refreshError,
+    setRefreshError,
+  ] =
+    useState<string | null>(
+      null,
+    );
+
+  const [
+    lastUpdated,
+    setLastUpdated,
+  ] =
+    useState<Date | null>(
+      initialCache
+        ? new Date(
+            initialCache.updatedAt,
+          )
+        : null,
+    );
+
+  async function handleRefresh() {
+    if (refreshing) {
+      return;
+    }
+
+    setRefreshing(true);
+    setRefreshError(null);
+
+    try {
+      const response =
+        await refreshBlizzardStats(
+          "Europe",
+          "All",
+          "All",
+          "all-maps",
+        );
+
+      const statsMap =
+        new Map(
+          response.heroes.map(
+            (stats) => [
+              stats.heroId,
+              stats,
+            ],
+          ),
+        );
+
+      const updatedHeroes =
+        heroes.map(
+          (hero) => {
+            const stats =
+              statsMap.get(
+                hero.id,
+              );
+
+            if (!stats) {
+              return {
+                ...hero,
+
+                winRate:
+                  undefined,
+
+                pickRate:
+                  undefined,
+
+                banRate:
+                  undefined,
+              };
+            }
+
+            return {
+              ...hero,
+
+              winRate:
+                stats.winRate ??
+                undefined,
+
+              pickRate:
+                stats.pickRate ??
+                undefined,
+
+              banRate:
+                stats.banRate ??
+                undefined,
+            };
+          },
+        );
+
+      const updatedAt =
+        response.updatedAt *
+        1000;
+
+      setCurrentHeroes(
+        updatedHeroes,
+      );
+
+      setLastUpdated(
+        new Date(
+          updatedAt,
+        ),
+      );
+
+      saveCachedDataset({
+        region: "Europe",
+        tier: "All",
+        role: "All",
+
+        heroes:
+          updatedHeroes,
+
+        rq:
+          response.rq,
+
+        updatedAt,
+      });
+    } catch (error) {
+      console.error(
+        "Heroes refresh error:",
+        error,
+      );
+
+      setRefreshError(
+        error instanceof Error
+          ? error.message
+          : "Unable to refresh Blizzard data.",
+      );
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  const filteredHeroes =
+    useMemo(() => {
+      const normalizedSearch =
+        search
+          .trim()
+          .toLowerCase();
+
+      return [
+        ...currentHeroes,
+      ]
+        .filter(
+          (hero) => {
+            const matchesRole =
+              activeRole ===
+                "All" ||
+              hero.role ===
+                activeRole;
+
+            const matchesSearch =
+              normalizedSearch ===
+                "" ||
+              hero.name
+                .toLowerCase()
+                .includes(
+                  normalizedSearch,
+                );
+
+            return (
+              matchesRole &&
+              matchesSearch
+            );
+          },
+        )
+        .sort(
+          (a, b) => {
+            const aValue =
+              a[sortBy] ?? -1;
+
+            const bValue =
+              b[sortBy] ?? -1;
+
+            return (
+              bValue -
+              aValue
+            );
+          },
+        );
+    }, [
+      currentHeroes,
+      activeRole,
+      search,
+      sortBy,
+    ]);
+
+  const hasFilters =
+    search.trim() !== "" ||
+    activeRole !== "All";
+
+  function resetFilters() {
+    setSearch("");
+    setActiveRole("All");
+  }
+
+  return (
+    <div className="global-page">
+      {/* ========================================
+          HEADER
+      ======================================== */}
+
+      <header className="topbar">
+        <div>
+          <p className="eyebrow">
+            HERO DATABASE
+          </p>
+
+          <h1>
+            Heroes
+          </h1>
+
+          <p className="subtitle">
+            Explore heroes and compare
+            their Blizzard statistics.
+          </p>
+        </div>
+
+        <div className="stats-header-actions">
+          <div className="live-status">
+            <span className="status-dot" />
+
+            Blizzard data
+          </div>
+
+          <button
+            className="stats-refresh-button"
+            type="button"
+            onClick={
+              handleRefresh
+            }
+            disabled={
+              refreshing
+            }
+          >
+            <RefreshCw
+              size={14}
+              className={
+                refreshing
+                  ? "refresh-spinning"
+                  : ""
+              }
+            />
+
+            {refreshing
+              ? "Refreshing..."
+              : "Refresh"}
+          </button>
+        </div>
+      </header>
+
+      {(lastUpdated ||
+        refreshError) && (
+        <div className="stats-update-info">
+          {lastUpdated && (
+            <>
+              <span>
+                Updated
+              </span>
+
+              <strong>
+                {formatRelativeAge(
+                  lastUpdated,
+                )}
+              </strong>
+
+              <span>
+                ·{" "}
+                {lastUpdated.toLocaleTimeString(
+                  [],
+                  {
+                    hour:
+                      "2-digit",
+
+                    minute:
+                      "2-digit",
+                  },
+                )}
+              </span>
+            </>
+          )}
+
+          {refreshError && (
+            <strong className="stats-refresh-error">
+              {refreshError}
+            </strong>
+          )}
+        </div>
+      )}
+
+      {/* ========================================
+          OVERVIEW
+      ======================================== */}
+
+      <section className="stats-overview">
+        <div className="summary-card">
+          <span className="summary-label">
+            Heroes tracked
+          </span>
+
+          <strong>
+            {currentHeroes.length}
+          </strong>
+
+          <span className="summary-detail">
+            Current hero roster
+          </span>
+        </div>
+
+        <div className="summary-card">
+          <span className="summary-label">
+            Region
+          </span>
+
+          <strong>
+            Europe
+          </strong>
+
+          <span className="summary-detail">
+            PC
+          </span>
+        </div>
+
+        <div className="summary-card">
+          <span className="summary-label">
+            Rank
+          </span>
+
+          <strong>
+            All ranks
+          </strong>
+
+          <span className="summary-detail">
+            Competitive
+          </span>
+        </div>
+      </section>
+
+      {/* ========================================
+          HERO BROWSER
+      ======================================== */}
+
+      <section className="toolbar">
+        <RoleFilter
+          activeRole={
+            activeRole
+          }
+          onChange={
+            setActiveRole
+          }
+        />
+
+        <div className="search-wrapper">
+          <Search
+            size={14}
+          />
+
+          <input
+            type="text"
+            placeholder="Search a hero..."
+            value={
+              search
+            }
+            onChange={(
+              event,
+            ) =>
+              setSearch(
+                event.target.value,
+              )
+            }
+          />
+        </div>
+      </section>
+
+      {filteredHeroes.length >
+      0 ? (
+        <section className="hero-grid">
+          {filteredHeroes.map(
+            (hero) => (
+              <HeroCard
+                key={
+                  hero.id
+                }
+                hero={
+                  hero
+                }
+                onOpen={
+                  onOpenHero
+                }
+              />
+            ),
+          )}
+        </section>
+      ) : (
+        <div className="empty-state">
+          <SearchX
+            size={24}
+          />
+
+          <span className="panel-eyebrow">
+            NO RESULTS
+          </span>
+
+          <h2>
+            No hero found
+          </h2>
+
+          <p>
+            No hero matches the current
+            search and role filters.
+          </p>
+
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={
+                resetFilters
+              }
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ========================================
+          HERO RANKING
+      ======================================== */}
+
+      <section className="stats-controls">
+        <div className="stats-control-group">
+          <span className="stats-control-label">
+            Rank heroes by
+          </span>
+
+          <div className="metric-filters">
+            <MetricButton
+              active={
+                sortBy ===
+                "winRate"
+              }
+              label="Win Rate"
+              onClick={() =>
+                setSortBy(
+                  "winRate",
+                )
+              }
+            />
+
+            <MetricButton
+              active={
+                sortBy ===
+                "pickRate"
+              }
+              label="Pick Rate"
+              onClick={() =>
+                setSortBy(
+                  "pickRate",
+                )
+              }
+            />
+
+            <MetricButton
+              active={
+                sortBy ===
+                "banRate"
+              }
+              label="Ban Rate"
+              onClick={() =>
+                setSortBy(
+                  "banRate",
+                )
+              }
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================
+          HERO STATS TABLE
+      ======================================== */}
+
+      <section className="stats-table">
+        <div className="stats-table-header">
+          <span>
+            Hero
+          </span>
+
+          <span>
+            Role
+          </span>
+
+          <span
+            className={
+              sortBy ===
+              "winRate"
+                ? "stats-column-active"
+                : ""
+            }
+          >
+            Win rate
+          </span>
+
+          <span
+            className={
+              sortBy ===
+              "pickRate"
+                ? "stats-column-active"
+                : ""
+            }
+          >
+            Pick rate
+          </span>
+
+          <span
+            className={
+              sortBy ===
+              "banRate"
+                ? "stats-column-active"
+                : ""
+            }
+          >
+            Ban rate
+          </span>
+
+          <span />
+        </div>
+
+        {filteredHeroes.map(
+          (
+            hero,
+            index,
+          ) => (
+            <button
+              className="stats-row"
+              key={
+                hero.id
+              }
+              onClick={() =>
+                onOpenHero(
+                  hero,
+                )
+              }
+            >
+              <div className="stats-hero">
+                <span className="stats-rank">
+                  {index + 1}
+                </span>
+
+                <div className="stats-avatar">
+                  <img
+                    src={
+                      hero.image
+                    }
+                    alt={
+                      hero.name
+                    }
+                  />
+                </div>
+
+                <strong>
+                  {hero.name}
+                </strong>
+              </div>
+
+              <div>
+                <span
+                  className={`stats-role ${hero.role.toLowerCase()}`}
+                >
+                  {hero.role}
+                </span>
+              </div>
+
+              <strong
+                className={
+                  sortBy ===
+                  "winRate"
+                    ? "stats-value-active"
+                    : ""
+                }
+              >
+                {formatRate(
+                  hero.winRate,
+                )}
+              </strong>
+
+              <strong
+                className={
+                  sortBy ===
+                  "pickRate"
+                    ? "stats-value-active"
+                    : ""
+                }
+              >
+                {formatRate(
+                  hero.pickRate,
+                )}
+              </strong>
+
+              <strong
+                className={
+                  sortBy ===
+                  "banRate"
+                    ? "stats-value-active"
+                    : ""
+                }
+              >
+                {formatRate(
+                  hero.banRate,
+                )}
+              </strong>
+
+              <div className="stats-open">
+                <ArrowRight
+                  size={15}
+                />
+              </div>
+            </button>
+          ),
+        )}
+      </section>
+    </div>
+  );
+}
+
+/* ========================================
+   METRIC BUTTON
+======================================== */
+
+type MetricButtonProps = {
+  active: boolean;
+
+  label: string;
+
+  onClick:
+    () => void;
+};
+
+function MetricButton({
+  active,
+  label,
+  onClick,
+}: MetricButtonProps) {
+  return (
+    <button
+      className={
+        active
+          ? "metric-filter active"
+          : "metric-filter"
+      }
+      onClick={
+        onClick
+      }
+      type="button"
+    >
+      {label}
+
+      {active && (
+        <span className="metric-sort-direction">
+          ↓
+        </span>
+      )}
+    </button>
+  );
+}
+
+/* ========================================
+   CACHE
+======================================== */
+
+function saveCachedDataset(
+  dataset:
+    CachedStatsDataset,
+) {
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify(
+        dataset,
+      ),
+    );
+  } catch (error) {
+    console.warn(
+      "Unable to save heroes cache:",
+      error,
+    );
+  }
+}
+
+function loadCachedDataset():
+  CachedStatsDataset | null {
+  try {
+    const value =
+      localStorage.getItem(
+        CACHE_KEY,
+      );
+
+    if (!value) {
+      return null;
+    }
+
+    const parsed =
+      JSON.parse(
+        value,
+      ) as CachedStatsDataset;
+
+    if (
+      !Array.isArray(
+        parsed.heroes,
+      ) ||
+      !parsed.updatedAt
+    ) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+/* ========================================
+   HELPERS
+======================================== */
+
+function formatRate(
+  value?: number,
+) {
+  if (
+    value === undefined
+  ) {
+    return "—";
+  }
+
+  return `${value}%`;
+}
+
+function formatRelativeAge(
+  date:
+    Date,
+) {
+  const elapsed =
+    Date.now() -
+    date.getTime();
+
+  const minutes =
+    Math.floor(
+      elapsed /
+        60000,
+    );
+
+  if (minutes < 1) {
+    return "just now";
+  }
+
+  if (minutes < 60) {
+    return `${minutes}m ago`;
+  }
+
+  const hours =
+    Math.floor(
+      minutes / 60,
+    );
+
+  return `${hours}h ago`;
+}
+
+export default HeroesPage;
