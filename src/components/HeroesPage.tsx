@@ -1,5 +1,4 @@
 import {
-  ArrowRight,
   RefreshCw,
   Search,
   SearchX,
@@ -467,56 +466,6 @@ function HeroesPage({
         </div>
       </section>
 
-      {filteredHeroes.length >
-      0 ? (
-        <section className="hero-grid">
-          {filteredHeroes.map(
-            (hero) => (
-              <HeroCard
-                key={
-                  hero.id
-                }
-                hero={
-                  hero
-                }
-                onOpen={
-                  onOpenHero
-                }
-              />
-            ),
-          )}
-        </section>
-      ) : (
-        <div className="empty-state">
-          <SearchX
-            size={24}
-          />
-
-          <span className="panel-eyebrow">
-            NO RESULTS
-          </span>
-
-          <h2>
-            No hero found
-          </h2>
-
-          <p>
-            No hero matches the current
-            search and role filters.
-          </p>
-
-          {hasFilters && (
-            <button
-              type="button"
-              onClick={
-                resetFilters
-              }
-            >
-              Clear filters
-            </button>
-          )}
-        </div>
-      )}
 
       {/* ========================================
           HERO RANKING
@@ -571,149 +520,56 @@ function HeroesPage({
         </div>
       </section>
 
-      {/* ========================================
-          HERO STATS TABLE
-      ======================================== */}
+      {filteredHeroes.length >
+      0 ? (
+        <section className="hero-grid">
+          {filteredHeroes.map(
+            (hero) => (
+              <HeroCard
+                key={
+                  hero.id
+                }
+                hero={
+                  hero
+                }
+                onOpen={
+                  onOpenHero
+                }
+              />
+            ),
+          )}
+        </section>
+      ) : (
+        <div className="empty-state">
+          <SearchX
+            size={24}
+          />
 
-      <section className="stats-table">
-        <div className="stats-table-header">
-          <span>
-            Hero
+          <span className="panel-eyebrow">
+            NO RESULTS
           </span>
 
-          <span>
-            Role
-          </span>
+          <h2>
+            No hero found
+          </h2>
 
-          <span
-            className={
-              sortBy ===
-              "winRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Win rate
-          </span>
+          <p>
+            No hero matches the current
+            search and role filters.
+          </p>
 
-          <span
-            className={
-              sortBy ===
-              "pickRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Pick rate
-          </span>
-
-          <span
-            className={
-              sortBy ===
-              "banRate"
-                ? "stats-column-active"
-                : ""
-            }
-          >
-            Ban rate
-          </span>
-
-          <span />
-        </div>
-
-        {filteredHeroes.map(
-          (
-            hero,
-            index,
-          ) => (
+          {hasFilters && (
             <button
-              className="stats-row"
-              key={
-                hero.id
-              }
-              onClick={() =>
-                onOpenHero(
-                  hero,
-                )
+              type="button"
+              onClick={
+                resetFilters
               }
             >
-              <div className="stats-hero">
-                <span className="stats-rank">
-                  {index + 1}
-                </span>
-
-                <div className="stats-avatar">
-                  <img
-                    src={
-                      hero.image
-                    }
-                    alt={
-                      hero.name
-                    }
-                  />
-                </div>
-
-                <strong>
-                  {hero.name}
-                </strong>
-              </div>
-
-              <div>
-                <span
-                  className={`stats-role ${hero.role.toLowerCase()}`}
-                >
-                  {hero.role}
-                </span>
-              </div>
-
-              <strong
-                className={
-                  sortBy ===
-                  "winRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.winRate,
-                )}
-              </strong>
-
-              <strong
-                className={
-                  sortBy ===
-                  "pickRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.pickRate,
-                )}
-              </strong>
-
-              <strong
-                className={
-                  sortBy ===
-                  "banRate"
-                    ? "stats-value-active"
-                    : ""
-                }
-              >
-                {formatRate(
-                  hero.banRate,
-                )}
-              </strong>
-
-              <div className="stats-open">
-                <ArrowRight
-                  size={15}
-                />
-              </div>
+              Clear filters
             </button>
-          ),
-        )}
-      </section>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -818,17 +674,6 @@ function loadCachedDataset():
    HELPERS
 ======================================== */
 
-function formatRate(
-  value?: number,
-) {
-  if (
-    value === undefined
-  ) {
-    return "—";
-  }
-
-  return `${value}%`;
-}
 
 function formatRelativeAge(
   date:
