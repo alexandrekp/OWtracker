@@ -4,8 +4,14 @@ import type {
   PlayerSummary,
 } from "../types/player";
 
-const API_URL =
-  "https://overfast-api.tekrop.fr";
+/* ========================================
+   API
+======================================== */
+
+const API_BASE_URL =
+  import.meta.env
+    .VITE_API_URL ||
+  "http://127.0.0.1:8787";
 
 /* ========================================
    GAMEMODE
@@ -30,8 +36,10 @@ type OverFastErrorResponse = {
   check_count?: number;
 };
 
-export class PlayerApiError extends Error {
-  status: number;
+export class PlayerApiError
+  extends Error {
+  status:
+    number;
 
   retryAfter:
     number | null;
@@ -43,9 +51,12 @@ export class PlayerApiError extends Error {
     number | null;
 
   constructor(
-    message: string,
+    message:
+      string,
+
     options: {
-      status: number;
+      status:
+        number;
 
       retryAfter?:
         number | null;
@@ -57,7 +68,9 @@ export class PlayerApiError extends Error {
         number | null;
     },
   ) {
-    super(message);
+    super(
+      message,
+    );
 
     this.name =
       "PlayerApiError";
@@ -84,11 +97,15 @@ export class PlayerApiError extends Error {
 ======================================== */
 
 export function normalizeBattleTag(
-  battleTag: string,
+  battleTag:
+    string,
 ) {
   return battleTag
     .trim()
-    .replace("#", "-");
+    .replace(
+      "#",
+      "-",
+    );
 }
 
 /* ========================================
@@ -96,12 +113,17 @@ export function normalizeBattleTag(
 ======================================== */
 
 async function requestJson<T>(
-  url: string,
+  url:
+    string,
 ): Promise<T> {
   const response =
-    await fetch(url);
+    await fetch(
+      url,
+    );
 
-  if (response.ok) {
+  if (
+    response.ok
+  ) {
     return response.json();
   }
 
@@ -116,7 +138,10 @@ async function requestJson<T>(
     // Response body is not JSON.
   }
 
-  if (response.status === 404) {
+  if (
+    response.status ===
+    404
+  ) {
     throw new PlayerApiError(
       apiError.error ??
         "Player data is currently unavailable.",
@@ -136,7 +161,10 @@ async function requestJson<T>(
     );
   }
 
-  if (response.status === 403) {
+  if (
+    response.status ===
+    403
+  ) {
     throw new PlayerApiError(
       "This profile is private.",
       {
@@ -146,7 +174,10 @@ async function requestJson<T>(
     );
   }
 
-  if (response.status === 429) {
+  if (
+    response.status ===
+    429
+  ) {
     throw new PlayerApiError(
       "Too many requests. Please try again later.",
       {
@@ -189,21 +220,24 @@ async function requestJson<T>(
 ======================================== */
 
 export async function getPlayerSummary(
-  battleTag: string,
+  battleTag:
+    string,
 ): Promise<PlayerSummary> {
   const normalized =
     normalizeBattleTag(
       battleTag,
     );
 
-  if (!normalized) {
+  if (
+    !normalized
+  ) {
     throw new Error(
       "Enter a BattleTag.",
     );
   }
 
   return requestJson<PlayerSummary>(
-    `${API_URL}/players/${encodeURIComponent(
+    `${API_BASE_URL}/api/player/${encodeURIComponent(
       normalized,
     )}/summary`,
   );
@@ -214,16 +248,21 @@ export async function getPlayerSummary(
 ======================================== */
 
 export async function getPlayerStats(
-  battleTag: string,
+  battleTag:
+    string,
+
   gamemode:
-    PlayerGamemode = "all",
+    PlayerGamemode =
+      "all",
 ): Promise<PlayerStatsSummary> {
   const normalized =
     normalizeBattleTag(
       battleTag,
     );
 
-  if (!normalized) {
+  if (
+    !normalized
+  ) {
     throw new Error(
       "Enter a BattleTag.",
     );
@@ -232,31 +271,30 @@ export async function getPlayerStats(
   const params =
     new URLSearchParams();
 
-  params.set(
-    "platform",
-    "pc",
-  );
-
-  /*
-    OverFast accepts:
-    - competitive
-    - quickplay
-
-    For "all", we simply omit
-    the gamemode parameter.
-  */
-
-  if (gamemode !== "all") {
+  if (
+    gamemode !==
+    "all"
+  ) {
     params.set(
       "gamemode",
       gamemode,
     );
   }
 
-  return requestJson<PlayerStatsSummary>(
-    `${API_URL}/players/${encodeURIComponent(
+  const query =
+    params.toString();
+
+  const url =
+    `${API_BASE_URL}/api/player/${encodeURIComponent(
       normalized,
-    )}/stats/summary?${params.toString()}`,
+    )}/stats${
+      query
+        ? `?${query}`
+        : ""
+    }`;
+
+  return requestJson<PlayerStatsSummary>(
+    url,
   );
 }
 
@@ -265,16 +303,21 @@ export async function getPlayerStats(
 ======================================== */
 
 export async function getPlayerData(
-  battleTag: string,
+  battleTag:
+    string,
+
   gamemode:
-    PlayerGamemode = "all",
+    PlayerGamemode =
+      "all",
 ): Promise<PlayerData> {
   const normalized =
     normalizeBattleTag(
       battleTag,
     );
 
-  if (!normalized) {
+  if (
+    !normalized
+  ) {
     throw new Error(
       "Enter a BattleTag.",
     );
@@ -283,16 +326,17 @@ export async function getPlayerData(
   const [
     summary,
     stats,
-  ] = await Promise.all([
-    getPlayerSummary(
-      normalized,
-    ),
+  ] =
+    await Promise.all([
+      getPlayerSummary(
+        normalized,
+      ),
 
-    getPlayerStats(
-      normalized,
-      gamemode,
-    ),
-  ]);
+      getPlayerStats(
+        normalized,
+        gamemode,
+      ),
+    ]);
 
   return {
     summary,
