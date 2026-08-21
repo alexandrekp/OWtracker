@@ -1,7 +1,6 @@
 import {
   Activity,
   Database,
-  Code2,
   Info,
   Server,
   ShieldCheck,
@@ -187,51 +186,6 @@ function SettingsPage() {
             </span>
           </div>
         </div>
-      </section>
-
-      {/* ========================================
-          PROJECT
-      ======================================== */}
-
-      <section className="settings-section">
-        <div className="settings-section-header">
-          <Code2 size={16} />
-
-          <div>
-            <span className="settings-eyebrow">
-              PROJECT
-            </span>
-
-            <h2>
-              Open source
-            </h2>
-          </div>
-        </div>
-
-        <a
-          className="settings-link-card"
-          href="https://Code2.com/alexandrekp/OWtracker"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <div className="settings-row-icon">
-          <Code2 size={17} />
-          </div>
-
-          <div className="settings-row-content">
-            <strong>
-              Code2 repository
-            </strong>
-
-            <span>
-              alexandrekp/OWtracker
-            </span>
-          </div>
-
-          <span className="settings-link-arrow">
-            ↗
-          </span>
-        </a>
       </section>
 
       {/* ========================================
