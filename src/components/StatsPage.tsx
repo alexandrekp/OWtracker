@@ -593,18 +593,7 @@ function StatsPage({
             <h1>
               Stats
             </h1>
-
-            <p className="subtitle">
-              PC · {activeRegion} ·{" "}
-              {activeTier === "All"
-                ? "All ranks"
-                : activeTier}{" "}
-              ·{" "}
-              {activeRole === "All"
-                ? "All roles"
-                : activeRole}{" "}
-              · All maps · Competitive
-            </p>
+            
           </div>
 
           <div className="stats-header-actions">
