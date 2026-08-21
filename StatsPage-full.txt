@@ -677,6 +677,170 @@ function StatsPage({
       </header>
 
       {/* ===================================
+          FILTERS
+      ==================================== */}
+
+      <section className="stats-data-filters">
+        <div className="stats-data-filter">
+          <label>
+            Region
+          </label>
+
+          <select
+            value={
+              selectedRegion
+            }
+            onChange={(
+              event,
+            ) =>
+              setSelectedRegion(
+                event.target
+                  .value as
+                  BlizzardRegion,
+              )
+            }
+          >
+            {REGIONS.map(
+              (region) => (
+                <option
+                  key={
+                    region
+                  }
+                  value={
+                    region
+                  }
+                >
+                  {region}
+                </option>
+              ),
+            )}
+          </select>
+        </div>
+
+        <div className="stats-data-filter">
+          <label>
+            Rank
+          </label>
+
+          <select
+            value={
+              selectedTier
+            }
+            onChange={(
+              event,
+            ) =>
+              setSelectedTier(
+                event.target
+                  .value as
+                  BlizzardTier,
+              )
+            }
+          >
+            {TIERS.map(
+              (tier) => (
+                <option
+                  key={
+                    tier
+                  }
+                  value={
+                    tier
+                  }
+                >
+                  {tier ===
+                  "All"
+                    ? "All ranks"
+                    : tier}
+                </option>
+              ),
+            )}
+          </select>
+        </div>
+
+        <div className="stats-data-filter">
+          <label>
+            Role
+          </label>
+
+          <select
+            value={
+              selectedRole
+            }
+            onChange={(
+              event,
+            ) =>
+              setSelectedRole(
+                event.target
+                  .value as
+                  BlizzardRole,
+              )
+            }
+          >
+            {ROLES.map(
+              (role) => (
+                <option
+                  key={
+                    role
+                  }
+                  value={
+                    role
+                  }
+                >
+                  {role ===
+                  "All"
+                    ? "All roles"
+                    : role}
+                </option>
+              ),
+            )}
+          </select>
+        </div>
+
+        <div className="stats-filter-summary">
+          <span>
+            Dataset
+          </span>
+
+          <strong>
+            {selectedRegion}
+            {" · "}
+            {selectedTier ===
+            "All"
+              ? "All"
+              : selectedTier}
+            {" · "}
+            {selectedRole ===
+            "All"
+              ? "All"
+              : selectedRole}
+          </strong>
+
+          {filtersChanged ? (
+            <>
+              {selectedHasCache ? (
+                <button
+                  className="stats-load-cache-button"
+                  type="button"
+                  onClick={
+                    applySelectedDataset
+                  }
+                >
+                  Load cached dataset
+                </button>
+              ) : (
+                <small>
+                  No cache · refresh required
+                </small>
+              )}
+            </>
+          ) : (
+            <small className="stats-filter-applied">
+              Active dataset
+            </small>
+          )}
+        </div>
+      </section>
+
+      {/* ===================================
           META OVERVIEW
       ==================================== */}
 
@@ -797,210 +961,6 @@ function StatsPage({
       </section>
 
       {/* ===================================
-          UNIFIED FILTERS + SORT + SEARCH
-      ==================================== */}
-
-      <section className="stats-unified-controls">
-        <div className="stats-unified-top">
-          <div className="stats-data-filter">
-            <label>
-              Region
-            </label>
-
-            <select
-              value={
-                selectedRegion
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedRegion(
-                  event.target
-                    .value as
-                    BlizzardRegion,
-                )
-              }
-            >
-              {REGIONS.map(
-                (region) => (
-                  <option
-                    key={region}
-                    value={region}
-                  >
-                    {region}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-data-filter">
-            <label>
-              Rank
-            </label>
-
-            <select
-              value={
-                selectedTier
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedTier(
-                  event.target
-                    .value as
-                    BlizzardTier,
-                )
-              }
-            >
-              {TIERS.map(
-                (tier) => (
-                  <option
-                    key={tier}
-                    value={tier}
-                  >
-                    {tier === "All"
-                      ? "All ranks"
-                      : tier}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-data-filter">
-            <label>
-              Role
-            </label>
-
-            <select
-              value={
-                selectedRole
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedRole(
-                  event.target
-                    .value as
-                    BlizzardRole,
-                )
-              }
-            >
-              {ROLES.map(
-                (role) => (
-                  <option
-                    key={role}
-                    value={role}
-                  >
-                    {role === "All"
-                      ? "All roles"
-                      : role}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-ranking-control">
-            <span className="stats-control-label">
-              Rank heroes by
-            </span>
-
-            <div className="metric-filters">
-              <MetricButton
-                active={
-                  sortBy ===
-                  "winRate"
-                }
-                label="Win Rate"
-                onClick={() =>
-                  setSortBy(
-                    "winRate",
-                  )
-                }
-              />
-
-              <MetricButton
-                active={
-                  sortBy ===
-                  "pickRate"
-                }
-                label="Pick Rate"
-                onClick={() =>
-                  setSortBy(
-                    "pickRate",
-                  )
-                }
-              />
-
-              <MetricButton
-                active={
-                  sortBy ===
-                  "banRate"
-                }
-                label="Ban Rate"
-                onClick={() =>
-                  setSortBy(
-                    "banRate",
-                  )
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="stats-unified-bottom">
-          <div className="stats-toolbar">
-            <div className="search-wrapper">
-              <Search
-                size={14}
-              />
-
-              <input
-                type="text"
-                placeholder="Search hero..."
-                value={search}
-                onChange={(
-                  event,
-                ) =>
-                  setSearch(
-                    event.target
-                      .value,
-                  )
-                }
-              />
-            </div>
-          </div>
-
-          <div className="stats-dataset-status">
-            {filtersChanged ? (
-              selectedHasCache ? (
-                <button
-                  className="stats-load-cache-button"
-                  type="button"
-                  onClick={
-                    applySelectedDataset
-                  }
-                >
-                  Load cached dataset
-                </button>
-              ) : (
-                <small>
-                  No cache · refresh required
-                </small>
-              )
-            ) : (
-              <small className="stats-filter-applied">
-                <span className="status-dot" />
-                Active dataset
-              </small>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================
           META TIER LIST
       ==================================== */}
 
@@ -1062,6 +1022,85 @@ function StatsPage({
               />
             ),
           )}
+        </div>
+      </section>
+
+      {/* ===================================
+          SORT + SEARCH
+      ==================================== */}
+
+      <section className="stats-controls">
+        <div className="stats-control-group">
+          <span className="stats-control-label">
+            Rank heroes by
+          </span>
+
+          <div className="metric-filters">
+            <MetricButton
+              active={
+                sortBy ===
+                "winRate"
+              }
+              label="Win Rate"
+              onClick={() =>
+                setSortBy(
+                  "winRate",
+                )
+              }
+            />
+
+            <MetricButton
+              active={
+                sortBy ===
+                "pickRate"
+              }
+              label="Pick Rate"
+              onClick={() =>
+                setSortBy(
+                  "pickRate",
+                )
+              }
+            />
+
+            <MetricButton
+              active={
+                sortBy ===
+                "banRate"
+              }
+              label="Ban Rate"
+              onClick={() =>
+                setSortBy(
+                  "banRate",
+                )
+              }
+            />
+          </div>
+        </div>
+
+        <div className="stats-control-divider" />
+
+        <div className="stats-toolbar">
+          <div className="search-wrapper">
+            <Search
+              size={14}
+            />
+
+            <input
+              type="text"
+              placeholder="Search hero..."
+              value={
+                search
+              }
+              onChange={(
+                event,
+              ) =>
+                setSearch(
+                  event.target
+                    .value,
+                )
+              }
+            />
+          </div>
         </div>
       </section>
 

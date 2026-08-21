@@ -869,3 +869,202 @@
     flex: 1;
   }
 }
+
+/* ========================================
+   UNIFIED STATS CONTROLS
+======================================== */
+
+.stats-unified-controls {
+  margin: 24px 0 32px;
+  padding: 18px;
+
+  background: #11151b;
+  border: 1px solid #27303b;
+  border-radius: 14px;
+}
+
+.stats-unified-top {
+  display: grid;
+
+  grid-template-columns:
+    minmax(150px, 1fr)
+    minmax(150px, 1fr)
+    minmax(150px, 1fr)
+    auto;
+
+  gap: 14px;
+
+  align-items: end;
+}
+
+.stats-data-filter,
+.stats-ranking-control {
+  min-width: 0;
+}
+
+.stats-data-filter label,
+.stats-control-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #8290a3;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stats-data-filter select {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px;
+
+  background: #0d1117;
+  color: #f4f6f8;
+
+  border: 1px solid #2a3440;
+  border-radius: 8px;
+
+  outline: none;
+}
+
+.stats-data-filter select:focus {
+  border-color: var(--accent);
+}
+
+.stats-ranking-control {
+  padding-left: 4px;
+}
+
+.metric-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   BOTTOM ROW
+======================================== */
+
+.stats-unified-bottom {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-top: 16px;
+  padding-top: 16px;
+
+  border-top: 1px solid #252d37;
+}
+
+.stats-search {
+  position: relative;
+
+  width: 260px;
+}
+
+.stats-search-icon {
+  position: absolute;
+
+  left: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #778497;
+
+  pointer-events: none;
+}
+
+.stats-search input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 12px 0 36px;
+
+  background: #0d1117;
+  color: #f4f6f8;
+
+  border: 1px solid #2a3440;
+  border-radius: 8px;
+
+  outline: none;
+}
+
+.stats-search input::placeholder {
+  color: #647184;
+}
+
+.stats-search input:focus {
+  border-color: var(--accent);
+}
+
+/* ========================================
+   DATASET STATUS
+======================================== */
+
+.stats-dataset-status {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  min-height: 40px;
+
+  color: #7f8b9c;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stats-dataset-status .status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #39d98a;
+}
+
+.stats-cache-warning {
+  color: #d69a4c;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1100px) {
+  .stats-unified-top {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .stats-ranking-control {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .stats-unified-top {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-unified-bottom {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .stats-search {
+    width: 100%;
+  }
+}
