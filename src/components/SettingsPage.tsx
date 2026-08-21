@@ -6,10 +6,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "http://127.0.0.1:8787";
-
 function SettingsPage() {
   return (
     <div className="settings-page">
@@ -165,27 +161,6 @@ function SettingsPage() {
               LIVE
             </span>
           </div>
-
-          <div className="settings-row">
-            <div className="settings-row-icon">
-              <Server size={16} />
-            </div>
-
-            <div className="settings-row-content">
-              <strong>
-                OWTracker API
-              </strong>
-
-              <span>
-                {API_URL}
-              </span>
-            </div>
-
-            <span className="settings-status online">
-              CLOUDFLARE
-            </span>
-          </div>
-        </div>
       </section>
 
       {/* ========================================
