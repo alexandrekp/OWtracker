@@ -587,7 +587,7 @@ function StatsPage({
         <div className="stats-header-main">
           <div className="stats-header-copy">
             <p className="eyebrow">
-              BLIZZARD HERO STATISTICS
+              HERO STATISTICS
             </p>
 
             <h1>
@@ -665,11 +665,7 @@ function StatsPage({
                   )}
                 </span>
               </>
-            ) : (
-              <span>
-                Local fallback dataset
-              </span>
-            )}
+            ) : null}
 
             {refreshError && (
               <strong className="stats-refresh-error">

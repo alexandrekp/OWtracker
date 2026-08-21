@@ -25,7 +25,11 @@ function Sidebar({
     <aside className="sidebar">
       <div className="brand">
         <div className="brand-mark">
-          OW
+          <img
+            src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
+            alt="OWTracker"
+            className="brand-logo"
+          />
         </div>
 
         <div>
@@ -98,7 +102,16 @@ function Sidebar({
       </nav>
 
       <div className="sidebar-footer">
-        <button className="nav-item">
+        <button
+          className={
+            activeSection === "settings"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() =>
+            onNavigate("settings")
+          }
+        >
           <Settings size={17} />
           Settings
         </button>

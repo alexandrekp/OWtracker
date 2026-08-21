@@ -19,6 +19,7 @@ import RoleFilter from "./components/RoleFilter";
 import StatsPage from "./components/StatsPage";
 import PlayersPage from "./components/PlayersPage";
 import PerksPage from "./components/PerksPage";
+import SettingsPage from "./components/SettingsPage";
 
 import AppLoader from "./components/ui/AppLoader";
 import EmptyState from "./components/ui/EmptyState";
@@ -373,6 +374,15 @@ function App() {
                       openHero
                     }
                   />
+                </div>
+              )}
+              {activeSection ===
+                 "settings" && (
+               <div
+                  className="page-transition"
+                  key="settings"
+                >
+                  <SettingsPage />
                 </div>
               )}
             </>

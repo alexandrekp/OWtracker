@@ -1959,3 +1959,320 @@ button {
 .page-preserved-hidden {
   display: none;
 }
+
+/* ========================================
+   OWTRACKER LOGO
+======================================== */
+
+.brand-mark {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: transparent;
+}
+
+.brand-logo {
+  display: block;
+
+  width: 46px;
+  height: 46px;
+
+  object-fit: contain;
+
+  transform: scale(1.18);
+}
+
+/* ========================================
+   SETTINGS
+======================================== */
+
+.settings-page {
+  width: 100%;
+}
+
+.settings-section {
+  margin-bottom: 18px;
+
+  padding: 22px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: var(--surface);
+}
+
+.settings-section-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  margin-bottom: 20px;
+}
+
+.settings-section-header > svg {
+  color: var(--accent);
+}
+
+.settings-section-header h2 {
+  margin: 3px 0 0;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.settings-eyebrow {
+  color: var(--muted);
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 0.09em;
+}
+
+.settings-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.settings-card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  padding: 17px;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: #0d1015;
+}
+
+.settings-label {
+  color: var(--muted);
+
+  font-size: 8px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.06em;
+}
+
+.settings-card strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.settings-detail {
+  color: #626b77;
+
+  font-size: 8px;
+}
+
+.settings-list {
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: #0d1015;
+}
+
+.settings-row,
+.settings-link-card {
+  min-height: 68px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 14px 16px;
+
+  border-bottom:
+    1px solid var(--border);
+}
+
+.settings-row:last-child {
+  border-bottom: 0;
+}
+
+.settings-row-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid #303641;
+  border-radius: 9px;
+
+  color: var(--accent);
+
+  background: #151920;
+}
+
+.settings-row-content {
+  min-width: 0;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.settings-row-content strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-row-content span {
+  overflow: hidden;
+
+  color: var(--muted);
+
+  font-size: 8px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-status {
+  flex-shrink: 0;
+
+  padding: 5px 7px;
+
+  border-radius: 6px;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 0.07em;
+}
+
+.settings-status.online {
+  color: #74dba8;
+
+  border:
+    1px solid
+    rgba(116, 219, 168, 0.2);
+
+  background:
+    rgba(116, 219, 168, 0.05);
+}
+
+.settings-link-card {
+  color: inherit;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: #0d1015;
+
+  text-decoration: none;
+
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s ease;
+}
+
+.settings-link-card:hover {
+  transform: translateY(-1px);
+
+  border-color: #363e49;
+
+  background: #11151b;
+}
+
+.settings-link-arrow {
+  color: var(--accent);
+
+  font-size: 16px;
+}
+
+.settings-disclaimer {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 13px;
+
+  padding: 18px;
+
+  border:
+    1px solid
+    rgba(255, 122, 26, 0.18);
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 122, 26, 0.035);
+}
+
+.settings-disclaimer > svg {
+  flex-shrink: 0;
+
+  color: var(--accent);
+}
+
+.settings-disclaimer strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 11px;
+}
+
+.settings-disclaimer p {
+  max-width: 760px;
+
+  margin: 6px 0 0;
+
+  color: var(--muted);
+
+  font-size: 8px;
+  line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-status {
+    display: none;
+  }
+}

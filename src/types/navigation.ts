@@ -2,4 +2,5 @@ export type AppSection =
   | "stats"
   | "players"
   | "heroes"
-  | "perks";
+  | "perks"
+  | "settings";
