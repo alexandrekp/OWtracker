@@ -1,0 +1,1274 @@
+/* ========================================
+   SEARCH
+======================================== */
+
+.compare-search-panel {
+  margin-bottom: 18px;
+
+  padding: 16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 14px;
+
+  background:
+    var(--surface);
+}
+
+.compare-input-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    45px
+    minmax(0, 1fr);
+
+  align-items: end;
+
+  gap: 12px;
+}
+
+.compare-player-input {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.compare-player-input > span {
+  color:
+    var(--muted);
+
+  font-size: 7px;
+  font-weight: 700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.08em;
+}
+
+.compare-player-input > div {
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding:
+    0
+    11px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  background:
+    #0d1015;
+}
+
+.compare-player-input svg {
+  flex-shrink: 0;
+
+  color:
+    var(--muted);
+}
+
+.compare-player-input input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  color:
+    var(--text);
+
+  background:
+    transparent;
+
+  font-family:
+    inherit;
+
+  font-size: 9px;
+}
+
+.compare-versus {
+  height: 38px;
+
+  display: grid;
+
+  place-items: center;
+
+  color:
+    var(--accent);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ========================================
+   SEARCH FOOTER
+======================================== */
+
+.compare-search-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content:
+    space-between;
+
+  gap: 12px;
+
+  margin-top: 14px;
+
+  padding-top: 14px;
+
+  border-top:
+    1px solid
+    var(--border);
+}
+
+.compare-mode-buttons {
+  display: flex;
+
+  gap: 4px;
+
+  padding: 3px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  background:
+    #0b0e12;
+}
+
+.compare-mode-button {
+  height: 28px;
+
+  padding:
+    0
+    9px;
+
+  border: 0;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  color:
+    var(--muted);
+
+  background:
+    transparent;
+
+  font-family:
+    inherit;
+
+  font-size: 7px;
+  font-weight: 600;
+
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.compare-mode-button:hover:not(:disabled) {
+  color:
+    var(--text);
+}
+
+.compare-mode-button.active {
+  color:
+    var(--accent);
+
+  background:
+    var(--accent-soft);
+}
+
+.compare-mode-button:disabled {
+  cursor: wait;
+
+  opacity: 0.55;
+}
+
+.compare-submit {
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding:
+    0
+    13px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      122,
+      26,
+      0.35
+    );
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  color:
+    var(--accent);
+
+  background:
+    var(--accent-soft);
+
+  font-family:
+    inherit;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.compare-submit:disabled {
+  cursor: wait;
+
+  opacity: 0.55;
+}
+
+.compare-loading {
+  margin-bottom: 18px;
+
+  padding: 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  color:
+    var(--muted);
+
+  background:
+    var(--surface);
+
+  font-size: 8px;
+}
+
+/* ========================================
+   PLAYER HEADS
+======================================== */
+
+.compare-mode-status {
+  margin-bottom: 9px;
+
+  color:
+    var(--accent);
+
+  font-size: 7px;
+  font-weight: 700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.07em;
+}
+
+.compare-player-heads {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    45px
+    1fr;
+
+  align-items: center;
+
+  margin-bottom: 24px;
+
+  padding: 14px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  background:
+    var(--surface);
+}
+
+.compare-player-head {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.compare-player-head:last-child {
+  flex-direction:
+    row-reverse;
+
+  text-align: right;
+}
+
+.compare-avatar {
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+
+  place-items: center;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  color:
+    var(--muted);
+
+  background:
+    #090c10;
+}
+
+.compare-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.compare-player-head strong {
+  display: block;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 14px;
+}
+
+.compare-player-head span {
+  display: block;
+
+  margin-top: 3px;
+
+  color:
+    var(--muted);
+
+  font-size: 7px;
+}
+
+.compare-head-vs {
+  text-align: center;
+
+  color:
+    var(--accent);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* ========================================
+   SECTION
+======================================== */
+
+.compare-section-heading {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content:
+    space-between;
+
+  gap: 15px;
+
+  margin:
+    24px
+    0
+    10px;
+}
+
+.compare-section-heading h2 {
+  margin:
+    4px
+    0
+    0;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 15px;
+}
+
+.compare-section-heading p {
+  margin:
+    4px
+    0
+    0;
+
+  color:
+    var(--muted);
+
+  font-size: 7px;
+}
+
+/* ========================================
+   GENERAL TABLE
+======================================== */
+
+.compare-table {
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  background:
+    var(--surface);
+}
+
+.compare-row {
+  min-height: 43px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    0.75fr
+    0.75fr;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding:
+    0
+    14px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-row:last-child {
+  border-bottom: 0;
+}
+
+.compare-row > span {
+  color:
+    var(--muted);
+
+  font-size: 8px;
+}
+
+.compare-row > strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 10px;
+}
+
+.compare-row-header {
+  min-height: 34px;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.06em;
+}
+
+.compare-row-header span {
+  font-size: 7px;
+}
+
+.compare-best {
+  color:
+    var(--accent)
+    !important;
+}
+
+/* ========================================
+   RANKS
+======================================== */
+
+.compare-ranks {
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  background:
+    var(--surface);
+}
+
+.compare-rank-row {
+  min-height: 68px;
+
+  display: grid;
+
+  grid-template-columns:
+    0.7fr
+    1fr
+    1fr;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding:
+    9px
+    14px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-rank-row:last-child {
+  border-bottom: 0;
+}
+
+.compare-rank-role {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    var(--muted);
+}
+
+.compare-rank-role strong {
+  color:
+    var(--text);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+}
+
+.compare-rank-display {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.compare-rank-display > strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+}
+
+.compare-rank-display.unranked {
+  color:
+    var(--muted);
+}
+
+.compare-rank-icons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 2px;
+}
+
+.compare-rank-icons img {
+  width: 30px;
+  height: 30px;
+
+  object-fit: contain;
+}
+
+.compare-rank-icons img + img {
+  width: 17px;
+  height: 17px;
+}
+
+/* ========================================
+   ROLE PERFORMANCE
+======================================== */
+
+.compare-role-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.compare-role-card {
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  background:
+    var(--surface);
+}
+
+.compare-role-card-header {
+  min-height: 38px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    2fr;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding:
+    0
+    12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-role-card-header > div:first-child {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    var(--accent);
+}
+
+.compare-role-card-header strong {
+  color:
+    var(--text);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+}
+
+.compare-role-player-names {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 10px;
+
+  color:
+    var(--muted);
+
+  font-size: 7px;
+  font-weight: 700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+}
+
+.compare-role-metric {
+  min-height: 36px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    0
+    12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-role-metric:last-child {
+  border-bottom: 0;
+}
+
+.compare-role-metric span {
+  color:
+    var(--muted);
+
+  font-size: 7px;
+}
+
+.compare-role-metric strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+}
+
+.compare-role-no-data {
+  padding: 16px;
+
+  color:
+    var(--muted);
+
+  font-size: 7px;
+}
+
+/* ========================================
+   SHARED SUMMARY
+======================================== */
+
+.compare-shared-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 8px;
+
+  margin-bottom: 12px;
+}
+
+.compare-highlight-card {
+  display: grid;
+
+  grid-template-columns:
+    27px
+    minmax(0, 1fr);
+
+  grid-template-rows:
+    auto
+    auto;
+
+  align-items: center;
+
+  column-gap: 7px;
+
+  padding: 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    var(--surface);
+}
+
+.compare-highlight-card > div {
+  grid-row:
+    1 / 3;
+
+  color:
+    var(--accent);
+}
+
+.compare-highlight-card span {
+  color:
+    var(--muted);
+
+  font-size: 6px;
+}
+
+.compare-highlight-card strong {
+  overflow: hidden;
+
+  margin-top: 2px;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 9px;
+
+  text-overflow:
+    ellipsis;
+
+  white-space:
+    nowrap;
+}
+
+/* ========================================
+   SHARED SORT
+======================================== */
+
+.compare-shared-toolbar {
+  display: flex;
+
+  align-items: center;
+  justify-content:
+    space-between;
+
+  gap: 12px;
+
+  margin-bottom: 9px;
+}
+
+.compare-shared-toolbar > span {
+  color:
+    var(--muted);
+
+  font-size: 7px;
+  font-weight: 600;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.06em;
+}
+
+.compare-shared-sort-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 3px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  background:
+    #0b0e12;
+}
+
+.compare-shared-sort-button {
+  height: 27px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding:
+    0
+    8px;
+
+  border: 0;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  color:
+    var(--muted);
+
+  background:
+    transparent;
+
+  font-family:
+    inherit;
+
+  font-size: 7px;
+  font-weight: 600;
+}
+
+.compare-shared-sort-button:hover {
+  color:
+    var(--text);
+}
+
+.compare-shared-sort-button.active {
+  color:
+    var(--accent);
+
+  background:
+    var(--accent-soft);
+}
+
+/* ========================================
+   SHARED HEROES
+======================================== */
+
+.compare-shared-heroes-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.compare-shared-hero-card {
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 11px;
+
+  background:
+    var(--surface);
+}
+
+.compare-shared-hero-header {
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content:
+    space-between;
+
+  gap: 15px;
+
+  padding:
+    8px
+    12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-hero-identity {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+.compare-hero-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+
+  place-items: center;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  background:
+    #090c10;
+}
+
+.compare-hero-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.compare-hero-identity strong {
+  display: block;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 10px;
+}
+
+.compare-hero-identity span {
+  display: block;
+
+  margin-top: 3px;
+
+  color:
+    var(--muted);
+
+  font-size: 6px;
+}
+
+.compare-shared-gap {
+  text-align: right;
+}
+
+.compare-shared-gap span {
+  display: block;
+
+  color:
+    var(--muted);
+
+  font-size: 5px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.06em;
+}
+
+.compare-shared-gap strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color:
+    var(--accent);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 12px;
+}
+
+/* ========================================
+   SHARED HERO TABLE
+======================================== */
+
+.compare-shared-table {
+  width: 100%;
+}
+
+.compare-shared-row {
+  min-height: 35px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    0
+    12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.compare-shared-row:last-child {
+  border-bottom: 0;
+}
+
+.compare-shared-row > span {
+  color:
+    var(--muted);
+
+  font-size: 7px;
+}
+
+.compare-shared-row > strong {
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 8px;
+}
+
+.compare-shared-row-header {
+  min-height: 31px;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+}
+
+.compare-shared-row-header span {
+  font-size: 6px;
+  font-weight: 700;
+}
+
+.compare-no-shared {
+  padding: 25px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  color:
+    var(--muted);
+
+  background:
+    var(--surface);
+
+  text-align: center;
+
+  font-size: 8px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (
+  max-width: 900px
+) {
+  .compare-shared-summary {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+}
+
+@media (
+  max-width: 750px
+) {
+  .compare-input-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-versus {
+    height: auto;
+  }
+
+  .compare-search-footer {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .compare-mode-buttons {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        3,
+        1fr
+      );
+  }
+
+  .compare-player-heads {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-head-vs {
+    padding:
+      10px
+      0;
+  }
+
+  .compare-player-head:last-child {
+    flex-direction: row;
+
+    text-align: left;
+  }
+
+  .compare-rank-row {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-role-card-header {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-role-player-names {
+    padding-bottom: 8px;
+  }
+
+  .compare-shared-toolbar {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+}
+
+@media (
+  max-width: 550px
+) {
+  .compare-shared-summary {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-shared-sort-buttons {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        3,
+        1fr
+      );
+  }
+
+  .compare-shared-sort-button {
+    width: 100%;
+  }
+}

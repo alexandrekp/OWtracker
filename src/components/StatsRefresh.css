@@ -1,0 +1,406 @@
+/* ========================================
+   STATS HEADER
+======================================== */
+
+.stats-header {
+  margin-bottom: 18px;
+}
+
+.stats-header-main {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 28px;
+}
+
+.stats-header-copy {
+  min-width: 0;
+}
+
+.stats-header-copy .eyebrow {
+  margin-bottom: 7px;
+}
+
+.stats-header-copy h1 {
+  margin: 0;
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 42px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+.stats-header-copy .subtitle {
+  margin-top: 12px;
+}
+
+.stats-header-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  flex-shrink: 0;
+}
+
+.stats-header-actions .live-status {
+  flex-shrink: 0;
+}
+
+/* ========================================
+   REFRESH BUTTON
+======================================== */
+
+.stats-refresh-button {
+  height: 34px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  color: var(--text);
+
+  background: var(--surface);
+
+  font-family: inherit;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.stats-refresh-button:hover:not(:disabled) {
+  border-color:
+    rgba(
+      255,
+      122,
+      26,
+      0.42
+    );
+
+  color: var(--accent);
+
+  background:
+    var(--accent-soft);
+}
+
+.stats-refresh-button.pending {
+  border-color:
+    rgba(
+      255,
+      122,
+      26,
+      0.45
+    );
+
+  color: var(--accent);
+
+  background:
+    var(--accent-soft);
+}
+
+.stats-refresh-button:disabled {
+  cursor: wait;
+
+  opacity: 0.6;
+}
+
+/* ========================================
+   REFRESH SPINNER
+======================================== */
+
+.refresh-spinning {
+  animation:
+    statsRefreshSpin
+    0.8s
+    linear
+    infinite;
+}
+
+@keyframes statsRefreshSpin {
+  to {
+    transform:
+      rotate(360deg);
+  }
+}
+
+/* ========================================
+   UPDATE INFORMATION
+======================================== */
+
+.stats-header-bottom {
+  min-height: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  margin-top: 17px;
+}
+
+.stats-update-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #606975;
+
+  font-size: 8px;
+}
+
+.stats-update-info strong {
+  color: var(--text);
+
+  font-weight: 600;
+}
+
+.stats-refresh-error {
+  margin-left: 10px;
+
+  color: #ff8b8b !important;
+}
+
+/* ========================================
+   BLIZZARD FILTER PANEL
+======================================== */
+
+.stats-data-filters {
+  display: grid;
+
+  grid-template-columns:
+    minmax(150px, 1fr)
+    minmax(160px, 1fr)
+    minmax(150px, 1fr)
+    minmax(230px, 1.35fr);
+
+  align-items: stretch;
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+
+  padding: 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: var(--surface);
+}
+
+/* ========================================
+   FILTER
+======================================== */
+
+.stats-data-filter {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.stats-data-filter label,
+.stats-filter-summary > span {
+  color: #68717d;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+}
+
+.stats-data-filter select {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 11px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  outline: none;
+
+  cursor: pointer;
+
+  color: var(--text);
+
+  background: #0d1015;
+
+  font-family: inherit;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.stats-data-filter select:hover {
+  border-color:
+    rgba(
+      255,
+      122,
+      26,
+      0.28
+    );
+}
+
+.stats-data-filter select:focus {
+  border-color:
+    rgba(
+      255,
+      122,
+      26,
+      0.5
+    );
+}
+
+/* ========================================
+   DATASET SUMMARY
+======================================== */
+
+.stats-filter-summary {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  padding-left: 16px;
+
+  border-left:
+    1px solid var(--border);
+}
+
+.stats-filter-summary strong {
+  overflow: hidden;
+
+  color: var(--text);
+
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stats-filter-summary small {
+  color: var(--accent);
+
+  font-size: 7px;
+}
+
+.stats-filter-summary
+.stats-filter-applied {
+  color: #61d5a0;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1000px) {
+  .stats-data-filters {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+
+  .stats-filter-summary {
+    grid-column:
+      1 / -1;
+
+    padding:
+      11px 0 0;
+
+    border-left: 0;
+
+    border-top:
+      1px solid var(--border);
+  }
+}
+
+@media (max-width: 750px) {
+  .stats-header-main {
+    flex-direction: column;
+
+    gap: 16px;
+  }
+
+  .stats-header-actions {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .stats-data-filters {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (max-width: 520px) {
+  .stats-header-copy h1 {
+    font-size: 36px;
+  }
+
+  .stats-header-actions {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .stats-data-filters {
+    grid-template-columns:
+      1fr;
+  }
+
+  .stats-filter-summary {
+    grid-column: auto;
+  }
+}

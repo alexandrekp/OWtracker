@@ -1,0 +1,60 @@
+.players-page-shell {
+  width: 100%;
+}
+
+.players-view-switch {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  margin-bottom: 20px;
+
+  padding: 4px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: #0b0e12;
+}
+
+.players-view-button {
+  height: 32px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 12px;
+
+  border: 0;
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  color: var(--muted);
+
+  background: transparent;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.players-view-button:hover {
+  color: var(--text);
+}
+
+.players-view-button.active {
+  color: var(--accent);
+
+  background: var(--accent-soft);
+}
