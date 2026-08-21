@@ -2,7 +2,6 @@ import {
   Activity,
   Database,
   Info,
-  Server,
   ShieldCheck,
 } from "lucide-react";
 
@@ -161,6 +160,7 @@ function SettingsPage() {
               LIVE
             </span>
           </div>
+	</div>
       </section>
 
       {/* ========================================
