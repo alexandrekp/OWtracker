@@ -77,10 +77,6 @@ function SettingsPage() {
             <strong>
               Web
             </strong>
-
-            <span className="settings-detail">
-              React + Vite
-            </span>
           </div>
 
           <div className="settings-card">
@@ -196,3 +192,4 @@ function SettingsPage() {
 }
 
 export default SettingsPage;
+
