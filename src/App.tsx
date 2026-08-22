@@ -19,6 +19,7 @@ import PlayersPage from "./components/PlayersPage";
 import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
 import LandingPage from "./components/LandingPage";
+import SeoIntro from "./components/SeoIntro";
 
 import AppLoader from "./components/ui/AppLoader";
 import AppErrorBoundary from "./components/ui/AppErrorBoundary";
@@ -204,10 +205,6 @@ function App() {
   const runningInTauri =
     isTauri();
 
-  /* ========================================
-     STARTUP
-  ======================================== */
-
   const [
     appReady,
     setAppReady,
@@ -242,10 +239,6 @@ function App() {
         timer,
       );
   }, []);
-
-  /* ========================================
-     NAVIGATION
-  ======================================== */
 
   const [
     activeSection,
@@ -333,10 +326,6 @@ function App() {
   }, [
     runningInTauri,
   ]);
-
-  /* ========================================
-     ACTIONS
-  ======================================== */
 
   function navigate(
     section: AppSection,
@@ -436,10 +425,6 @@ function App() {
     );
   }
 
-  /* ========================================
-     PRESERVED PLAYER PAGE
-  ======================================== */
-
   const heroOpenedFromPlayer =
     selectedHero !== null &&
     playerHeroContext !==
@@ -447,19 +432,11 @@ function App() {
     activeSection ===
       "players";
 
-  /* ========================================
-     STARTUP SCREEN
-  ======================================== */
-
   if (!appReady) {
     return (
       <AppLoader />
     );
   }
-
-  /* ========================================
-     WEB LANDING
-  ======================================== */
 
   if (
     !runningInTauri &&
@@ -473,10 +450,6 @@ function App() {
       />
     );
   }
-
-  /* ========================================
-     APP
-  ======================================== */
 
   return (
     <AppErrorBoundary>
@@ -500,6 +473,10 @@ function App() {
                   : "page-preserved-visible page-transition"
               }
             >
+              {!runningInTauri && (
+                <SeoIntro section="players" />
+              )}
+
               <PlayersPage
                 onOpenHero={
                   openPlayerHero
@@ -535,6 +512,10 @@ function App() {
                   className="page-transition"
                   key="stats"
                 >
+                  {!runningInTauri && (
+                    <SeoIntro section="stats" />
+                  )}
+
                   <StatsPage
                     onOpenHero={
                       openHero
@@ -549,6 +530,10 @@ function App() {
                   className="page-transition"
                   key="heroes"
                 >
+                  {!runningInTauri && (
+                    <SeoIntro section="heroes" />
+                  )}
+
                   <HeroesPage
                     onOpenHero={
                       openHero
@@ -563,6 +548,10 @@ function App() {
                   className="page-transition"
                   key="perks"
                 >
+                  {!runningInTauri && (
+                    <SeoIntro section="perks" />
+                  )}
+
                   <PerksPage
                     onOpenHero={
                       openHero
