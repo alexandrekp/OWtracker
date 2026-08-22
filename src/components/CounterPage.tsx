@@ -1,4 +1,4 @@
-import {
+﻿import {
   Info,
   LoaderCircle,
   Search,
@@ -473,10 +473,6 @@ function CounterGroup({
             {title}
           </h2>
         </div>
-
-        <span className="counter-count">
-          {entries.length}
-        </span>
       </div>
 
       {entries.length > 0 ? (
@@ -598,3 +594,5 @@ function formatConfidence(
 }
 
 export default CounterPage;
+
+

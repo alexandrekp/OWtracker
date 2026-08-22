@@ -23,9 +23,10 @@
   min-height: 76px;
   display: grid;
   grid-template-columns:
-    minmax(0, 1fr) auto;
+    minmax(130px, 1fr)
+    minmax(240px, auto);
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   padding: 12px 0;
   border-bottom:
     1px solid var(--border);
@@ -88,15 +89,17 @@
 }
 
 .matchup-values {
+  min-width: 0;
   display: grid;
   grid-template-columns:
-    repeat(3, auto);
+    repeat(3, minmax(72px, auto));
   align-items: center;
-  gap: 18px;
+  justify-content: end;
+  column-gap: 14px;
 }
 
 .matchup-values > div {
-  min-width: 68px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -107,14 +110,18 @@
   color: var(--muted);
   font-size: 7px;
   font-weight: 600;
+  line-height: 1.2;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .matchup-values strong {
   color: var(--text);
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .matchup-values .matchup-positive {
@@ -125,24 +132,47 @@
   color: #ff8f8f;
 }
 
-@media (max-width: 900px) {
+/* At intermediate desktop widths the two cards become
+   too narrow for 3 metric columns. Stack the cards
+   before any text can overlap. */
+@media (max-width: 1180px) {
   .counters-layout {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 620px) {
+/* Tablet / narrow content area */
+@media (max-width: 760px) {
   .matchup-row {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .matchup-values {
     width: 100%;
     grid-template-columns:
       repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+    column-gap: 12px;
   }
 
   .matchup-values > div {
     align-items: flex-start;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .matchup-values {
+    column-gap: 8px;
+  }
+
+  .matchup-values span {
+    font-size: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .matchup-values strong {
+    font-size: 11px;
   }
 }
