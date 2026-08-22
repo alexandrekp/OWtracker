@@ -5,6 +5,7 @@ import {
 
 import "./App.css";
 import "./AppUx.css";
+import "./Responsive.css";
 
 import Sidebar from "./components/Sidebar";
 import HeroDetail from "./components/HeroDetail";
@@ -13,6 +14,7 @@ import HeroesPage from "./components/HeroesPage";
 import PlayersPage from "./components/PlayersPage";
 import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
+
 
 import AppLoader from "./components/ui/AppLoader";
 import AppErrorBoundary from "./components/ui/AppErrorBoundary";

@@ -1,0 +1,831 @@
+/* ========================================
+   OWTRACKER — RESPONSIVE OVERRIDES
+   Import this file LAST in App.tsx
+======================================== */
+
+/* ========================================
+   GLOBAL SAFETY
+======================================== */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
+.main-content,
+.global-page,
+.hero-detail,
+.players-page-shell,
+.player-page,
+.perks-page {
+  min-width: 0;
+}
+
+/* ========================================
+   LARGE TABLET / SMALL LAPTOP
+======================================== */
+
+@media (max-width: 1200px) {
+  .main-content {
+    padding:
+      34px
+      28px
+      52px;
+  }
+
+  .meta-leader-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .meta-role-rankings {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-role-list,
+  .player-role-performance {
+    grid-template-columns:
+      1fr;
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns:
+      74px
+      minmax(0, 1fr);
+  }
+
+  .sidebar {
+    width: 74px;
+
+    padding:
+      20px
+      10px;
+  }
+
+  .main-content {
+    min-width: 0;
+
+    padding:
+      28px
+      20px
+      44px;
+  }
+
+  /* HEROES */
+
+  .hero-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  /* HERO DETAIL */
+
+  .hero-detail-header {
+    min-height: 230px;
+
+    padding:
+      30px
+      28px;
+  }
+
+  .hero-detail-info {
+    max-width: 62%;
+  }
+
+  .hero-detail-info h1 {
+    font-size:
+      clamp(
+        42px,
+        8vw,
+        64px
+      );
+  }
+
+  .hero-detail-portrait {
+    right: -2%;
+
+    width: 50%;
+
+    opacity: 0.65;
+  }
+
+  .overview-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+  .perks-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+  /*
+    HeroDetail Stats currently uses an inline
+    2-column grid. Force it to one column here.
+  */
+  .hero-detail
+  section[style*="grid-template-columns"] {
+    grid-template-columns:
+      1fr !important;
+  }
+
+  /* STATS PAGE */
+
+  .stats-header-main {
+    align-items:
+      flex-start;
+
+    gap: 18px;
+  }
+
+  .stats-unified-top,
+  .stats-data-filters {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .meta-leader-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  /* PLAYERS */
+
+  .player-overview-grid,
+  .player-combat-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .compare-input-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .compare-versus {
+    height: auto;
+
+    padding: 4px 0;
+  }
+
+  .compare-player-heads {
+    grid-template-columns:
+      minmax(0, 1fr)
+      34px
+      minmax(0, 1fr);
+  }
+
+  /* PERKS */
+
+  .global-perk-groups {
+    grid-template-columns:
+      1fr;
+  }
+
+  .global-perk-column:first-child {
+    border-right: 0;
+
+    border-bottom:
+      1px solid
+      var(--border);
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 700px) {
+  .app-shell {
+    grid-template-columns:
+      64px
+      minmax(0, 1fr);
+  }
+
+  .sidebar {
+    width: 64px;
+
+    padding:
+      16px
+      8px;
+  }
+
+  .brand {
+    padding-bottom: 18px;
+  }
+
+  .brand-mark,
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .nav-item {
+    min-height: 44px;
+
+    justify-content:
+      center;
+
+    padding:
+      10px
+      0;
+
+    font-size: 0;
+  }
+
+  .main-content {
+    padding:
+      22px
+      14px
+      36px;
+  }
+
+  /* SHARED HEADERS */
+
+  .topbar,
+  .stats-header-main,
+  .stats-header-bottom,
+  .meta-overview-heading,
+  .meta-tier-heading,
+  .panel-heading,
+  .player-section-heading,
+  .compare-section-heading,
+  .perks-toolbar {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .stats-header-actions,
+  .stats-update-info {
+    width: 100%;
+
+    justify-content:
+      flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  /* HERO LIST */
+
+  .hero-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .hero-art {
+    height: 190px;
+  }
+
+  .hero-image {
+    height: 175px;
+  }
+
+  /* HERO DETAIL */
+
+  .back-button {
+    margin-bottom: 16px;
+  }
+
+  .hero-detail-header {
+    min-height: 230px;
+
+    padding:
+      24px
+      20px;
+  }
+
+  .hero-detail-info {
+    max-width: 72%;
+  }
+
+  .hero-detail-info h1 {
+    font-size:
+      clamp(
+        38px,
+        12vw,
+        54px
+      );
+
+    overflow-wrap:
+      anywhere;
+  }
+
+  .hero-detail-info p {
+    max-width: 92%;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+  }
+
+  .hero-detail-portrait {
+    right: -18%;
+
+    width: 72%;
+
+    opacity: 0.38;
+  }
+
+  .hero-tabs {
+    width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .hero-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-tab {
+    min-height: 42px;
+
+    flex:
+      0 0 auto;
+  }
+
+  .detail-panel {
+    padding: 18px;
+  }
+
+  .panel-heading {
+    gap: 10px;
+  }
+
+  .data-source {
+    align-self:
+      flex-start;
+  }
+
+  .performance-grid {
+    grid-template-columns:
+      1fr;
+
+    margin-top: 18px;
+  }
+
+  .performance-grid > div {
+    padding:
+      14px
+      0;
+  }
+
+  .performance-grid
+  > div:not(:first-child) {
+    padding-left: 0;
+
+    border-left: 0;
+
+    border-top:
+      1px solid
+      var(--border);
+  }
+
+  .performance-grid strong {
+    font-size: 22px;
+  }
+
+  .overview-perk {
+    max-width: none;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .player-vs-row {
+    min-width: 520px;
+  }
+
+  .player-vs-table {
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .player-vs-mini-stats {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  /* STATS FILTERS */
+
+  .stats-unified-top,
+  .stats-data-filters {
+    display: grid;
+
+    grid-template-columns:
+      1fr;
+  }
+
+  .stats-data-filter,
+  .stats-data-filter select,
+  .stats-data-filter button {
+    width: 100%;
+  }
+
+  .stats-filter-summary {
+    flex-wrap: wrap;
+  }
+
+  /* META */
+
+  .meta-leader-grid,
+  .meta-role-rankings {
+    grid-template-columns:
+      1fr;
+  }
+
+  .meta-tier-counts {
+    width: 100%;
+
+    justify-content:
+      flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  .meta-tier-row {
+    min-width: 0;
+  }
+
+  .meta-tier-heroes {
+    overflow-x: auto;
+
+    padding-bottom: 4px;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .meta-hero-card {
+    flex:
+      0 0 auto;
+  }
+
+  /* STATS TABLE */
+
+  .stats-table {
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .stats-table-header,
+  .stats-row {
+    min-width: 760px;
+  }
+
+  /* PLAYERS */
+
+  .players-view-switch {
+    max-width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+  .players-view-switch::-webkit-scrollbar {
+    display: none;
+  }
+
+  .player-search-form {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .player-search-button {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .player-overview-grid,
+  .player-combat-grid,
+  .player-ranks {
+    grid-template-columns:
+      1fr;
+  }
+
+  .player-profile,
+  .player-profile-actions,
+  .player-hero-section-top {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .player-heroes-table {
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .player-hero-row {
+    min-width: 620px;
+  }
+
+  /* PLAYER COMPARE */
+
+  .compare-search-footer,
+  .compare-shared-toolbar {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .compare-submit {
+    width: 100%;
+
+    justify-content:
+      center;
+  }
+
+  .compare-player-heads {
+    grid-template-columns:
+      1fr;
+
+    gap: 12px;
+  }
+
+  .compare-player-head,
+  .compare-player-head:last-child {
+    justify-content:
+      flex-start;
+
+    flex-direction:
+      row;
+
+    text-align: left;
+  }
+
+  .compare-head-vs {
+    padding: 2px 0;
+  }
+
+  .compare-table,
+  .compare-shared-table {
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .compare-row,
+  .compare-row-header,
+  .compare-shared-row,
+  .compare-shared-row-header {
+    min-width: 620px;
+  }
+
+  .compare-ranks,
+  .compare-role-list {
+    grid-template-columns:
+      1fr;
+  }
+
+  /* PERKS */
+
+  .global-perk-hero-header {
+    align-items:
+      flex-start;
+  }
+
+  .global-perk-open {
+    flex-shrink: 0;
+  }
+
+  .global-perk-item-top {
+    grid-template-columns:
+      42px
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .global-perk-score {
+    min-width: 44px;
+  }
+
+  /* SETTINGS */
+
+  .settings-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .settings-row,
+  .settings-link-card {
+    min-width: 0;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 520px) {
+  .app-shell {
+    grid-template-columns:
+      56px
+      minmax(0, 1fr);
+  }
+
+  .sidebar {
+    width: 56px;
+
+    padding:
+      14px
+      6px;
+  }
+
+  .brand-mark,
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-item {
+    min-height: 42px;
+  }
+
+  .nav-item svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .main-content {
+    padding:
+      18px
+      10px
+      30px;
+  }
+
+  .hero-detail-header {
+    min-height: 210px;
+
+    padding:
+      20px
+      16px;
+  }
+
+  .hero-detail-info {
+    max-width: 82%;
+  }
+
+  .hero-detail-portrait {
+    right: -28%;
+
+    width: 88%;
+  }
+
+  .hero-detail-info h1 {
+    font-size:
+      clamp(
+        34px,
+        13vw,
+        46px
+      );
+  }
+
+  .detail-panel {
+    padding: 15px;
+  }
+
+  .overview-perk {
+    grid-template-columns:
+      1fr;
+  }
+
+  .overview-perk-score {
+    justify-self:
+      flex-start;
+  }
+
+  .player-vs-mini-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+  .meta-leader-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .meta-tier-counts {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .global-perk-hero-header {
+    gap: 10px;
+
+    padding:
+      10px
+      12px;
+  }
+
+  .global-perk-column {
+    padding: 12px;
+  }
+
+  .global-perk-item {
+    padding: 9px;
+  }
+
+  .global-perk-item-top {
+    grid-template-columns:
+      38px
+      minmax(0, 1fr);
+  }
+
+  .global-perk-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .global-perk-score {
+    grid-column:
+      1 / -1;
+
+    justify-self:
+      flex-start;
+  }
+
+  .compare-mode-buttons,
+  .player-mode-buttons,
+  .player-hero-sort-buttons {
+    max-width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+  .compare-mode-buttons::-webkit-scrollbar,
+  .player-mode-buttons::-webkit-scrollbar,
+  .player-hero-sort-buttons::-webkit-scrollbar {
+    display: none;
+  }
+}
