@@ -385,6 +385,21 @@ function StatsPage({
     }
   }
 
+  async function handleApply() {
+    if (refreshing || !filtersChanged) {
+      return;
+    }
+
+    const loadedFromCache =
+      applySelectedDataset();
+
+    if (loadedFromCache) {
+      return;
+    }
+
+    await handleRefresh();
+  }
+
   /* ========================================
      META
   ======================================== */
@@ -494,16 +509,6 @@ function StatsPage({
     selectedRole !==
       activeRole;
 
-  const selectedCachedDataset =
-    loadCachedDataset(
-      selectedRegion,
-      selectedTier,
-      selectedRole,
-    );
-
-  const selectedHasCache =
-    selectedCachedDataset !==
-    null;
 
   const currentCacheAge =
     lastUpdated
@@ -550,7 +555,6 @@ function StatsPage({
 
               <button
               className={
-                filtersChanged ||
                 cacheIsStale
                   ? "stats-refresh-button pending"
                   : "stats-refresh-button"
@@ -573,11 +577,9 @@ function StatsPage({
 
               {refreshing
                 ? "Refreshing..."
-                : filtersChanged
-                  ? "Apply & Refresh"
-                  : cacheIsStale
-                    ? "Refresh data"
-                    : "Refresh"}
+                : cacheIsStale
+                  ? "Refresh data"
+                  : "Refresh"}
             </button>
             </div>
 
@@ -846,32 +848,23 @@ function StatsPage({
               )}
             </select>
           </div>
-        </div>
 
-        <div className="stats-unified-bottom">
-          <div className="stats-dataset-status">
-            {filtersChanged ? (
-              selectedHasCache ? (
-                <button
-                  className="stats-load-cache-button"
-                  type="button"
-                  onClick={
-                    applySelectedDataset
-                  }
-                >
-                  Load cached dataset
-                </button>
-              ) : (
-                <small>
-                  No cache · refresh required
-                </small>
-              )
-            ) : (
-              <small className="stats-filter-applied">
-                <span className="status-dot" />
-                Active dataset
-              </small>
-            )}
+          <div className="stats-apply-filter">
+            <button
+              type="button"
+              className="stats-apply-button"
+              onClick={
+                handleApply
+              }
+              disabled={
+                refreshing ||
+                !filtersChanged
+              }
+            >
+              {refreshing
+                ? "Applying..."
+                : "Apply"}
+            </button>
           </div>
         </div>
       </section>
@@ -904,7 +897,7 @@ function StatsPage({
             </span>
 
             <strong>
-              WR 50% · PR 30% · BR 20%
+              WR 60% · PR 30% · BR 10%
             </strong>
           </div>
         </div>
@@ -1332,9 +1325,9 @@ function buildMetaTierList(
   /* ========================================
      RAW META SCORE
 
-     Win Rate  = 50%
+     Win Rate  = 60%
      Pick Rate = 30%
-     Ban Rate  = 20%
+     Ban Rate  = 10%
   ======================================== */
 
   const rawScores =
@@ -1366,11 +1359,11 @@ function buildMetaTierList(
 
         const rawScore =
           normalizedWin *
-            0.5 +
+            0.6 +
           normalizedPick *
             0.3 +
           normalizedBan *
-            0.2;
+            0.1;
 
         return {
           hero,

@@ -957,10 +957,11 @@
 }
 
 .stats-apply-button {
-  min-width: 96px;
-  height: 42px;
+  min-width: 88px;
+  width: 88px;
+  height: 36px;
 
-  padding: 0 20px;
+  padding: 0 14px;
 
   border: 1px solid
     rgba(
@@ -981,7 +982,7 @@
     "Space Grotesk",
     sans-serif;
 
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
 
   letter-spacing: 0.04em;
