@@ -2292,3 +2292,7 @@ button {
     display: none;
   }
 }
+
+.heroes-update-info {
+  margin-bottom: 20px;
+}

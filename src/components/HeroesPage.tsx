@@ -345,7 +345,7 @@ function HeroesPage({
 
       {(lastUpdated ||
         refreshError) && (
-        <div className="stats-update-info">
+        <div className="stats-update-info heroes-update-info">
           {lastUpdated && (
             <>
               <span>
