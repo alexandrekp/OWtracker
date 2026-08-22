@@ -34,6 +34,8 @@ type HeroesPageProps = {
 };
 
 type SortMetric =
+  | "name"
+  | "metaScore"
   | "winRate"
   | "pickRate"
   | "banRate";
@@ -86,7 +88,7 @@ function HeroesPage({
     setSortBy,
   ] =
     useState<SortMetric>(
-      "winRate",
+      "metaScore",
     );
 
   const [
@@ -225,6 +227,15 @@ function HeroesPage({
     }
   }
 
+  const metaScores =
+    useMemo(
+      () =>
+        buildMetaScores(
+          currentHeroes,
+        ),
+      [currentHeroes],
+    );
+
   const filteredHeroes =
     useMemo(() => {
       const normalizedSearch =
@@ -260,6 +271,29 @@ function HeroesPage({
         )
         .sort(
           (a, b) => {
+            if (
+              sortBy ===
+              "name"
+            ) {
+              return a.name.localeCompare(
+                b.name,
+              );
+            }
+
+            if (
+              sortBy ===
+              "metaScore"
+            ) {
+              return (
+                (metaScores.get(
+                  b.id,
+                ) ?? -1) -
+                (metaScores.get(
+                  a.id,
+                ) ?? -1)
+              );
+            }
+
             const aValue =
               a[sortBy] ?? -1;
 
@@ -277,6 +311,7 @@ function HeroesPage({
       activeRole,
       search,
       sortBy,
+      metaScores,
     ]);
 
   const hasFilters =
@@ -310,44 +345,63 @@ function HeroesPage({
           </p>
         </div>
 
-        <div className="stats-header-actions">
-          <div className="live-status">
-            <span className="status-dot" />
+        <div
+          className="stats-header-actions"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: "6px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <div className="live-status">
+              <span className="status-dot" />
 
-            Blizzard data
+              Blizzard data
+            </div>
+
+            <button
+              className="stats-refresh-button"
+              type="button"
+              onClick={
+                handleRefresh
+              }
+              disabled={
+                refreshing
+              }
+            >
+              <RefreshCw
+                size={14}
+                className={
+                  refreshing
+                    ? "refresh-spinning"
+                    : ""
+                }
+              />
+
+              {refreshing
+                ? "Refreshing..."
+                : "Refresh"}
+            </button>
           </div>
 
-          <button
-            className="stats-refresh-button"
-            type="button"
-            onClick={
-              handleRefresh
-            }
-            disabled={
-              refreshing
-            }
-          >
-            <RefreshCw
-              size={14}
-              className={
-                refreshing
-                  ? "refresh-spinning"
-                  : ""
-              }
-            />
-
-            {refreshing
-              ? "Refreshing..."
-              : "Refresh"}
-          </button>
-        </div>
-      </header>
-
-      {(lastUpdated ||
-        refreshError) && (
-        <div className="stats-update-info heroes-update-info">
           {lastUpdated && (
-            <>
+            <div
+              className="stats-update-info"
+              style={{
+                justifyContent:
+                  "flex-end",
+                margin: 0,
+                width: "100%",
+              }}
+            >
               <span>
                 Updated
               </span>
@@ -371,14 +425,16 @@ function HeroesPage({
                   },
                 )}
               </span>
-            </>
+            </div>
           )}
+        </div>
+      </header>
 
-          {refreshError && (
-            <strong className="stats-refresh-error">
-              {refreshError}
-            </strong>
-          )}
+      {refreshError && (
+        <div className="stats-update-info">
+          <strong className="stats-refresh-error">
+            {refreshError}
+          </strong>
         </div>
       )}
 
@@ -466,18 +522,30 @@ function HeroesPage({
         </div>
       </section>
 
-
       {/* ========================================
-          HERO RANKING
+          HERO SORT
       ======================================== */}
 
       <section className="stats-controls">
         <div className="stats-control-group">
           <span className="stats-control-label">
-            Rank heroes by
+            Sort heroes by
           </span>
 
           <div className="metric-filters">
+            <MetricButton
+              active={
+                sortBy ===
+                "metaScore"
+              }
+              label="Meta Score"
+              onClick={() =>
+                setSortBy(
+                  "metaScore",
+                )
+              }
+            />
+
             <MetricButton
               active={
                 sortBy ===
@@ -513,6 +581,19 @@ function HeroesPage({
               onClick={() =>
                 setSortBy(
                   "banRate",
+                )
+              }
+            />
+
+            <MetricButton
+              active={
+                sortBy ===
+                "name"
+              }
+              label="Name"
+              onClick={() =>
+                setSortBy(
+                  "name",
                 )
               }
             />
@@ -608,10 +689,175 @@ function MetricButton({
 
       {active && (
         <span className="metric-sort-direction">
-          ↓
+          {label === "Name"
+            ? "A–Z"
+            : "↓"}
         </span>
       )}
     </button>
+  );
+}
+
+/* ========================================
+   META SCORE
+======================================== */
+
+function buildMetaScores(
+  dataset: Hero[],
+) {
+  const validHeroes =
+    dataset.filter(
+      (hero) =>
+        typeof hero.winRate ===
+          "number" &&
+        typeof hero.pickRate ===
+          "number",
+    );
+
+  const scoreMap =
+    new Map<string, number>();
+
+  if (
+    validHeroes.length === 0
+  ) {
+    return scoreMap;
+  }
+
+  const winRates =
+    validHeroes.map(
+      (hero) =>
+        hero.winRate ?? 0,
+    );
+
+  const pickRates =
+    validHeroes.map(
+      (hero) =>
+        hero.pickRate ?? 0,
+    );
+
+  const banRates =
+    validHeroes.map(
+      (hero) =>
+        hero.banRate ?? 0,
+    );
+
+  const winMin =
+    Math.min(
+      ...winRates,
+    );
+
+  const winMax =
+    Math.max(
+      ...winRates,
+    );
+
+  const pickMin =
+    Math.min(
+      ...pickRates,
+    );
+
+  const pickMax =
+    Math.max(
+      ...pickRates,
+    );
+
+  const banMin =
+    Math.min(
+      ...banRates,
+    );
+
+  const banMax =
+    Math.max(
+      ...banRates,
+    );
+
+  const rawScores =
+    validHeroes.map(
+      (hero) => {
+        const normalizedWin =
+          normalizeMetric(
+            hero.winRate ?? 0,
+            winMin,
+            winMax,
+          );
+
+        const normalizedPick =
+          normalizeMetric(
+            hero.pickRate ?? 0,
+            pickMin,
+            pickMax,
+          );
+
+        const normalizedBan =
+          normalizeMetric(
+            hero.banRate ?? 0,
+            banMin,
+            banMax,
+          );
+
+        const rawScore =
+          normalizedWin *
+            0.6 +
+          normalizedPick *
+            0.3 +
+          normalizedBan *
+            0.1;
+
+        return {
+          hero,
+          rawScore,
+        };
+      },
+    );
+
+  const rawValues =
+    rawScores.map(
+      (entry) =>
+        entry.rawScore,
+    );
+
+  const minScore =
+    Math.min(
+      ...rawValues,
+    );
+
+  const maxScore =
+    Math.max(
+      ...rawValues,
+    );
+
+  rawScores.forEach(
+    ({
+      hero,
+      rawScore,
+    }) => {
+      scoreMap.set(
+        hero.id,
+        normalizeMetric(
+          rawScore,
+          minScore,
+          maxScore,
+        ),
+      );
+    },
+  );
+
+  return scoreMap;
+}
+
+function normalizeMetric(
+  value: number,
+  min: number,
+  max: number,
+) {
+  if (max === min) {
+    return 100;
+  }
+
+  return (
+    ((value - min) /
+      (max - min)) *
+    100
   );
 }
 
@@ -673,7 +919,6 @@ function loadCachedDataset():
 /* ========================================
    HELPERS
 ======================================== */
-
 
 function formatRelativeAge(
   date:
