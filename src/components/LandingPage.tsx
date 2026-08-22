@@ -26,14 +26,28 @@ function LandingPage({
     <div className="landing-page">
       <header className="landing-nav">
         <div className="landing-brand">
-          <img
-            src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
-            alt="OWTracker"
-          />
+          <div className="landing-brand-mark">
+            <img
+              src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
+              alt="OWTracker"
+            />
+          </div>
 
-          <span>
-            OWTracker
-          </span>
+          <div className="landing-brand-copy">
+            <div className="landing-brand-name">
+              <span className="landing-brand-ow">
+                OW
+              </span>
+
+              <span className="landing-brand-tracker">
+                Tracker
+              </span>
+            </div>
+
+            <span className="landing-brand-tagline">
+              DATA COMPANION
+            </span>
+          </div>
         </div>
 
         <div className="landing-nav-actions">
