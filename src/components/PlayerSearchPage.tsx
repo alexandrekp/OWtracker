@@ -2,6 +2,7 @@ import {
   Activity,
   ArrowRight,
   Clock3,
+  Copy,
   HeartPulse,
   Monitor,
   Gamepad2,
@@ -49,6 +50,10 @@ import type {
   PlayerRank,
   PlayerStatBlock,
 } from "../types/player";
+
+import {
+  useI18n,
+} from "../i18n/i18n";
 
 import "./PlayerSearchPage.css";
 
@@ -105,6 +110,10 @@ const FAVORITES_STORAGE_KEY =
 function PlayerSearchPage({
   onOpenHero,
 }: PlayerSearchPageProps) {
+  const {
+    t,
+  } = useI18n();
+
   const [
     battleTag,
     setBattleTag,
@@ -466,7 +475,19 @@ function PlayerSearchPage({
       ) {
         setLookupError({
           message:
-            error.message,
+            error.message.startsWith(
+              "No Console statistics",
+            )
+              ? t(
+                  "player.error.noConsoleStats",
+                )
+              : error.message.startsWith(
+                    "No PC statistics",
+                  )
+                ? t(
+                    "player.error.noPcStats",
+                  )
+                : error.message,
           status:
             error.status,
           retryAfter:
@@ -715,17 +736,17 @@ function PlayerSearchPage({
         <div className="player-platform-selector">
           <div>
             <span className="player-mode-label">
-              Platform
+              {t("player.platform.label")}
             </span>
 
             <p>
-              Load PC or console career data.
+              {t("player.platform.detail")}
             </p>
           </div>
 
           <div className="player-platform-buttons">
             <PlatformButton
-              label="PC"
+              label={t("player.platform.pc")}
               icon={<Monitor size={13} />}
               active={selectedPlatform === "pc"}
               disabled={loading}
@@ -735,7 +756,7 @@ function PlayerSearchPage({
             />
 
             <PlatformButton
-              label="Console"
+              label={t("player.platform.console")}
               icon={<Gamepad2 size={13} />}
               active={selectedPlatform === "console"}
               disabled={loading}
@@ -1134,6 +1155,10 @@ function PlayerProfile({
   onOpenHero,
 }: PlayerProfileProps) {
   const {
+    t,
+  } = useI18n();
+
+  const {
     summary,
     stats,
   } = data;
@@ -1150,6 +1175,11 @@ function PlayerProfile({
     );
 
   const [
+    showAllHeroes,
+    setShowAllHeroes,
+  ] = useState(false);
+
+  const [
     careerCategory,
     setCareerCategory,
   ] = useState<CareerCategory>(
@@ -1162,7 +1192,7 @@ function PlayerProfile({
       careerHero,
     );
 
-  const sortedHeroes =
+  const allSortedHeroes =
     useMemo(() => {
       return Object.entries(
         stats.heroes ?? {},
@@ -1206,12 +1236,124 @@ function PlayerProfile({
                 );
             }
           },
-        )
-        .slice(0, 10);
+        );
     }, [
       stats.heroes,
       heroSortMetric,
     ]);
+
+  const sortedHeroes =
+    showAllHeroes
+      ? allSortedHeroes
+      : allSortedHeroes.slice(
+          0,
+          10,
+        );
+
+  const bestPerformingHeroes =
+    useMemo(() => {
+      return Object.entries(
+        stats.heroes ?? {},
+      )
+        .filter(
+          ([, heroStats]) =>
+            heroStats.games_played >=
+            10,
+        )
+        .sort(
+          (
+            [, a],
+            [, b],
+          ) => {
+            if (
+              b.winrate !==
+              a.winrate
+            ) {
+              return (
+                b.winrate -
+                a.winrate
+              );
+            }
+
+            return (
+              b.games_played -
+              a.games_played
+            );
+          },
+        )
+        .slice(
+          0,
+          3,
+        );
+    }, [
+      stats.heroes,
+    ]);
+
+  const roleDistribution =
+    useMemo(() => {
+      const roles = [
+        {
+          label: t("player.role.tank"),
+          value:
+            stats.roles?.tank
+              ?.time_played ??
+            0,
+        },
+        {
+          label: t("player.role.damage"),
+          value:
+            stats.roles?.damage
+              ?.time_played ??
+            0,
+        },
+        {
+          label: t("player.role.support"),
+          value:
+            stats.roles?.support
+              ?.time_played ??
+            0,
+        },
+      ];
+
+      const total =
+        roles.reduce(
+          (
+            sum,
+            role,
+          ) =>
+            sum +
+            role.value,
+          0,
+        );
+
+      return roles.map(
+        (role) => ({
+          ...role,
+          percent:
+            total > 0
+              ? (
+                  role.value /
+                  total
+                ) *
+                100
+              : 0,
+        }),
+      );
+    }, [
+      stats.roles,
+      t,
+    ]);
+
+  async function copyBattleTag() {
+    try {
+      await navigator.clipboard.writeText(
+        battleTag,
+      );
+    } catch {
+      // Clipboard access can be unavailable
+      // in some embedded contexts.
+    }
+  }
 
   return (
     <section className="player-profile">
@@ -1242,9 +1384,21 @@ function PlayerProfile({
             {summary.username}
           </h2>
 
-          <span className="player-battletag">
-            {battleTag}
-          </span>
+          <div className="player-battletag-row">
+            <span className="player-battletag">
+              {battleTag}
+            </span>
+
+            <button
+              type="button"
+              className="player-copy-battletag"
+              onClick={copyBattleTag}
+              aria-label={t("player.copyBattleTag")}
+              title={t("player.copyBattleTag")}
+            >
+              <Copy size={12} />
+            </button>
+          </div>
 
           {summary.title && (
             <p>
@@ -1305,18 +1459,17 @@ function PlayerProfile({
           <div className="player-mode-selector">
             <div>
               <span className="player-mode-label">
-                Mode
+                {t("player.mode.label")}
               </span>
 
               <p>
-                Select which career
-                statistics to display.
+                {t("player.mode.detail")}
               </p>
             </div>
 
             <div className="player-mode-buttons">
               <ModeButton
-                label="All modes"
+                label={t("player.mode.all")}
                 active={
                   selectedGamemode ===
                   "all"
@@ -1330,7 +1483,7 @@ function PlayerProfile({
               />
 
               <ModeButton
-                label="Competitive"
+                label={t("player.mode.competitive")}
                 active={
                   selectedGamemode ===
                   "competitive"
@@ -1344,7 +1497,7 @@ function PlayerProfile({
               />
 
               <ModeButton
-                label="Quick Play"
+                label={t("player.mode.quickplay")}
                 active={
                   selectedGamemode ===
                   "quickplay"
@@ -1433,29 +1586,29 @@ function PlayerProfile({
       </div>
 
       <SectionHeader
-        eyebrow="AVERAGE / 10 MIN"
-        title="Performance pace"
+        eyebrow={t("player.average.eyebrow")}
+        title={t("player.average.title")}
       />
 
       <div className="player-combat-grid player-average-grid">
         <DecimalStat
-          label="Eliminations"
+          label={t("player.stat.eliminations")}
           value={stats.general.average.eliminations}
         />
         <DecimalStat
-          label="Assists"
+          label={t("player.stat.assists")}
           value={stats.general.average.assists}
         />
         <DecimalStat
-          label="Deaths"
+          label={t("player.stat.deaths")}
           value={stats.general.average.deaths}
         />
         <DecimalStat
-          label="Damage"
+          label={t("player.stat.damage")}
           value={stats.general.average.damage}
         />
         <DecimalStat
-          label="Healing"
+          label={t("player.stat.healing")}
           value={stats.general.average.healing}
         />
       </div>
@@ -1463,11 +1616,12 @@ function PlayerProfile({
       <div className="player-section-heading">
         <div>
           <span className="panel-eyebrow">
-            COMPETITIVE
+            {t("player.competitive.eyebrow")}
           </span>
 
           <h3>
-            {formatPlatform(platform)} ranks
+            {formatPlatform(platform)}{" "}
+            {t("player.competitive.ranks")}
           </h3>
 
           {ranks?.season !==
@@ -1475,7 +1629,7 @@ function PlayerProfile({
             ranks?.season !==
               null && (
               <span className="player-season">
-                Season{" "}
+                {t("player.competitive.season")}{" "}
                 {ranks.season}
               </span>
             )}
@@ -1484,7 +1638,7 @@ function PlayerProfile({
 
       <div className="player-ranks">
         <RankCard
-          label="Tank"
+          label={t("player.role.tank")}
           icon={
             <Shield
               size={18}
@@ -1496,7 +1650,7 @@ function PlayerProfile({
         />
 
         <RankCard
-          label="Damage"
+          label={t("player.role.damage")}
           icon={
             <Swords
               size={18}
@@ -1508,7 +1662,7 @@ function PlayerProfile({
         />
 
         <RankCard
-          label="Support"
+          label={t("player.role.support")}
           icon={
             <HeartPulse
               size={18}
@@ -1527,7 +1681,7 @@ function PlayerProfile({
 
       <div className="player-role-performance">
         <RolePerformanceCard
-          label="Tank"
+          label={t("player.role.tank")}
           icon={
             <Shield
               size={17}
@@ -1539,7 +1693,7 @@ function PlayerProfile({
         />
 
         <RolePerformanceCard
-          label="Damage"
+          label={t("player.role.damage")}
           icon={
             <Swords
               size={17}
@@ -1551,7 +1705,7 @@ function PlayerProfile({
         />
 
         <RolePerformanceCard
-          label="Support"
+          label={t("player.role.support")}
           icon={
             <HeartPulse
               size={17}
@@ -1563,6 +1717,124 @@ function PlayerProfile({
         />
       </div>
 
+      <div className="player-insights-grid">
+        <section className="player-insight-card">
+          <div className="player-section-heading compact">
+            <div>
+              <span className="panel-eyebrow">
+                {t("player.roleDistribution.eyebrow")}
+              </span>
+
+              <h3>
+                {t("player.roleDistribution.title")}
+              </h3>
+            </div>
+          </div>
+
+          <div className="player-role-distribution">
+            {roleDistribution.map(
+              (role) => (
+                <div
+                  className="player-role-distribution-row"
+                  key={role.label}
+                >
+                  <div>
+                    <strong>
+                      {role.label}
+                    </strong>
+
+                    <span>
+                      {formatDuration(
+                        role.value,
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="player-role-distribution-bar">
+                    <span
+                      style={{
+                        width:
+                          `${role.percent.toFixed(
+                            1,
+                          )}%`,
+                      }}
+                    />
+                  </div>
+
+                  <strong>
+                    {role.percent.toFixed(
+                      1,
+                    )}
+                    %
+                  </strong>
+                </div>
+              ),
+            )}
+          </div>
+        </section>
+
+        <section className="player-insight-card">
+          <div className="player-section-heading compact">
+            <div>
+              <span className="panel-eyebrow">
+                {t("player.bestHeroes.eyebrow")}
+              </span>
+
+              <h3>
+                {t("player.bestHeroes.title")}
+              </h3>
+            </div>
+          </div>
+
+          <div className="player-best-heroes">
+            {bestPerformingHeroes.length >
+            0 ? (
+              bestPerformingHeroes.map(
+                ([
+                  heroId,
+                  heroStats,
+                ]) => (
+                  <div
+                    className="player-best-hero-row"
+                    key={heroId}
+                  >
+                    <div className="player-best-hero-main">
+                      <strong>
+                        {formatHeroName(
+                          heroId,
+                        )}
+                      </strong>
+
+                      <span>
+                        {
+                          heroStats.games_played
+                        }{" "}
+                        {t("player.bestHeroes.games")}
+                      </span>
+                    </div>
+
+                    <strong>
+                      {heroStats.winrate.toFixed(
+                        1,
+                      )}
+                      %
+                    </strong>
+                  </div>
+                ),
+              )
+            ) : (
+              <span className="player-role-no-data">
+                {t("player.bestHeroes.notEnough")}
+              </span>
+            )}
+          </div>
+
+          <span className="player-insight-note">
+            {t("player.bestHeroes.minimum")}
+          </span>
+        </section>
+      </div>
+
       <SectionHeader
         eyebrow="CAREER STATS"
         title={`${formatGamemode(
@@ -1572,7 +1844,7 @@ function PlayerProfile({
 
       <div className="player-combat-grid">
         <CombatStat
-          label="Eliminations"
+          label={t("player.stat.eliminations")}
           value={
             stats.general.total
               .eliminations
@@ -1580,7 +1852,7 @@ function PlayerProfile({
         />
 
         <CombatStat
-          label="Assists"
+          label={t("player.stat.assists")}
           value={
             stats.general.total
               .assists
@@ -1588,7 +1860,7 @@ function PlayerProfile({
         />
 
         <CombatStat
-          label="Deaths"
+          label={t("player.stat.deaths")}
           value={
             stats.general.total
               .deaths
@@ -1596,7 +1868,7 @@ function PlayerProfile({
         />
 
         <CombatStat
-          label="Damage"
+          label={t("player.stat.damage")}
           value={
             stats.general.total
               .damage
@@ -1604,7 +1876,7 @@ function PlayerProfile({
         />
 
         <CombatStat
-          label="Healing"
+          label={t("player.stat.healing")}
           value={
             stats.general.total
               .healing
@@ -1613,20 +1885,20 @@ function PlayerProfile({
       </div>
 
       <SectionHeader
-        eyebrow="ADVANCED CAREER"
-        title="Detailed career statistics"
+        eyebrow={t("player.career.eyebrow")}
+        title={t("player.career.title")}
       />
 
       {gamemode === "all" ? (
         <div className="player-career-note">
-          Choose Competitive or Quick Play to load advanced career statistics.
+          {t("player.career.chooseMode")}
         </div>
       ) : (
         <section className="player-career-panel">
           <div className="player-career-toolbar">
             <div className="player-career-select">
               <label htmlFor="player-career-hero">
-                Hero
+                {t("player.career.hero")}
               </label>
 
               <select
@@ -1640,7 +1912,7 @@ function PlayerProfile({
                 }
               >
                 <option value="all-heroes">
-                  All heroes
+                  {t("player.career.allHeroes")}
                 </option>
 
                 {sortedHeroes.map(([heroId]) => (
@@ -1656,12 +1928,30 @@ function PlayerProfile({
 
             <div className="player-career-tabs">
               {([
-                ["combat", "Combat"],
-                ["game", "Game"],
-                ["best", "Best"],
-                ["average", "Average"],
-                ["assists", "Assists"],
-                ["hero_specific", "Hero specific"],
+                [
+                  "combat",
+                  t("player.career.combat"),
+                ],
+                [
+                  "game",
+                  t("player.career.game"),
+                ],
+                [
+                  "best",
+                  t("player.career.best"),
+                ],
+                [
+                  "average",
+                  t("player.career.average"),
+                ],
+                [
+                  "assists",
+                  t("player.career.assists"),
+                ],
+                [
+                  "hero_specific",
+                  t("player.career.heroSpecific"),
+                ],
               ] as [CareerCategory, string][]).map(
                 ([category, label]) => (
                   <button
@@ -1685,7 +1975,7 @@ function PlayerProfile({
 
           {careerLoading ? (
             <div className="player-career-state">
-              Loading advanced career stats...
+              {t("player.career.loading")}
             </div>
           ) : careerError ? (
             <div className="player-career-state error">
@@ -1817,6 +2107,26 @@ function PlayerProfile({
           ),
         )}
       </div>
+
+      {allSortedHeroes.length >
+        10 && (
+        <button
+          type="button"
+          className="player-show-all-heroes"
+          onClick={() =>
+            setShowAllHeroes(
+              (current) =>
+                !current,
+            )
+          }
+        >
+          {showAllHeroes
+            ? t("player.showTop10")
+            : `${t(
+                "player.showAllHeroes",
+              )} (${allSortedHeroes.length})`}
+        </button>
+      )}
     </section>
   );
 }

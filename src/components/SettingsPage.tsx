@@ -37,6 +37,7 @@ import {
   getLanguageLabel,
   LANGUAGE_OPTIONS,
   resolveAppLanguage,
+  translate,
   useI18n,
 } from "../i18n/i18n";
 
@@ -87,9 +88,68 @@ const WEBSITE_URL =
 const GITHUB_URL =
   "https://github.com/alexandrekp/OWtracker";
 
+function getRegionLabel(
+  region: BlizzardRegion,
+  t: ReturnType<typeof useI18n>["t"],
+) {
+  switch (region) {
+    case "Americas":
+      return t("settings.region.americas");
+    case "Asia":
+      return t("settings.region.asia");
+    case "Europe":
+    default:
+      return t("settings.region.europe");
+  }
+}
+
+function getTierLabel(
+  tier: BlizzardTier,
+  t: ReturnType<typeof useI18n>["t"],
+) {
+  switch (tier) {
+    case "All":
+      return t("settings.allRanks");
+    case "Bronze":
+      return t("settings.tier.bronze");
+    case "Silver":
+      return t("settings.tier.silver");
+    case "Gold":
+      return t("settings.tier.gold");
+    case "Platinum":
+      return t("settings.tier.platinum");
+    case "Diamond":
+      return t("settings.tier.diamond");
+    case "Master":
+      return t("settings.tier.master");
+    case "Grandmaster":
+      return t("settings.tier.grandmaster");
+    case "Champion":
+    default:
+      return t("settings.tier.champion");
+  }
+}
+
+function getRoleLabel(
+  role: BlizzardRole,
+  t: ReturnType<typeof useI18n>["t"],
+) {
+  switch (role) {
+    case "All":
+      return t("settings.allRoles");
+    case "Tank":
+      return t("settings.role.tank");
+    case "Damage":
+      return t("settings.role.damage");
+    case "Support":
+    default:
+      return t("settings.role.support");
+  }
+}
+
 function SettingsPage() {
   const {
-    t,
+    t: globalT,
   } = useI18n();
 
   const [
@@ -104,6 +164,14 @@ function SettingsPage() {
   const resolvedLanguage =
     resolveAppLanguage(
       preferences.language,
+    );
+
+  const t = (
+    key: Parameters<typeof globalT>[0],
+  ) =>
+    translate(
+      resolvedLanguage,
+      key,
     );
 
   function updatePreference<
@@ -276,7 +344,10 @@ function SettingsPage() {
                   key={region}
                   value={region}
                 >
-                  {region}
+                  {getRegionLabel(
+                    region,
+                    t,
+                  )}
                 </option>
               ),
             )}
@@ -304,9 +375,10 @@ function SettingsPage() {
                   key={tier}
                   value={tier}
                 >
-                  {tier === "All"
-                    ? "All ranks"
-                    : tier}
+                  {getTierLabel(
+                    tier,
+                    t,
+                  )}
                 </option>
               ),
             )}
@@ -334,9 +406,10 @@ function SettingsPage() {
                   key={role}
                   value={role}
                 >
-                  {role === "All"
-                    ? "All roles"
-                    : role}
+                  {getRoleLabel(
+                    role,
+                    t,
+                  )}
                 </option>
               ),
             )}
@@ -407,7 +480,8 @@ function SettingsPage() {
 
             <strong>
               {preferences.refreshIntervalMinutes}
-              {" "}min
+              {" "}
+              {t("settings.cache.minShort")}
             </strong>
 
             <span className="settings-detail">
@@ -421,11 +495,20 @@ function SettingsPage() {
             </span>
 
             <strong>
-              {preferences.defaultRegion}
+              {getRegionLabel(
+                preferences.defaultRegion,
+                t,
+              )}
               {" · "}
-              {preferences.defaultTier}
+              {getTierLabel(
+                preferences.defaultTier,
+                t,
+              )}
               {" · "}
-              {preferences.defaultRole}
+              {getRoleLabel(
+                preferences.defaultRole,
+                t,
+              )}
             </strong>
 
             <span className="settings-detail">
@@ -569,27 +652,27 @@ function SettingsPage() {
             icon={
               <Activity size={16} />
             }
-            title="Blizzard statistics"
+            title={t("settings.data.blizzardTitle")}
             detail={t("settings.data.blizzardDetail")}
-            status="LIVE"
+            status={t("settings.status.live")}
           />
 
           <DataRow
             icon={
               <Database size={16} />
             }
-            title="OverFast"
+            title={t("settings.data.overfastTitle")}
             detail={t("settings.data.overfastDetail")}
-            status="PLAYER DATA"
+            status={t("settings.status.playerData")}
           />
 
           <DataRow
             icon={
               <Activity size={16} />
             }
-            title="Counterwatch"
+            title={t("settings.data.counterwatchTitle")}
             detail={t("settings.data.counterwatchDetail")}
-            status="MATCHUP DATA"
+            status={t("settings.status.matchupData")}
           />
 
           <DataRow
@@ -598,16 +681,16 @@ function SettingsPage() {
             }
             title={t("settings.data.perks")}
             detail={t("settings.data.perksDetail")}
-            status="COMMUNITY"
+            status={t("settings.status.community")}
           />
 
           <DataRow
             icon={
               <Activity size={16} />
             }
-            title="OWTracker Meta Score"
+            title={t("settings.data.metaTitle")}
             detail={t("settings.data.metaDetail")}
-            status="CALCULATED"
+            status={t("settings.status.calculated")}
           />
 
           <DataRow
@@ -616,7 +699,7 @@ function SettingsPage() {
             }
             title={t("settings.data.cache")}
             detail={t("settings.data.cacheDetail")}
-            status="ACTIVE"
+            status={t("settings.status.active")}
           />
         </div>
       </section>
