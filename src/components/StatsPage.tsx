@@ -15,6 +15,10 @@ import {
   refreshBlizzardStats,
 } from "../services/blizzardStats";
 
+import {
+  loadAppPreferences,
+} from "../services/appPreferences";
+
 import type {
   BlizzardRegion,
   BlizzardRole,
@@ -90,8 +94,14 @@ const ROLES:
 const CACHE_PREFIX =
   "owtracker.blizzardStats";
 
+const initialPreferences =
+  loadAppPreferences();
+
 const CACHE_MAX_AGE =
-  30 * 60 * 1000;
+  initialPreferences
+    .refreshIntervalMinutes *
+  60 *
+  1000;
 
 /* ========================================
    PAGE
@@ -109,7 +119,8 @@ function StatsPage({
     setSelectedRegion,
   ] =
     useState<BlizzardRegion>(
-      "Europe",
+      initialPreferences
+        .defaultRegion,
     );
 
   const [
@@ -117,7 +128,8 @@ function StatsPage({
     setSelectedTier,
   ] =
     useState<BlizzardTier>(
-      "All",
+      initialPreferences
+        .defaultTier,
     );
 
   const [
@@ -125,7 +137,8 @@ function StatsPage({
     setSelectedRole,
   ] =
     useState<BlizzardRole>(
-      "All",
+      initialPreferences
+        .defaultRole,
     );
 
   const [
@@ -133,7 +146,8 @@ function StatsPage({
     setActiveRegion,
   ] =
     useState<BlizzardRegion>(
-      "Europe",
+      initialPreferences
+        .defaultRegion,
     );
 
   const [
@@ -141,7 +155,8 @@ function StatsPage({
     setActiveTier,
   ] =
     useState<BlizzardTier>(
-      "All",
+      initialPreferences
+        .defaultTier,
     );
 
   const [
@@ -149,7 +164,8 @@ function StatsPage({
     setActiveRole,
   ] =
     useState<BlizzardRole>(
-      "All",
+      initialPreferences
+        .defaultRole,
     );
 
   /* ========================================
@@ -158,9 +174,12 @@ function StatsPage({
 
   const initialCache =
     loadCachedDataset(
-      "Europe",
-      "All",
-      "All",
+      initialPreferences
+        .defaultRegion,
+      initialPreferences
+        .defaultTier,
+      initialPreferences
+        .defaultRole,
     );
 
   const [
@@ -505,15 +524,6 @@ function StatsPage({
                 refreshing
               }
             >
-              <RefreshCw
-                size={14}
-                className={
-                  refreshing
-                    ? "refresh-spinning"
-                    : ""
-                }
-              />
-
               {refreshing
                 ? "Refreshing..."
                 : cacheIsStale
@@ -818,6 +828,15 @@ function StatsPage({
                     : 0.45,
               }}
             >
+              <RefreshCw
+                size={14}
+                className={
+                  refreshing
+                    ? "refresh-spinning"
+                    : ""
+                }
+              />
+
               {refreshing
                 ? "Applying..."
                 : "Apply"}
