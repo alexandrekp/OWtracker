@@ -377,6 +377,8 @@ async fn refresh_blizzard_stats(
     role: String,
 
     map: String,
+
+    rq: Option<u8>,
 ) -> Result<BlizzardStatsResponse, String> {
     let client =
         reqwest::Client::new();
@@ -396,11 +398,23 @@ async fn refresh_blizzard_stats(
         ban-rate information.
     */
 
-    for rq in [
-        0_u8,
-        1_u8,
-        2_u8,
-    ] {
+    let rq_values: Vec<u8> =
+        match rq {
+            Some(value)
+                if value == 1 ||
+                   value == 2 =>
+            {
+                vec![value]
+            }
+
+            _ => vec![
+                0_u8,
+                1_u8,
+                2_u8,
+            ],
+        };
+
+    for rq in rq_values {
         match fetch_blizzard_dataset(
             &client,
             rq,
@@ -523,149 +537,6 @@ async fn refresh_blizzard_stats(
 }
 
 /* ========================================
-   BLIZZARD CAREER
-======================================== */
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct BlizzardCareerResponse {
-    career_id: String,
-    url: String,
-    html_length: usize,
-    html: String,
-}
-
-#[tauri::command]
-async fn fetch_blizzard_career(
-    career_id: String,
-) -> Result<BlizzardCareerResponse, String> {
-    let career_id =
-        career_id.trim();
-
-    if career_id.is_empty() {
-        return Err(
-            "Career ID is required."
-                .to_string(),
-        );
-    }
-
-    let encoded_career_id =
-        career_id.replace(
-            "|",
-            "%7C",
-        );
-
-    let url = format!(
-        "https://overwatch.blizzard.com/fr-fr/career/{}/",
-        encoded_career_id,
-    );
-
-    println!(
-        "Fetching Blizzard career:"
-    );
-
-    println!(
-        "{}",
-        url,
-    );
-
-    let client =
-        reqwest::Client::builder()
-            .redirect(
-                reqwest::redirect::Policy::limited(
-                    10,
-                ),
-            )
-            .build()
-            .map_err(
-                |error| {
-                    format!(
-                        "Unable to create HTTP client: {error}"
-                    )
-                },
-            )?;
-
-    let response =
-        client
-            .get(
-                &url,
-            )
-            .header(
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
-            )
-            .header(
-                "Accept",
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            )
-            .header(
-                "Accept-Language",
-                "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
-            )
-            .send()
-            .await
-            .map_err(
-                |error| {
-                    format!(
-                        "Unable to contact Blizzard career page: {error}"
-                    )
-                },
-            )?;
-
-    let status =
-        response.status();
-
-    if !status.is_success() {
-        return Err(
-            format!(
-                "Blizzard career returned HTTP {}",
-                status,
-            ),
-        );
-    }
-
-    let html =
-        response
-            .text()
-            .await
-            .map_err(
-                |error| {
-                    format!(
-                        "Unable to read Blizzard career page: {error}"
-                    )
-                },
-            )?;
-
-    if html.trim().is_empty() {
-        return Err(
-            "Blizzard returned an empty career page."
-                .to_string(),
-        );
-    }
-
-    let html_length =
-        html.len();
-
-    println!(
-        "Career HTML received: {} bytes",
-        html_length,
-    );
-
-    Ok(
-        BlizzardCareerResponse {
-            career_id:
-                career_id.to_string(),
-
-            url,
-
-            html_length,
-
-            html,
-        },
-    )
-}
-
-/* ========================================
    DEFAULT TAURI
 ======================================== */
 
@@ -689,12 +560,11 @@ pub fn run() {
             tauri_plugin_opener::init(),
         )
         .invoke_handler(
-    tauri::generate_handler![
-        greet,
-        refresh_blizzard_stats,
-        fetch_blizzard_career,
-    ],
-)
+            tauri::generate_handler![
+                greet,
+                refresh_blizzard_stats,
+            ],
+        )
         .run(
             tauri::generate_context!(),
         )

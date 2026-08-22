@@ -17,6 +17,7 @@ import type {
 } from "react";
 
 import type {
+  BlizzardFormat,
   BlizzardRegion,
   BlizzardRole,
   BlizzardTier,
@@ -71,6 +72,12 @@ const ROLES:
     "Tank",
     "Damage",
     "Support",
+  ];
+
+const FORMATS:
+  BlizzardFormat[] = [
+    "5v5",
+    "6v6",
   ];
 
 const REFRESH_INTERVALS:
@@ -354,6 +361,36 @@ function SettingsPage() {
           </SettingSelect>
 
           <SettingSelect
+            label={t("settings.stats.format")}
+            detail={t("settings.stats.formatDetail")}
+            value={
+              preferences.defaultFormat
+            }
+            onChange={(
+              value,
+            ) =>
+              updatePreference(
+                "defaultFormat",
+                value as
+                  BlizzardFormat,
+              )
+            }
+          >
+            {FORMATS.map(
+              (format) => (
+                <option
+                  key={format}
+                  value={format}
+                >
+                  {format === "5v5"
+                    ? t("settings.format.5v5")
+                    : t("settings.format.6v6")}
+                </option>
+              ),
+            )}
+          </SettingSelect>
+
+          <SettingSelect
             label={t("settings.stats.rank")}
             detail={t("settings.stats.rankDetail")}
             value={
@@ -499,6 +536,10 @@ function SettingsPage() {
                 preferences.defaultRegion,
                 t,
               )}
+              {" · "}
+              {preferences.defaultFormat === "5v5"
+                ? t("settings.format.5v5Short")
+                : t("settings.format.6v6Short")}
               {" · "}
               {getTierLabel(
                 preferences.defaultTier,

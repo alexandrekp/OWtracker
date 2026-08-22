@@ -1,4 +1,4 @@
-﻿import {
+import {
   invoke,
   isTauri,
 } from "@tauri-apps/api/core";
@@ -25,99 +25,77 @@ export type BlizzardRole =
   | "Damage"
   | "Support";
 
-export type LiveHeroStats = {
+/*
+  Blizzard's Hero Statistics page exposes
+  ranked 6v6 Open Queue with rq=1 and
+  ranked 5v5 Role Queue with rq=2.
+*/
+export type BlizzardFormat =
+  | "5v5"
+  | "6v6";
+
+export type BlizzardHeroStats = {
   heroId: string;
   heroName: string;
-
   role:
     | "Tank"
     | "Damage"
     | "Support";
-
-  winRate:
-    number | null;
-
-  pickRate:
-    number | null;
-
-  banRate:
-    number | null;
+  winRate: number | null;
+  pickRate: number | null;
+  banRate: number | null;
 };
 
 export type BlizzardStatsResponse = {
-  heroes:
-    LiveHeroStats[];
-
-  rq: number;
-
-  region:
-    BlizzardRegion;
-
-  tier:
-    BlizzardTier;
-
-  role:
-    BlizzardRole;
-
+  heroes: BlizzardHeroStats[];
+  rq: number | null;
+  region: BlizzardRegion;
+  tier: BlizzardTier;
+  role: BlizzardRole;
   map: string;
-
-  updatedAt:
-    number;
+  updatedAt: number;
 };
 
-/* ========================================
-   API
-======================================== */
-
 const API_BASE_URL =
-  import.meta.env
-    .VITE_API_URL ||
+  import.meta.env.VITE_API_URL ||
   "https://worker.akidneyperks.workers.dev";
 
-/* ========================================
-   TAURI
-======================================== */
+export function formatToRq(
+  format: BlizzardFormat,
+) {
+  return format === "6v6"
+    ? 1
+    : 2;
+}
 
 async function refreshFromTauri(
-  region:
-    BlizzardRegion,
-
-  tier:
-    BlizzardTier,
-
-  role:
-    BlizzardRole,
-
-  map:
-    string,
+  region: BlizzardRegion,
+  tier: BlizzardTier,
+  role: BlizzardRole,
+  map: string,
+  format: BlizzardFormat,
 ): Promise<BlizzardStatsResponse> {
-  return invoke<BlizzardStatsResponse>(
+  return invoke(
     "refresh_blizzard_stats",
     {
       region,
       tier,
       role,
       map,
+      rq:
+        formatToRq(
+          format,
+        ),
     },
   );
 }
 
-/* ========================================
-   WEB API
-======================================== */
-
-async function refreshFromApi(
-  region:
-    BlizzardRegion,
-
-  tier:
-    BlizzardTier,
-
-  role:
-    BlizzardRole,
-
-  map:
-    string,
+async function refreshFromWeb(
+  region: BlizzardRegion,
+  tier: BlizzardTier,
+  role: BlizzardRole,
+  map: string,
+  format: BlizzardFormat,
 ): Promise<BlizzardStatsResponse> {
   const params =
     new URLSearchParams({
@@ -125,6 +103,11 @@ async function refreshFromApi(
       tier,
       role,
       map,
+      rq: String(
+        formatToRq(
+          format,
+        ),
+      ),
     });
 
   const response =
@@ -137,31 +120,22 @@ async function refreshFromApi(
       `API returned HTTP ${response.status}`;
 
     try {
-      const body:
-        unknown =
+      const payload =
         await response.json();
 
       if (
-        typeof body ===
+        payload &&
+        typeof payload ===
           "object" &&
-        body !== null &&
-        "error" in body &&
-        typeof (
-          body as {
-            error?: unknown;
-          }
-        ).error ===
+        "error" in payload &&
+        typeof payload.error ===
           "string"
       ) {
         message =
-          (
-            body as {
-              error: string;
-            }
-          ).error;
+          payload.error;
       }
     } catch {
-      // Invalid JSON response.
+      // Keep HTTP message.
     }
 
     throw new Error(
@@ -174,38 +148,26 @@ async function refreshFromApi(
   ) as BlizzardStatsResponse;
 }
 
-/* ========================================
-   BLIZZARD STATS
-======================================== */
-
 export async function refreshBlizzardStats(
-  region:
-    BlizzardRegion,
-
-  tier:
-    BlizzardTier,
-
-  role:
-    BlizzardRole,
-
-  map =
-    "all-maps",
-): Promise<BlizzardStatsResponse> {
-  if (
-    isTauri()
-  ) {
-    return refreshFromTauri(
-      region,
-      tier,
-      role,
-      map,
-    );
-  }
-
-  return refreshFromApi(
-    region,
-    tier,
-    role,
-    map,
-  );
+  region: BlizzardRegion,
+  tier: BlizzardTier,
+  role: BlizzardRole,
+  map = "all-maps",
+  format: BlizzardFormat = "5v5",
+) {
+  return isTauri()
+    ? refreshFromTauri(
+        region,
+        tier,
+        role,
+        map,
+        format,
+      )
+    : refreshFromWeb(
+        region,
+        tier,
+        role,
+        map,
+        format,
+      );
 }

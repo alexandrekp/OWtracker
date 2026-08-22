@@ -11,6 +11,7 @@ export type PlayerPlatformRanks = {
   tank?: PlayerRank | null;
   damage?: PlayerRank | null;
   support?: PlayerRank | null;
+  open?: PlayerRank | null;
 };
 
 export type PlayerSummary = {

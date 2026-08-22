@@ -269,6 +269,18 @@ const EN = {
   "settings.status.active": "ACTIVE",
   "settings.cache.minShort": "min",
 
+  "player.competitive.format": "Rank format",
+  "player.competitive.5v5": "5v5 · Role Queue",
+  "player.competitive.6v6": "6v6 · Open Queue",
+  "player.competitive.openQueue": "Open Queue",
+
+  "settings.stats.format": "Default format",
+  "settings.stats.formatDetail": "Blizzard ranked format used by Stats.",
+  "settings.format.5v5": "5v5 · Role Queue",
+  "settings.format.6v6": "6v6 · Open Queue",
+  "settings.format.5v5Short": "5v5",
+  "settings.format.6v6Short": "6v6",
+
 } as const;
 
 export type TranslationKey =
@@ -481,6 +493,18 @@ const OVERRIDES:
     "settings.role.tank": "Tank",
     "settings.role.damage": "Dégâts",
     "settings.role.support": "Soutien",
+
+    "player.competitive.format": "Format classé",
+    "player.competitive.5v5": "5v5 · File par rôle",
+    "player.competitive.6v6": "6v6 · File ouverte",
+    "player.competitive.openQueue": "File ouverte",
+
+    "settings.stats.format": "Format par défaut",
+    "settings.stats.formatDetail": "Format classé Blizzard utilisé dans les Statistiques.",
+    "settings.format.5v5": "5v5 · File par rôle",
+    "settings.format.6v6": "6v6 · File ouverte",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   de: {
@@ -634,6 +658,18 @@ const OVERRIDES:
     "settings.role.tank": "Tank",
     "settings.role.damage": "Schaden",
     "settings.role.support": "Unterstützung",
+
+    "player.competitive.format": "Rangformat",
+    "player.competitive.5v5": "5v5 · Rollenwahl",
+    "player.competitive.6v6": "6v6 · Offene Wahl",
+    "player.competitive.openQueue": "Offene Wahl",
+
+    "settings.stats.format": "Standardformat",
+    "settings.stats.formatDetail": "Blizzard-Wettkampfformat für Statistiken.",
+    "settings.format.5v5": "5v5 · Rollenwahl",
+    "settings.format.6v6": "6v6 · Offene Wahl",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   es: {
@@ -787,6 +823,18 @@ const OVERRIDES:
     "settings.role.tank": "Tanque",
     "settings.role.damage": "Daño",
     "settings.role.support": "Apoyo",
+
+    "player.competitive.format": "Formato competitivo",
+    "player.competitive.5v5": "5v5 · Cola por roles",
+    "player.competitive.6v6": "6v6 · Cola abierta",
+    "player.competitive.openQueue": "Cola abierta",
+
+    "settings.stats.format": "Formato predeterminado",
+    "settings.stats.formatDetail": "Formato competitivo de Blizzard usado en Estadísticas.",
+    "settings.format.5v5": "5v5 · Cola por roles",
+    "settings.format.6v6": "6v6 · Cola abierta",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   "pt-BR": {
@@ -940,6 +988,18 @@ const OVERRIDES:
     "settings.role.tank": "Tanque",
     "settings.role.damage": "Dano",
     "settings.role.support": "Suporte",
+
+    "player.competitive.format": "Formato competitivo",
+    "player.competitive.5v5": "5v5 · Fila por função",
+    "player.competitive.6v6": "6v6 · Fila aberta",
+    "player.competitive.openQueue": "Fila aberta",
+
+    "settings.stats.format": "Formato padrão",
+    "settings.stats.formatDetail": "Formato competitivo da Blizzard usado em Estatísticas.",
+    "settings.format.5v5": "5v5 · Fila por função",
+    "settings.format.6v6": "6v6 · Fila aberta",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   ko: {
@@ -1091,6 +1151,18 @@ const OVERRIDES:
     "settings.role.tank": "돌격",
     "settings.role.damage": "공격",
     "settings.role.support": "지원",
+
+    "player.competitive.format": "경쟁전 형식",
+    "player.competitive.5v5": "5대5 · 역할 고정",
+    "player.competitive.6v6": "6대6 · 자유 역할",
+    "player.competitive.openQueue": "자유 역할",
+
+    "settings.stats.format": "기본 포맷",
+    "settings.stats.formatDetail": "통계에서 사용할 Blizzard 경쟁전 포맷입니다.",
+    "settings.format.5v5": "5대5 · 역할 고정",
+    "settings.format.6v6": "6대6 · 자유 역할",
+    "settings.format.5v5Short": "5대5",
+    "settings.format.6v6Short": "6대6",
   },
 
   ja: {
@@ -1242,6 +1314,18 @@ const OVERRIDES:
     "settings.role.tank": "タンク",
     "settings.role.damage": "ダメージ",
     "settings.role.support": "サポート",
+
+    "player.competitive.format": "ランク形式",
+    "player.competitive.5v5": "5v5 · ロールキュー",
+    "player.competitive.6v6": "6v6 · オープンキュー",
+    "player.competitive.openQueue": "オープンキュー",
+
+    "settings.stats.format": "デフォルト形式",
+    "settings.stats.formatDetail": "統計で使用するBlizzardのライバル・プレイ形式。",
+    "settings.format.5v5": "5v5 · ロールキュー",
+    "settings.format.6v6": "6v6 · オープンキュー",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   "zh-CN": {
@@ -1393,6 +1477,18 @@ const OVERRIDES:
     "settings.role.tank": "重装",
     "settings.role.damage": "输出",
     "settings.role.support": "支援",
+
+    "player.competitive.format": "竞技赛制",
+    "player.competitive.5v5": "5v5 · 职责队列",
+    "player.competitive.6v6": "6v6 · 开放队列",
+    "player.competitive.openQueue": "开放队列",
+
+    "settings.stats.format": "默认赛制",
+    "settings.stats.formatDetail": "统计页面使用的Blizzard竞技赛制。",
+    "settings.format.5v5": "5v5 · 职责队列",
+    "settings.format.6v6": "6v6 · 开放队列",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 
   ru: {
@@ -1546,6 +1642,18 @@ const OVERRIDES:
     "settings.role.tank": "Танк",
     "settings.role.damage": "Урон",
     "settings.role.support": "Поддержка",
+
+    "player.competitive.format": "Формат рейтинга",
+    "player.competitive.5v5": "5v5 · Ролевая очередь",
+    "player.competitive.6v6": "6v6 · Открытая очередь",
+    "player.competitive.openQueue": "Открытая очередь",
+
+    "settings.stats.format": "Формат по умолчанию",
+    "settings.stats.formatDetail": "Соревновательный формат Blizzard для статистики.",
+    "settings.format.5v5": "5v5 · Ролевая очередь",
+    "settings.format.6v6": "6v6 · Открытая очередь",
+    "settings.format.5v5Short": "5v5",
+    "settings.format.6v6Short": "6v6",
   },
 };
 

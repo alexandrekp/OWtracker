@@ -16,6 +16,7 @@ import {
 } from "../services/blizzardStats";
 
 import type {
+  BlizzardFormat,
   BlizzardRegion,
   BlizzardRole,
   BlizzardTier,
@@ -52,6 +53,7 @@ type CachedStatsDataset = {
   region: BlizzardRegion;
   tier: BlizzardTier;
   role: BlizzardRole;
+  format: BlizzardFormat;
 
   heroes: Hero[];
 
@@ -86,6 +88,12 @@ const ROLES:
     "Tank",
     "Damage",
     "Support",
+  ];
+
+const FORMATS:
+  BlizzardFormat[] = [
+    "5v5",
+    "6v6",
   ];
 
 const CACHE_PREFIX =
@@ -130,6 +138,14 @@ function StatsPage({
     );
 
   const [
+    selectedFormat,
+    setSelectedFormat,
+  ] =
+    useState<BlizzardFormat>(
+      "5v5",
+    );
+
+  const [
     activeRegion,
     setActiveRegion,
   ] =
@@ -153,6 +169,14 @@ function StatsPage({
       "All",
     );
 
+  const [
+    activeFormat,
+    setActiveFormat,
+  ] =
+    useState<BlizzardFormat>(
+      "5v5",
+    );
+
   /* ========================================
      CACHE INIT
   ======================================== */
@@ -162,6 +186,7 @@ function StatsPage({
       "Europe",
       "All",
       "All",
+      "5v5",
     );
 
   const [
@@ -209,6 +234,7 @@ function StatsPage({
         selectedRegion,
         selectedTier,
         selectedRole,
+        selectedFormat,
       );
 
     if (!cached) {
@@ -229,6 +255,11 @@ function StatsPage({
 
     setActiveRole(
       cached.role,
+    );
+
+    setActiveFormat(
+      cached.format ??
+        "5v5",
     );
 
     setLastUpdated(
@@ -263,6 +294,7 @@ function StatsPage({
           selectedTier,
           selectedRole,
           "all-maps",
+          selectedFormat,
         );
 
       const statsMap =
@@ -345,6 +377,10 @@ function StatsPage({
         response.role,
       );
 
+      setActiveFormat(
+        selectedFormat,
+      );
+
       setLastUpdated(
         new Date(
           updatedAt,
@@ -360,6 +396,9 @@ function StatsPage({
 
         role:
           response.role,
+
+        format:
+          selectedFormat,
 
         heroes:
           updatedHeroes,
@@ -507,7 +546,9 @@ function StatsPage({
     selectedTier !==
       activeTier ||
     selectedRole !==
-      activeRole;
+      activeRole ||
+    selectedFormat !==
+      activeFormat;
 
 
   const currentCacheAge =
@@ -527,7 +568,7 @@ function StatsPage({
   ======================================== */
 
   return (
-    <div className="global-page stats-v2-page">
+    <div className="global-page">
       {/* ===================================
           HEADER
       ==================================== */}
@@ -622,133 +663,6 @@ function StatsPage({
           </div>
         </div>
       </header>
-
-      {/* ===================================
-          TIER LIST FILTERS
-      ==================================== */}
-
-      <section className="stats-unified-controls">
-        <div className="stats-unified-top">
-          <div className="stats-data-filter">
-            <label>
-              Region
-            </label>
-
-            <select
-              value={
-                selectedRegion
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedRegion(
-                  event.target
-                    .value as
-                    BlizzardRegion,
-                )
-              }
-            >
-              {REGIONS.map(
-                (region) => (
-                  <option
-                    key={region}
-                    value={region}
-                  >
-                    {region}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-data-filter">
-            <label>
-              Rank
-            </label>
-
-            <select
-              value={
-                selectedTier
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedTier(
-                  event.target
-                    .value as
-                    BlizzardTier,
-                )
-              }
-            >
-              {TIERS.map(
-                (tier) => (
-                  <option
-                    key={tier}
-                    value={tier}
-                  >
-                    {tier === "All"
-                      ? "All ranks"
-                      : tier}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-data-filter">
-            <label>
-              Role
-            </label>
-
-            <select
-              value={
-                selectedRole
-              }
-              onChange={(
-                event,
-              ) =>
-                setSelectedRole(
-                  event.target
-                    .value as
-                    BlizzardRole,
-                )
-              }
-            >
-              {ROLES.map(
-                (role) => (
-                  <option
-                    key={role}
-                    value={role}
-                  >
-                    {role === "All"
-                      ? "All roles"
-                      : role}
-                  </option>
-                ),
-              )}
-            </select>
-          </div>
-
-          <div className="stats-apply-filter">
-            <button
-              type="button"
-              className="stats-apply-button"
-              onClick={
-                handleApply
-              }
-              disabled={
-                refreshing ||
-                !filtersChanged
-              }
-            >
-              {refreshing
-                ? "Applying..."
-                : "Apply"}
-            </button>
-          </div>
-        </div>
-      </section>
-
 
       {/* ===================================
           META OVERVIEW
@@ -867,6 +781,166 @@ function StatsPage({
               onOpenHero
             }
           />
+        </div>
+      </section>
+
+      {/* ===================================
+          TIER LIST FILTERS
+      ==================================== */}
+
+      <section className="stats-unified-controls">
+        <div className="stats-unified-top">
+          <div className="stats-data-filter">
+            <label>
+              Region
+            </label>
+
+            <select
+              value={
+                selectedRegion
+              }
+              onChange={(
+                event,
+              ) =>
+                setSelectedRegion(
+                  event.target
+                    .value as
+                    BlizzardRegion,
+                )
+              }
+            >
+              {REGIONS.map(
+                (region) => (
+                  <option
+                    key={region}
+                    value={region}
+                  >
+                    {region}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          <div className="stats-data-filter">
+            <label>
+              Format
+            </label>
+
+            <select
+              value={
+                selectedFormat
+              }
+              onChange={(
+                event,
+              ) =>
+                setSelectedFormat(
+                  event.target
+                    .value as
+                    BlizzardFormat,
+                )
+              }
+            >
+              {FORMATS.map(
+                (format) => (
+                  <option
+                    key={format}
+                    value={format}
+                  >
+                    {format === "5v5"
+                      ? "5v5 · Role Queue"
+                      : "6v6 · Open Queue"}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          <div className="stats-data-filter">
+            <label>
+              Rank
+            </label>
+
+            <select
+              value={
+                selectedTier
+              }
+              onChange={(
+                event,
+              ) =>
+                setSelectedTier(
+                  event.target
+                    .value as
+                    BlizzardTier,
+                )
+              }
+            >
+              {TIERS.map(
+                (tier) => (
+                  <option
+                    key={tier}
+                    value={tier}
+                  >
+                    {tier === "All"
+                      ? "All ranks"
+                      : tier}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          <div className="stats-data-filter">
+            <label>
+              Role
+            </label>
+
+            <select
+              value={
+                selectedRole
+              }
+              onChange={(
+                event,
+              ) =>
+                setSelectedRole(
+                  event.target
+                    .value as
+                    BlizzardRole,
+                )
+              }
+            >
+              {ROLES.map(
+                (role) => (
+                  <option
+                    key={role}
+                    value={role}
+                  >
+                    {role === "All"
+                      ? "All roles"
+                      : role}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          <div className="stats-apply-filter">
+            <button
+              type="button"
+              className="stats-apply-button"
+              onClick={
+                handleApply
+              }
+              disabled={
+                refreshing ||
+                !filtersChanged
+              }
+            >
+              {refreshing
+                ? "Applying..."
+                : "Apply"}
+            </button>
+          </div>
         </div>
       </section>
 
@@ -1489,8 +1563,11 @@ function getCacheKey(
 
   role:
     BlizzardRole,
+
+  format:
+    BlizzardFormat,
 ) {
-  return `${CACHE_PREFIX}.${region}.${tier}.${role}`;
+  return `${CACHE_PREFIX}.${region}.${tier}.${role}.${format}`;
 }
 
 function saveCachedDataset(
@@ -1503,6 +1580,7 @@ function saveCachedDataset(
         dataset.region,
         dataset.tier,
         dataset.role,
+        dataset.format,
       ),
 
       JSON.stringify(
@@ -1526,6 +1604,9 @@ function loadCachedDataset(
 
   role:
     BlizzardRole,
+
+  format:
+    BlizzardFormat,
 ): CachedStatsDataset | null {
   try {
     const value =
@@ -1534,6 +1615,7 @@ function loadCachedDataset(
           region,
           tier,
           role,
+          format,
         ),
       );
 

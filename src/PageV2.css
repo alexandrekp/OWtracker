@@ -2051,3 +2051,393 @@
   .player-hero-section-top {
   margin-bottom: 14px;
 }
+
+
+/* ========================================
+   STATS — 4 FILTERS + APPLY ON ONE ROW
+======================================== */
+
+.stats-v2-page .stats-unified-top {
+  grid-template-columns:
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    minmax(120px, 0.55fr)
+    88px;
+  gap: 9px;
+  align-items: end;
+}
+
+.stats-v2-page
+  .stats-data-filter select {
+  width: 100%;
+}
+
+.stats-v2-page
+  .stats-apply-filter {
+  width: 88px;
+}
+
+.stats-v2-page
+  .stats-apply-button {
+  width: 88px;
+  min-width: 88px;
+  height: 36px;
+}
+
+@media (max-width: 1100px) {
+  .stats-v2-page
+    .stats-unified-top {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .stats-v2-page
+    .stats-apply-filter,
+  .stats-v2-page
+    .stats-apply-button {
+    width: 100%;
+  }
+}
+
+
+/* ========================================
+   STATS — FORCE 4 FILTERS + APPLY INLINE
+   StatsPage root currently uses .global-page,
+   not .stats-v2-page.
+======================================== */
+
+.stats-unified-controls
+  .stats-unified-top {
+  display: grid;
+  grid-template-columns:
+    minmax(155px, 1fr)
+    minmax(155px, 1fr)
+    minmax(155px, 1fr)
+    minmax(115px, 0.45fr)
+    88px;
+  gap: 9px;
+  align-items: end;
+}
+
+.stats-unified-controls
+  .stats-apply-filter {
+  width: 88px;
+}
+
+.stats-unified-controls
+  .stats-apply-button {
+  width: 88px;
+  min-width: 88px;
+  height: 36px;
+}
+
+@media (max-width: 1050px) {
+  .stats-unified-controls
+    .stats-unified-top {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .stats-unified-controls
+    .stats-apply-filter,
+  .stats-unified-controls
+    .stats-apply-button {
+    width: 100%;
+  }
+}
+
+
+/* ========================================
+   GLOBAL TOP INTRO — SAME ON EVERY PAGE
+======================================== */
+
+.main-content .seo-intro {
+  display: grid;
+  grid-template-columns:
+    124px
+    minmax(0, 1fr);
+  align-items: center;
+
+  min-height: 48px;
+  margin: 0 0 20px;
+  padding: 8px 14px;
+
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 122, 26, 0.05),
+      transparent 28%
+    ),
+    rgba(16, 19, 25, 0.76);
+}
+
+.main-content
+  .seo-intro-eyebrow {
+  margin: 0;
+  align-self: center;
+
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+
+.main-content .seo-intro h1 {
+  grid-column: 2;
+
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.main-content .seo-intro p {
+  grid-column: 2;
+
+  max-width: none;
+  margin: 2px 0 0;
+
+  font-size: 8px;
+  line-height: 1.35;
+  opacity: 0.78;
+}
+
+/* When SeoIntro uses a copy wrapper */
+.main-content
+  .seo-intro-copy {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.main-content
+  .seo-intro-copy
+  .seo-intro-eyebrow {
+  display: none;
+}
+
+.main-content
+  .seo-intro-copy h1,
+.main-content
+  .seo-intro-copy p {
+  grid-column: auto;
+}
+
+@media (max-width: 720px) {
+  .main-content .seo-intro {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 10px 12px;
+  }
+
+  .main-content
+    .seo-intro-eyebrow {
+    margin-bottom: 4px;
+  }
+
+  .main-content
+    .seo-intro h1,
+  .main-content
+    .seo-intro p,
+  .main-content
+    .seo-intro-copy {
+    grid-column: 1;
+  }
+
+  .main-content
+    .seo-intro-copy
+    .seo-intro-eyebrow {
+    display: block;
+  }
+}
+
+
+/* ========================================
+   HEROES — TOP CARDS UNIFIED
+   Align the 4 overview cards with the compact
+   card language used elsewhere in OWTracker.
+======================================== */
+
+.heroes-v2-page
+  > .heroes-v2-overview-shell {
+  grid-template-columns:
+    minmax(260px, 1.15fr)
+    repeat(3, minmax(170px, 0.85fr));
+
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* Main Heroes card */
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar {
+  min-height: 92px;
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 122, 26, 0.045),
+      transparent 45%
+    ),
+    rgba(15, 18, 24, 0.78);
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar
+  > div:first-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar
+  .eyebrow {
+  margin: 0 0 4px;
+
+  font-size: 7px;
+  line-height: 1.2;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar h1 {
+  margin: 0 0 5px;
+
+  font-size: 26px;
+  line-height: 1;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar
+  .subtitle {
+  max-width: 190px;
+  margin: 0;
+
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar
+  .stats-header-actions {
+  align-self: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* 3 summary cards */
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card {
+  min-height: 92px;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: rgba(15, 18, 24, 0.78);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card
+  > .summary-label {
+  margin: 0 0 6px;
+
+  color: var(--muted);
+
+  font-size: 7px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card
+  > strong {
+  margin: 0 0 4px;
+
+  font-size: 20px;
+  line-height: 1;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card
+  > .summary-detail {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 7px;
+  line-height: 1.2;
+}
+
+/* Keep all four cards visually aligned */
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar,
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 1180px) {
+  .heroes-v2-page
+    > .heroes-v2-overview-shell {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .heroes-v2-page
+    .heroes-v2-overview-shell
+    > .topbar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroes-v2-page
+    > .heroes-v2-overview-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .heroes-v2-page
+    .heroes-v2-overview-shell
+    > .topbar {
+    grid-column: auto;
+  }
+}

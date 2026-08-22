@@ -2141,3 +2141,89 @@
       44px;
   }
 }
+
+
+/* ========================================
+   PLAYER COMPETITIVE FORMAT — 5V5 / 6V6
+======================================== */
+
+.player-competitive-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.player-rank-format {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.player-rank-format-label {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.player-rank-format-buttons {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(8, 11, 15, 0.76);
+}
+
+.player-rank-format-button {
+  min-height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.player-rank-format-button:hover {
+  color: var(--text);
+}
+
+.player-rank-format-button.active {
+  color: #ffffff;
+  background: rgba(255, 122, 26, 0.16);
+}
+
+.player-ranks.player-ranks-open {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 700px) {
+  .player-competitive-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .player-rank-format {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .player-rank-format-buttons {
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .player-rank-format-button {
+    width: 100%;
+  }
+}

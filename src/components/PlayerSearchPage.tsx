@@ -100,6 +100,10 @@ type CareerCategory =
   | "assists"
   | "hero_specific";
 
+type CompetitiveFormat =
+  | "role"
+  | "open";
+
 const FAVORITES_STORAGE_KEY =
   "owtracker.favoritePlayers";
 
@@ -1167,6 +1171,14 @@ function PlayerProfile({
     summary.competitive?.[platform];
 
   const [
+    competitiveFormat,
+    setCompetitiveFormat,
+  ] =
+    useState<CompetitiveFormat>(
+      "role",
+    );
+
+  const [
     heroSortMetric,
     setHeroSortMetric,
   ] =
@@ -1613,7 +1625,7 @@ function PlayerProfile({
         />
       </div>
 
-      <div className="player-section-heading">
+      <div className="player-section-heading player-competitive-heading">
         <div>
           <span className="panel-eyebrow">
             {t("player.competitive.eyebrow")}
@@ -1634,45 +1646,104 @@ function PlayerProfile({
               </span>
             )}
         </div>
+
+        <div className="player-rank-format">
+          <span className="player-rank-format-label">
+            {t("player.competitive.format")}
+          </span>
+
+          <div className="player-rank-format-buttons">
+            <button
+              type="button"
+              className={
+                competitiveFormat ===
+                "role"
+                  ? "player-rank-format-button active"
+                  : "player-rank-format-button"
+              }
+              onClick={() =>
+                setCompetitiveFormat(
+                  "role",
+                )
+              }
+            >
+              {t("player.competitive.5v5")}
+            </button>
+
+            <button
+              type="button"
+              className={
+                competitiveFormat ===
+                "open"
+                  ? "player-rank-format-button active"
+                  : "player-rank-format-button"
+              }
+              onClick={() =>
+                setCompetitiveFormat(
+                  "open",
+                )
+              }
+            >
+              {t("player.competitive.6v6")}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="player-ranks">
-        <RankCard
-          label={t("player.role.tank")}
-          icon={
-            <Shield
-              size={18}
-            />
-          }
-          rank={
-            ranks?.tank
-          }
-        />
+      {competitiveFormat ===
+      "role" ? (
+        <div className="player-ranks">
+          <RankCard
+            label={t("player.role.tank")}
+            icon={
+              <Shield
+                size={18}
+              />
+            }
+            rank={
+              ranks?.tank
+            }
+          />
 
-        <RankCard
-          label={t("player.role.damage")}
-          icon={
-            <Swords
-              size={18}
-            />
-          }
-          rank={
-            ranks?.damage
-          }
-        />
+          <RankCard
+            label={t("player.role.damage")}
+            icon={
+              <Swords
+                size={18}
+              />
+            }
+            rank={
+              ranks?.damage
+            }
+          />
 
-        <RankCard
-          label={t("player.role.support")}
-          icon={
-            <HeartPulse
-              size={18}
-            />
-          }
-          rank={
-            ranks?.support
-          }
-        />
-      </div>
+          <RankCard
+            label={t("player.role.support")}
+            icon={
+              <HeartPulse
+                size={18}
+              />
+            }
+            rank={
+              ranks?.support
+            }
+          />
+        </div>
+      ) : (
+        <div className="player-ranks player-ranks-open">
+          <RankCard
+            label={t("player.competitive.openQueue")}
+            icon={
+              <Trophy
+                size={18}
+              />
+            }
+            rank={
+              ranks?.open
+            }
+          />
+        </div>
+      )}
 
       <SectionHeader
         eyebrow="ROLE PERFORMANCE"

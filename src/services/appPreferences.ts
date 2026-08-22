@@ -1,4 +1,5 @@
 import type {
+  BlizzardFormat,
   BlizzardRegion,
   BlizzardRole,
   BlizzardTier,
@@ -23,6 +24,7 @@ export type AppPreferences = {
   defaultRegion: BlizzardRegion;
   defaultTier: BlizzardTier;
   defaultRole: BlizzardRole;
+  defaultFormat: BlizzardFormat;
   refreshIntervalMinutes:
     RefreshIntervalMinutes;
   language: AppLanguage;
@@ -33,6 +35,7 @@ export const DEFAULT_APP_PREFERENCES:
     defaultRegion: "Europe",
     defaultTier: "All",
     defaultRole: "All",
+    defaultFormat: "5v5",
     refreshIntervalMinutes: 30,
     language: "auto",
   };
@@ -80,6 +83,13 @@ export function loadAppPreferences():
         )
           ? parsed.defaultRole
           : DEFAULT_APP_PREFERENCES.defaultRole,
+
+      defaultFormat:
+        isFormat(
+          parsed.defaultFormat,
+        )
+          ? parsed.defaultFormat
+          : DEFAULT_APP_PREFERENCES.defaultFormat,
 
       refreshIntervalMinutes:
         isRefreshInterval(
@@ -184,5 +194,15 @@ function isRefreshInterval(
     value === 30 ||
     value === 60 ||
     value === 120
+  );
+}
+
+
+function isFormat(
+  value: unknown,
+): value is BlizzardFormat {
+  return (
+    value === "5v5" ||
+    value === "6v6"
   );
 }

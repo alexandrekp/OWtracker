@@ -350,6 +350,19 @@ async function handleBlizzard(
       ) ??
       "all-maps";
 
+    const requestedRq =
+      Number(
+        url.searchParams.get(
+          "rq",
+        ),
+      );
+
+    const fixedRq =
+      requestedRq === 1 ||
+      requestedRq === 2
+        ? requestedRq
+        : null;
+
     const datasets: {
       rq: number;
       heroes:
@@ -360,12 +373,19 @@ async function handleBlizzard(
         number;
     }[] = [];
 
+    const rqValues =
+      fixedRq === null
+        ? [
+            0,
+            1,
+            2,
+          ]
+        : [
+            fixedRq,
+          ];
+
     for (
-      const rq of [
-        0,
-        1,
-        2,
-      ]
+      const rq of rqValues
     ) {
       try {
         const heroes =
