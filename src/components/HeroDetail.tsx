@@ -34,6 +34,17 @@ import {
   heroes,
 } from "../data/heroes";
 
+import {
+  fetchCounterwatchHero,
+} from "../services/counterwatch";
+
+import type {
+  CounterwatchHeroStats,
+  CounterwatchMatchup,
+} from "../services/counterwatch";
+
+import "./HeroCounters.css";
+
 type PlayerHeroContext = {
   username: string;
   battleTag: string;
@@ -52,7 +63,8 @@ type HeroDetailProps = {
 type HeroTab =
   | "overview"
   | "perks"
-  | "stats";
+  | "stats"
+  | "counters";
 
 type MetaTier =
   | "S"
@@ -173,6 +185,128 @@ function HeroDetail({
         metaInfo,
       ],
     );
+
+  const [
+    counterData,
+    setCounterData,
+  ] =
+    useState<CounterwatchHeroStats | null>(
+      null,
+    );
+
+  const [
+    counteredBy,
+    setCounteredBy,
+  ] =
+    useState<CounterwatchMatchup[]>(
+      [],
+    );
+
+  const [
+    strongAgainst,
+    setStrongAgainst,
+  ] =
+    useState<CounterwatchMatchup[]>(
+      [],
+    );
+
+  const [
+    countersLoading,
+    setCountersLoading,
+  ] = useState(false);
+
+  const [
+    countersError,
+    setCountersError,
+  ] =
+    useState<string | null>(
+      null,
+    );
+
+  useEffect(() => {
+    let cancelled =
+      false;
+
+    setCountersLoading(
+      true,
+    );
+
+    setCountersError(
+      null,
+    );
+
+    setCounterData(
+      null,
+    );
+
+    setCounteredBy(
+      [],
+    );
+
+    setStrongAgainst(
+      [],
+    );
+
+    fetchCounterwatchHero(
+      hero.id,
+    )
+      .then(
+        (data) => {
+          if (
+            cancelled
+          ) {
+            return;
+          }
+
+          setCounterData(
+            data,
+          );
+
+          setCounteredBy(
+            data.counters,
+          );
+
+          setStrongAgainst(
+            data.strongAgainst,
+          );
+        },
+      )
+      .catch(
+        (reason) => {
+          if (
+            cancelled
+          ) {
+            return;
+          }
+
+          setCountersError(
+            reason instanceof
+            Error
+              ? reason.message
+              : "Unable to load Counterwatch matchup data.",
+          );
+        },
+      )
+      .finally(
+        () => {
+          if (
+            !cancelled
+          ) {
+            setCountersLoading(
+              false,
+            );
+          }
+        },
+      );
+
+    return () => {
+      cancelled =
+        true;
+    };
+  }, [
+    hero.id,
+  ]);
+
 
   const [
     metaTrend,
@@ -368,6 +502,23 @@ function HeroDetail({
 
           Stats
         </button>
+
+        <button
+          className={
+            activeTab === "counters"
+              ? "hero-tab active"
+              : "hero-tab"
+          }
+          onClick={() =>
+            setActiveTab(
+              "counters",
+            )
+          }
+        >
+          <Swords size={15} />
+
+          Counters
+        </button>
       </nav>
 
       {activeTab ===
@@ -420,6 +571,28 @@ function HeroDetail({
           }
           positioning={
             positioning
+          }
+        />
+      )}
+
+      {activeTab ===
+        "counters" && (
+        <CountersTab
+          hero={hero}
+          data={
+            counterData
+          }
+          counteredBy={
+            counteredBy
+          }
+          strongAgainst={
+            strongAgainst
+          }
+          loading={
+            countersLoading
+          }
+          error={
+            countersError
           }
         />
       )}
@@ -1334,6 +1507,360 @@ function StatsTableRow({
       </strong>
     </div>
   );
+}
+
+/* ========================================
+   COUNTERS
+======================================== */
+
+type CountersTabProps = {
+  hero: Hero;
+
+  data:
+    CounterwatchHeroStats | null;
+
+  counteredBy:
+    CounterwatchMatchup[];
+
+  strongAgainst:
+    CounterwatchMatchup[];
+
+  loading: boolean;
+
+  error:
+    string | null;
+};
+
+function CountersTab({
+  hero,
+  data,
+  counteredBy,
+  strongAgainst,
+  loading,
+  error,
+}: CountersTabProps) {
+  if (loading) {
+    return (
+      <section className="tab-empty">
+        <Swords size={24} />
+
+        <span className="panel-eyebrow">
+          COUNTERS
+        </span>
+
+        <h2>
+          Loading Counterwatch data
+        </h2>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="tab-empty">
+        <Swords size={24} />
+
+        <span className="panel-eyebrow">
+          COUNTERS
+        </span>
+
+        <h2>
+          Matchup data unavailable
+        </h2>
+
+        <p>
+          {error}
+        </p>
+      </section>
+    );
+  }
+
+  const hasData =
+    counteredBy.length > 0 ||
+    strongAgainst.length > 0;
+
+  if (!hasData) {
+    return (
+      <section className="tab-empty">
+        <Swords size={24} />
+
+        <span className="panel-eyebrow">
+          COUNTERS
+        </span>
+
+        <h2>
+          No matchup data available
+        </h2>
+
+        <p>
+          Counterwatch returned no
+          matchup entries for{" "}
+          {hero.name}.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <>
+      <section className="detail-panel counterwatch-summary">
+        <div className="panel-heading">
+          <div>
+            <span className="panel-eyebrow">
+              COUNTERWATCH
+            </span>
+
+            <h2>
+              Community matchup overview
+            </h2>
+          </div>
+
+          <span className="data-source">
+            LIVE
+          </span>
+        </div>
+
+        <div className="performance-grid">
+          <div>
+            <span>
+              Win rate
+            </span>
+
+            <strong>
+              {data?.winRate !==
+              null &&
+              data?.winRate !==
+              undefined
+                ? `${data.winRate}%`
+                : "—"}
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Tracked matches
+            </span>
+
+            <strong>
+              {data?.matches !==
+              null &&
+              data?.matches !==
+              undefined
+                ? data.matches.toLocaleString()
+                : "—"}
+            </strong>
+          </div>
+
+          <div>
+            <span>
+              Counterwatch tier
+            </span>
+
+            <strong>
+              {data?.tier ??
+                "—"}
+            </strong>
+          </div>
+        </div>
+
+        <div
+          style={{
+            marginTop: "14px",
+            paddingTop: "12px",
+            borderTop:
+              "1px solid var(--border, rgba(255,255,255,0.08))",
+            display: "flex",
+            justifyContent:
+              "space-between",
+            gap: "12px",
+            flexWrap: "wrap",
+            fontSize: "12px",
+            opacity: 0.72,
+          }}
+        >
+          <span>
+            Counter rating is not matchup win rate.
+          </span>
+
+          <span>
+            {data?.updatedAt
+              ? `Updated ${data.updatedAt}`
+              : "Community data"}
+          </span>
+        </div>
+      </section>
+
+      <section
+        className="counters-layout"
+        style={{
+          marginTop: "16px",
+        }}
+      >
+        <MatchupGroup
+          eyebrow="COUNTERED BY"
+          title={`Best counters to ${hero.name}`}
+          entries={
+            counteredBy
+          }
+        />
+
+        <MatchupGroup
+          eyebrow="STRONG AGAINST"
+          title={`${hero.name} performs well against`}
+          entries={
+            strongAgainst
+          }
+        />
+      </section>
+    </>
+  );
+}
+
+type MatchupGroupProps = {
+  eyebrow: string;
+  title: string;
+
+  entries:
+    CounterwatchMatchup[];
+};
+
+function MatchupGroup({
+  eyebrow,
+  title,
+  entries,
+}: MatchupGroupProps) {
+  return (
+    <article className="detail-panel matchup-group">
+      <div className="panel-heading">
+        <div>
+          <span className="panel-eyebrow">
+            {eyebrow}
+          </span>
+
+          <h2>
+            {title}
+          </h2>
+        </div>
+
+        <span className="data-source">
+          Counterwatch
+        </span>
+      </div>
+
+      <div className="matchup-list">
+        {entries.map(
+          (matchup) => {
+            const opponent =
+              heroes.find(
+                (entry) =>
+                  entry.id ===
+                  matchup.opponentId,
+              );
+
+            return (
+              <div
+                className="matchup-row"
+                key={`${matchup.heroId}-${matchup.opponentId}`}
+              >
+                <div className="matchup-hero">
+                  <div className="matchup-hero-avatar">
+                    {opponent?.image ? (
+                      <img
+                        src={
+                          opponent.image
+                        }
+                        alt={
+                          opponent.name
+                        }
+                      />
+                    ) : (
+                      <UserRound
+                        size={18}
+                      />
+                    )}
+                  </div>
+
+                  <div>
+                    <strong>
+                      {opponent?.name ??
+                        matchup.opponentName}
+                    </strong>
+
+                    <span>
+                      {matchup.contributors
+                        ? `${matchup.contributors.toLocaleString()} players`
+                        : "Community matchup"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="matchup-values">
+                  <div>
+                    <span>
+                      Counter rating
+                    </span>
+
+                    <strong className="matchup-positive">
+                      +{matchup.counterRating.toFixed(
+                        1,
+                      )}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>
+                      Fight swing
+                    </span>
+
+                    <strong>
+                      {matchup.estimatedFightSwing !==
+                      null
+                        ? `≈ +${matchup.estimatedFightSwing}%`
+                        : "—"}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>
+                      Confidence
+                    </span>
+
+                    <strong>
+                      {formatMatchupConfidence(
+                        matchup.confidence,
+                      )}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            );
+          },
+        )}
+      </div>
+    </article>
+  );
+}
+
+function formatMatchupConfidence(
+  confidence:
+    CounterwatchMatchup["confidence"],
+) {
+  switch (confidence) {
+    case "very-high":
+      return "Very high";
+
+    case "high":
+      return "High";
+
+    case "good":
+      return "Good";
+
+    case "medium":
+      return "Medium";
+
+    default:
+      return "Low";
+  }
 }
 
 /* ========================================

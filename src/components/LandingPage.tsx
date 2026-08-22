@@ -5,10 +5,10 @@ import type {
 import {
   ArrowRight,
   BarChart3,
-  Database,
   Code2,
+  Database,
   Search,
-  Sparkles,
+  Swords,
   Users,
 } from "lucide-react";
 
@@ -26,28 +26,14 @@ function LandingPage({
     <div className="landing-page">
       <header className="landing-nav">
         <div className="landing-brand">
-          <div className="landing-brand-mark">
-            <img
-              src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
-              alt="OWTracker"
-            />
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
+            alt="OWTracker"
+          />
 
-          <div className="landing-brand-copy">
-            <div className="landing-brand-name">
-              <span className="landing-brand-ow">
-                OW
-              </span>
-
-              <span className="landing-brand-tracker">
-                Tracker
-              </span>
-            </div>
-
-            <span className="landing-brand-tagline">
-              DATA COMPANION
-            </span>
-          </div>
+          <span>
+            OWTracker
+          </span>
         </div>
 
         <div className="landing-nav-actions">
@@ -82,8 +68,9 @@ function LandingPage({
 
             <p className="landing-lead">
               Explore hero statistics,
-              current meta rankings, perks
-              and player comparisons in one
+              live Counterwatch matchups,
+              meta rankings, perks and
+              player comparisons in one
               focused interface.
             </p>
 
@@ -104,8 +91,9 @@ function LandingPage({
             <div className="landing-source-line">
               <Database size={14} />
 
-              Blizzard hero statistics ·
-              Community perk data
+              Blizzard statistics ·
+              Counterwatch matchups ·
+              OverFast player data
             </div>
           </div>
 
@@ -186,11 +174,11 @@ function LandingPage({
 
           <FeatureCard
             icon={
-              <Sparkles size={18} />
+              <Swords size={18} />
             }
-            eyebrow="META"
-            title="OWTracker ranking"
-            description="A compact statistical tier list built from the active hero dataset."
+            eyebrow="COUNTERS"
+            title="Live hero matchups"
+            description="Counter rating, fight swing and confidence sourced on demand from Counterwatch."
           />
 
           <FeatureCard
@@ -208,25 +196,8 @@ function LandingPage({
             }
             eyebrow="HEROES"
             title="Hero explorer"
-            description="Search and sort heroes by meta score, win rate, pick rate or ban rate."
+            description="Explore hero details, OWTracker meta position, perks and live counters."
           />
-        </section>
-
-
-        <section className="landing-seo">
-          <span className="landing-section-eyebrow">
-            OVERWATCH STATS
-          </span>
-
-          <h2>
-            Overwatch hero stats, meta rankings and player comparison.
-          </h2>
-
-          <p>
-            Track hero win rates, pick rates and ban rates, compare the current
-            Overwatch meta, explore hero performance by role and rank, and
-            review player profiles in one focused companion.
-          </p>
         </section>
 
         <section className="landing-cta">
@@ -240,9 +211,10 @@ function LandingPage({
             </h2>
 
             <p>
-              OWTracker keeps the important
-              competitive information in a
-              single responsive interface.
+              OWTracker keeps Blizzard
+              statistics, community matchup
+              data and player information in
+              a single responsive interface.
             </p>
           </div>
         </section>

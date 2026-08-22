@@ -3,6 +3,7 @@ import {
   Search,
   Settings,
   Sparkles,
+  Swords,
   Users,
 } from "lucide-react";
 
@@ -78,6 +79,20 @@ function Sidebar({
 
         <button
           className={
+            activeSection === "counters"
+              ? "nav-item active"
+              : "nav-item"
+          }
+          onClick={() =>
+            onNavigate("counters")
+          }
+        >
+          <Swords size={17} />
+          Counters
+        </button>
+
+        <button
+          className={
             activeSection === "perks"
               ? "nav-item active"
               : "nav-item"
@@ -115,5 +130,3 @@ function Sidebar({
 }
 
 export default Sidebar;
-
-

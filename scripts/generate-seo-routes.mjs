@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 
 const distDir = path.resolve("dist");
@@ -20,7 +20,14 @@ const routes = {
     title:
       "Overwatch Hero Stats — OWTracker",
     description:
-      "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking and perks.",
+      "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking, perks and live hero counters.",
+  },
+
+  counters: {
+    title:
+      "Overwatch Hero Counters — OWTracker",
+    description:
+      "Explore live Overwatch hero counters, favorable matchups, counter ratings, fight swing and confidence from Counterwatch community data.",
   },
 
   players: {
@@ -122,7 +129,7 @@ for (
           "Web, Windows",
 
         description:
-          "Overwatch statistics, meta rankings, hero perks and player comparison in one focused companion.",
+          "Overwatch statistics, live hero counters, meta rankings, hero perks and player comparison in one focused companion.",
 
         isAccessibleForFree:
           true,

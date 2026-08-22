@@ -1,3 +1,5 @@
+import { handleCounterwatchRequest } from "./counterwatch";
+
 type BlizzardCells = {
   name: string;
   winrate: number | null;
@@ -57,6 +59,19 @@ export default {
     ) {
       return handleBlizzard(
         url,
+      );
+    }
+
+    /* ========================================
+       COUNTERWATCH
+    ======================================== */
+
+    if (
+      url.pathname ===
+      "/api/counterwatch"
+    ) {
+      return handleCounterwatchRequest(
+        request,
       );
     }
 

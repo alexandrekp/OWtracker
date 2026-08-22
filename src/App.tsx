@@ -1,4 +1,4 @@
-﻿import {
+import {
   useEffect,
   useState,
 } from "react";
@@ -15,6 +15,7 @@ import Sidebar from "./components/Sidebar";
 import HeroDetail from "./components/HeroDetail";
 import StatsPage from "./components/StatsPage";
 import HeroesPage from "./components/HeroesPage";
+import CounterPage from "./components/CounterPage";
 import PlayersPage from "./components/PlayersPage";
 import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
@@ -50,6 +51,7 @@ const WEB_ROUTES:
   Partial<Record<AppSection, string>> = {
     stats: "/stats",
     heroes: "/heroes",
+    counters: "/counters",
     players: "/players",
     perks: "/perks",
     settings: "/settings",
@@ -59,6 +61,7 @@ const ROUTE_SECTIONS:
   Record<string, AppSection> = {
     "/stats": "stats",
     "/heroes": "heroes",
+    "/counters": "counters",
     "/players": "players",
     "/perks": "perks",
     "/settings": "settings",
@@ -74,35 +77,42 @@ const PAGE_META:
   > = {
     stats: {
       title:
-        "Overwatch Stats & Meta â€” OWTracker",
+        "Overwatch Stats & Meta — OWTracker",
       description:
         "Explore Overwatch hero win rates, pick rates, ban rates and OWTracker meta rankings by region, rank and role.",
     },
 
     heroes: {
       title:
-        "Overwatch Hero Stats â€” OWTracker",
+        "Overwatch Hero Stats — OWTracker",
       description:
         "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking and perks.",
     },
 
+    counters: {
+      title:
+        "Overwatch Hero Counters — OWTracker",
+      description:
+        "Explore Overwatch hero counters, favorable matchups, difficult matchups and community matchup data.",
+    },
+
     players: {
       title:
-        "Overwatch Player Stats â€” OWTracker",
+        "Overwatch Player Stats — OWTracker",
       description:
         "Search Overwatch player profiles, inspect competitive ranks and compare hero performance side by side.",
     },
 
     perks: {
       title:
-        "Overwatch Hero Perks â€” OWTracker",
+        "Overwatch Hero Perks — OWTracker",
       description:
         "Explore Overwatch hero perks, perk popularity and community choices by hero and role.",
     },
 
     settings: {
       title:
-        "Settings â€” OWTracker",
+        "Settings — OWTracker",
       description:
         "Configure OWTracker statistics defaults, cache behavior and view application data sources.",
     },
@@ -141,7 +151,7 @@ function updateMeta(
   section: AppSection | null,
 ) {
   const landingTitle =
-    "OWTracker â€” Overwatch Stats & Meta";
+    "OWTracker — Overwatch Stats & Meta";
 
   const landingDescription =
     "Overwatch statistics, hero win rates, meta rankings, perks and player comparison in one focused interface.";
@@ -538,6 +548,20 @@ function App() {
                   )}
 
                   <HeroesPage
+                    onOpenHero={
+                      openHero
+                    }
+                  />
+                </div>
+              )}
+
+              {activeSection ===
+                "counters" && (
+                <div
+                  className="page-transition"
+                  key="counters"
+                >
+                  <CounterPage
                     onOpenHero={
                       openHero
                     }

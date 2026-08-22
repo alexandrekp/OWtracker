@@ -1,0 +1,148 @@
+/* ========================================
+   HERO COUNTERS
+======================================== */
+
+.counters-layout {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.matchup-group {
+  min-width: 0;
+}
+
+.matchup-list {
+  margin-top: 18px;
+  border-top:
+    1px solid var(--border);
+}
+
+.matchup-row {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom:
+    1px solid var(--border);
+}
+
+.matchup-row:last-child {
+  border-bottom: 0;
+}
+
+.matchup-hero {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.matchup-hero-avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.matchup-hero-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.matchup-hero > div:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.matchup-hero strong {
+  overflow: hidden;
+  color: var(--text);
+  font-family:
+    "Space Grotesk",
+    sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matchup-hero span {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+.matchup-values {
+  display: grid;
+  grid-template-columns:
+    repeat(3, auto);
+  align-items: center;
+  gap: 18px;
+}
+
+.matchup-values > div {
+  min-width: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.matchup-values span {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.matchup-values strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.matchup-values .matchup-positive {
+  color: #72d69b;
+}
+
+.matchup-values .matchup-negative {
+  color: #ff8f8f;
+}
+
+@media (max-width: 900px) {
+  .counters-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .matchup-row {
+    grid-template-columns: 1fr;
+  }
+
+  .matchup-values {
+    width: 100%;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .matchup-values > div {
+    align-items: flex-start;
+  }
+}

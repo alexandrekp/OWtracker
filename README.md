@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 <img src="./public/owtracker-logo.png" alt="OWTracker" width="170" />
 
@@ -6,7 +6,7 @@
 
 **Understand the meta.**
 
-Overwatch statistics, meta rankings, perks and player comparison in one focused interface.
+Overwatch statistics, live hero counters, meta rankings, perks and player comparison in one focused interface.
 
 [Open OWTracker](https://owtracker.net/) · [View repository](https://github.com/alexandrekp/OWtracker)
 
@@ -18,7 +18,7 @@ Overwatch statistics, meta rankings, perks and player comparison in one focused 
 
 OWTracker is an independent Overwatch companion available as both a web app and a desktop app.
 
-The project brings together hero statistics, an OWTracker meta ranking, perk popularity and player comparison tools in a compact interface designed for quick competitive analysis.
+The project brings together official Blizzard hero statistics, live community hero matchups from Counterwatch, an OWTracker meta ranking, perk popularity and player comparison tools in a compact interface designed for quick competitive analysis.
 
 The web version includes a public landing page, while the desktop version launches directly into the OWTracker interface.
 
@@ -52,10 +52,10 @@ The values are normalized across the selected dataset before the final score is 
 Current tiers:
 
 ```text
-S â‰¥ 85
-A â‰¥ 70
-B â‰¥ 55
-C â‰¥ 40
+S ≥ 85
+A ≥ 70
+B ≥ 55
+C ≥ 40
 D < 40
 ```
 
@@ -75,6 +75,28 @@ D < 40
 - Overall and role ranking
 - Recommended perks
 - Hero positioning inside the current roster
+- Live Counterwatch matchup tab
+
+### Counters
+
+OWTracker retrieves current community matchup data on demand from Counterwatch hero pages through the OWTracker Cloudflare Worker.
+
+For each supported hero, the Counters page can display:
+
+- Hardest matchups (`Countered by`)
+- Favorable matchups (`Strong against`)
+- Counter rating
+- Estimated fight swing when available
+- Confidence level
+- Counterwatch hero win rate
+- Number of tracked matches
+- Counterwatch tier
+- Source update date
+- Rank-by-rank Counterwatch statistics in the backend response
+
+Counter rating is a relative matchup metric and is **not** a raw matchup win rate.
+
+Counterwatch data is community data and is separate from Blizzard's official hero statistics.
 
 ### Players
 
@@ -103,17 +125,54 @@ D < 40
 
 ## Data sources
 
-OWTracker currently combines several data sources depending on the feature.
+OWTracker combines several data sources depending on the feature.
 
 | Data | Source |
 | --- | --- |
 | Global hero statistics | Blizzard official Overwatch statistics |
 | Win / Pick / Ban rates | Blizzard |
-| Player profiles | OverFast |
+| Hero counter ratings and matchup data | Counterwatch |
+| Player profiles and individual statistics | OverFast |
 | Perk popularity | Community data |
 | Meta tiers | Calculated locally by OWTracker |
 
 OWTracker does not claim that its generated tier list is an official Blizzard ranking.
+
+Counterwatch matchup data is third-party community data. It is retrieved on demand through the OWTracker Worker and can change as Counterwatch updates its public hero pages.
+
+## Counterwatch integration
+
+The frontend requests matchup data from the OWTracker Worker:
+
+```text
+/api/counterwatch?hero=<heroId>
+```
+
+Example:
+
+```text
+/api/counterwatch?hero=winston
+```
+
+The Worker retrieves the corresponding Counterwatch hero page, parses the public matchup information and returns normalized JSON to OWTracker.
+
+The response currently includes:
+
+```text
+heroId
+heroName
+role
+tier
+winRate
+matches
+updatedAt
+counters[]
+strongAgainst[]
+rankStats[]
+sourceUrl
+```
+
+This keeps Counterwatch-specific parsing outside the React components and gives both the dedicated Counters page and Hero Detail the same normalized data source.
 
 ## Tech stack
 
@@ -133,6 +192,7 @@ OWTracker does not claim that its generated tier list is an official Blizzard ra
 ### Data / backend
 
 - Blizzard Overwatch statistics
+- Counterwatch community matchup data
 - OverFast player API
 - Cloudflare Worker
 
@@ -223,22 +283,22 @@ git push
 
 ```text
 OWtracker/
-â”œâ”€â”€ public/
-â”œâ”€â”€ scripts/
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ components/
-â”‚   â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ services/
-â”‚   â”œâ”€â”€ types/
-â”‚   â”œâ”€â”€ utils/
-â”‚   â”œâ”€â”€ App.tsx
-â”‚   â””â”€â”€ main.tsx
-â”œâ”€â”€ src-tauri/
-â”œâ”€â”€ worker/
-â”œâ”€â”€ docs/
-â”œâ”€â”€ index.html
-â”œâ”€â”€ package.json
-â””â”€â”€ README.md
+├── public/
+├── scripts/
+├── src/
+│   ├── components/
+│   ├── data/
+│   ├── services/
+│   ├── types/
+│   ├── utils/
+│   ├── App.tsx
+│   └── main.tsx
+├── src-tauri/
+├── worker/
+├── docs/
+├── index.html
+├── package.json
+└── README.md
 ```
 
 ## Philosophy
@@ -247,15 +307,15 @@ OWTracker is designed around a simple principle:
 
 > **Data without the clutter.**
 
-The interface prioritizes the information that is useful for quickly understanding hero performance, the current meta and player profiles without turning each page into an overloaded analytics dashboard.
+The interface prioritizes the information that is useful for quickly understanding hero performance, live matchups, the current meta and player profiles without turning each page into an overloaded analytics dashboard.
 
 ## Disclaimer
 
-OWTracker is an independent project and is not affiliated with, endorsed by, sponsored by, or otherwise associated with Blizzard Entertainment.
+OWTracker is an independent project and is not affiliated with, endorsed by, sponsored by, or otherwise associated with Blizzard Entertainment or Counterwatch.
 
 Overwatch, Blizzard Entertainment and related names, logos, characters and assets are trademarks or intellectual property of their respective owners.
 
-Third-party statistics and community data remain subject to the availability and accuracy of their respective sources.
+Counterwatch and OverFast are third-party data sources. Their statistics and availability remain subject to their respective services.
 
 ---
 
@@ -264,6 +324,3 @@ Third-party statistics and community data remain subject to the availability and
 **OWTracker · Built by AKP**
 
 </div>
-
-
-
