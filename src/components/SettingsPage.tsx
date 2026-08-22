@@ -18,7 +18,6 @@ import type {
 } from "../services/blizzardStats";
 
 import {
-  DEFAULT_APP_PREFERENCES,
   loadAppPreferences,
   resetAppPreferences,
   saveAppPreferences,
