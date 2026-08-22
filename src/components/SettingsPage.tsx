@@ -495,6 +495,15 @@ function SettingsPage() {
 
           <DataRow
             icon={
+              <Activity size={16} />
+            }
+            title="Counterwatch"
+            detail="Hero counter ratings, fight swing and community matchup data."
+            status="MATCHUP DATA"
+          />
+
+          <DataRow
+            icon={
               <Info size={16} />
             }
             title="Community perks"
