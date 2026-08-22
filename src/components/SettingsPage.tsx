@@ -12,6 +12,10 @@ import {
 } from "react";
 
 import type {
+  ReactNode,
+} from "react";
+
+import type {
   BlizzardRegion,
   BlizzardRole,
   BlizzardTier,
@@ -64,6 +68,12 @@ const REFRESH_INTERVALS:
     60,
     120,
   ];
+
+const WEBSITE_URL =
+  "https://owtracker.net/";
+
+const GITHUB_URL =
+  "https://github.com/alexandrekp/OWtracker";
 
 function SettingsPage() {
   const [
@@ -119,8 +129,9 @@ function SettingsPage() {
           </h1>
 
           <p className="subtitle">
-            Defaults, refresh behavior
-            and application data.
+            Defaults, refresh behavior,
+            data sources and application
+            information.
           </p>
         </div>
 
@@ -376,7 +387,7 @@ function SettingsPage() {
             </span>
 
             <h2>
-              OWTracker
+              About OWTracker
             </h2>
           </div>
         </div>
@@ -404,6 +415,10 @@ function SettingsPage() {
             <strong>
               Desktop / Web
             </strong>
+
+            <span className="settings-detail">
+              React + Tauri
+            </span>
           </div>
 
           <div className="settings-card">
@@ -419,6 +434,24 @@ function SettingsPage() {
               PC statistics
             </span>
           </div>
+
+          <LinkCard
+            label="Website"
+            title="owtracker.net"
+            detail="Public web version."
+            href={
+              WEBSITE_URL
+            }
+          />
+
+          <LinkCard
+            label="Source"
+            title="GitHub repository"
+            detail="Source code and project history."
+            href={
+              GITHUB_URL
+            }
+          />
         </div>
       </section>
 
@@ -442,46 +475,142 @@ function SettingsPage() {
         </div>
 
         <div className="settings-list">
-          <div className="settings-row">
-            <div className="settings-row-icon">
+          <DataRow
+            icon={
               <Activity size={16} />
-            </div>
+            }
+            title="Blizzard statistics"
+            detail="Global hero win, pick and ban rates."
+            status="LIVE"
+          />
 
-            <div className="settings-row-content">
-              <strong>
-                Blizzard statistics
-              </strong>
+          <DataRow
+            icon={
+              <Database size={16} />
+            }
+            title="OverFast"
+            detail="Player profiles, competitive ranks and individual statistics."
+            status="PLAYER DATA"
+          />
 
-              <span>
-                Global hero win,
-                pick and ban rates.
-              </span>
-            </div>
+          <DataRow
+            icon={
+              <Info size={16} />
+            }
+            title="Community perks"
+            detail="Perk popularity and community preference data."
+            status="COMMUNITY"
+          />
 
-            <span className="settings-status online">
-              LIVE
+          <DataRow
+            icon={
+              <Activity size={16} />
+            }
+            title="OWTracker Meta Score"
+            detail="Calculated locally from normalized WR 60%, PR 30% and BR 10%."
+            status="CALCULATED"
+          />
+
+          <DataRow
+            icon={
+              <Database size={16} />
+            }
+            title="Local cache"
+            detail="Stores recent datasets and your application preferences."
+            status="ACTIVE"
+          />
+        </div>
+      </section>
+
+      {/* ========================================
+          META METHOD
+      ======================================== */}
+
+      <section className="settings-section">
+        <div className="settings-section-header">
+          <Activity size={16} />
+
+          <div>
+            <span className="settings-eyebrow">
+              META METHOD
+            </span>
+
+            <h2>
+              How the ranking works
+            </h2>
+          </div>
+        </div>
+
+        <div className="settings-grid">
+          <div className="settings-card">
+            <span className="settings-label">
+              Win Rate
+            </span>
+
+            <strong>
+              60%
+            </strong>
+
+            <span className="settings-detail">
+              Main performance signal.
             </span>
           </div>
 
-          <div className="settings-row">
-            <div className="settings-row-icon">
-              <Database size={16} />
-            </div>
-
-            <div className="settings-row-content">
-              <strong>
-                Local cache
-              </strong>
-
-              <span>
-                Stores recent datasets
-                and your preferences.
-              </span>
-            </div>
-
-            <span className="settings-status online">
-              ACTIVE
+          <div className="settings-card">
+            <span className="settings-label">
+              Pick Rate
             </span>
+
+            <strong>
+              30%
+            </strong>
+
+            <span className="settings-detail">
+              Measures current presence.
+            </span>
+          </div>
+
+          <div className="settings-card">
+            <span className="settings-label">
+              Ban Rate
+            </span>
+
+            <strong>
+              10%
+            </strong>
+
+            <span className="settings-detail">
+              Adds competitive pressure.
+            </span>
+          </div>
+        </div>
+
+        <div
+          className="settings-disclaimer"
+          style={{
+            marginTop: "14px",
+          }}
+        >
+          <Info size={17} />
+
+          <div>
+            <strong>
+              OWTracker ranking
+            </strong>
+
+            <p>
+              Win, pick and ban rates are
+              normalized inside the active
+              dataset before the weighted
+              Meta Score is calculated.
+            </p>
+
+            <p>
+              The resulting tier list is an
+              OWTracker interpretation and
+              is not an official Blizzard
+              ranking.
+            </p>
           </div>
         </div>
       </section>
@@ -491,8 +620,15 @@ function SettingsPage() {
 
         <div>
           <strong>
-            Preferences stay local
+            Independent project
           </strong>
+
+          <p>
+            OWTracker is an independent
+            project and is not affiliated
+            with, endorsed by or sponsored
+            by Blizzard Entertainment.
+          </p>
 
           <p>
             Region, rank, role and cache
@@ -512,7 +648,7 @@ type SettingSelectProps = {
   onChange:
     (value: string) => void;
   children:
-    React.ReactNode;
+    ReactNode;
 };
 
 function SettingSelect({
@@ -556,6 +692,82 @@ function SettingSelect({
 
       <span className="settings-detail">
         {detail}
+      </span>
+    </div>
+  );
+}
+
+
+type LinkCardProps = {
+  label: string;
+  title: string;
+  detail: string;
+  href: string;
+};
+
+function LinkCard({
+  label,
+  title,
+  detail,
+  href,
+}: LinkCardProps) {
+  return (
+    <a
+      className="settings-card"
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        textDecoration: "none",
+        color: "inherit",
+      }}
+    >
+      <span className="settings-label">
+        {label}
+      </span>
+
+      <strong>
+        {title}
+      </strong>
+
+      <span className="settings-detail">
+        {detail}
+      </span>
+    </a>
+  );
+}
+
+type DataRowProps = {
+  icon: ReactNode;
+  title: string;
+  detail: string;
+  status: string;
+};
+
+function DataRow({
+  icon,
+  title,
+  detail,
+  status,
+}: DataRowProps) {
+  return (
+    <div className="settings-row">
+      <div className="settings-row-icon">
+        {icon}
+      </div>
+
+      <div className="settings-row-content">
+        <strong>
+          {title}
+        </strong>
+
+        <span>
+          {detail}
+        </span>
+      </div>
+
+      <span className="settings-status online">
+        {status}
       </span>
     </div>
   );
