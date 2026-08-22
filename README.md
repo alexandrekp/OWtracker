@@ -8,7 +8,7 @@
 
 Overwatch statistics, meta rankings, perks and player comparison in one focused interface.
 
-[Open OWTracker](https://alexandrekp.github.io/OWtracker/) · [View repository](https://github.com/alexandrekp/OWtracker)
+[Open OWTracker](https://owtracker.net/) · [View repository](https://github.com/alexandrekp/OWtracker)
 
 </div>
 
@@ -264,4 +264,5 @@ Third-party statistics and community data remain subject to the availability and
 **OWTracker · Built by AKP**
 
 </div>
+
 
