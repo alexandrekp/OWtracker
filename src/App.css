@@ -99,27 +99,26 @@ button {
 .brand {
   display: flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 12px;
-
-  padding: 0 8px 30px;
+  padding: 0 4px 28px;
 }
 
 .brand-mark {
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  height: 92px;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius: 11px;
+  flex-shrink: 0;
+  overflow: visible;
 
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  border-radius: 0;
 
-  color: #111;
-  background: var(--accent);
+  color: inherit;
+  background: transparent;
 }
 
 .brand-name {
@@ -1508,11 +1507,19 @@ button {
   .brand {
     justify-content: center;
 
-    padding-inline: 0;
+    padding: 0 0 24px;
   }
 
-  .brand > div:last-child {
-    display: none;
+  .brand-mark {
+    width: 54px;
+    height: 54px;
+  }
+
+  .brand-logo {
+    width: 54px;
+    height: 54px;
+
+    object-fit: contain;
   }
 
   .nav-item {
@@ -1965,16 +1972,15 @@ button {
 ======================================== */
 
 .brand-mark {
-  width: 46px;
-  height: 46px;
-
-  flex-shrink: 0;
+  width: 100%;
+  height: 115px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  overflow: hidden;
+  flex-shrink: 0;
+  overflow: visible;
 
   background: transparent;
 }
@@ -1982,10 +1988,12 @@ button {
 .brand-logo {
   display: block;
 
-  width: 46px;
-  height: 46px;
+  width: 100%;
+  max-width: 210px;
+  height: 110px;
 
   object-fit: contain;
+  object-position: center;
 
   transform: scale(1.18);
 }

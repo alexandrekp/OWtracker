@@ -31,12 +31,6 @@ function Sidebar({
             className="brand-logo"
           />
         </div>
-
-        <div>
-          <div className="brand-name">
-            OWtracker
-          </div>
-        </div>
       </div>
 
       <nav className="navigation">
@@ -121,3 +115,4 @@ function Sidebar({
 }
 
 export default Sidebar;
+
