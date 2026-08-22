@@ -6,7 +6,7 @@
 
 **Understand the meta.**
 
-Overwatch statistics, live hero counters, meta rankings, perks and player comparison in one focused interface.
+Overwatch statistics, live hero counters, meta rankings, perks and player analysis in one focused interface.
 
 [Open OWTracker](https://owtracker.net/) · [View repository](https://github.com/alexandrekp/OWtracker)
 
@@ -18,26 +18,32 @@ Overwatch statistics, live hero counters, meta rankings, perks and player compar
 
 OWTracker is an independent Overwatch companion available as both a web app and a desktop app.
 
-The project brings together official Blizzard hero statistics, live community hero matchups from Counterwatch, an OWTracker meta ranking, perk popularity and player comparison tools in a compact interface designed for quick competitive analysis.
+The project brings together official Blizzard hero statistics, live community matchup data from Counterwatch, player data from OverFast, an OWTracker meta ranking, perk popularity and player comparison tools in a compact interface designed for quick competitive analysis.
 
-The web version includes a public landing page, while the desktop version launches directly into the OWTracker interface.
+The web version includes a public landing page and SEO-friendly deep routes, while the desktop version launches directly into the OWTracker interface.
 
 ## Features
 
 ### Statistics
 
-- Hero win rate
-- Pick rate
-- Ban rate
-- Region filters
-- Rank filters
-- Role filters
-- Local caching and configurable refresh intervals
-- Manual Blizzard data refresh
+- Official Blizzard hero statistics
+- Win Rate, Pick Rate and Ban Rate
+- Region filter
+- Competitive rank filter
+- Role filter
+- Competitive format filter:
+  - `5v5 · Role Queue`
+  - `6v6 · Open Queue`
+- Apply-based filter workflow
+- Manual Blizzard refresh
+- Local caching with configurable refresh intervals
+- Role leaders
+- OWTracker meta tier list
+- Role-specific hero rankings
 
 ### Meta ranking
 
-OWTracker generates its own meta score from the active Blizzard hero dataset.
+OWTracker generates its own Meta Score from the active Blizzard hero dataset.
 
 Current weighting:
 
@@ -59,6 +65,8 @@ C ≥ 40
 D < 40
 ```
 
+The Meta Score is an OWTracker interpretation and is not an official Blizzard ranking.
+
 ### Heroes
 
 - Full hero database
@@ -71,15 +79,16 @@ D < 40
   - Ban Rate
   - Name
 - Detailed hero pages
-- Current tier and meta score
+- Current tier and Meta Score
 - Overall and role ranking
 - Recommended perks
 - Hero positioning inside the current roster
 - Live Counterwatch matchup tab
+- Blizzard data refresh
 
 ### Counters
 
-OWTracker retrieves current community matchup data on demand from Counterwatch hero pages through the OWTracker Cloudflare Worker.
+OWTracker retrieves current community matchup data on demand from Counterwatch through the OWTracker Cloudflare Worker.
 
 For each supported hero, the Counters page can display:
 
@@ -88,9 +97,9 @@ For each supported hero, the Counters page can display:
 - Counter rating
 - Estimated fight swing when available
 - Confidence level
-- Counterwatch hero win rate
+- Counterwatch hero win rate when available
 - Number of tracked matches
-- Counterwatch tier
+- Counterwatch tier when available
 - Source update date
 - Rank-by-rank Counterwatch statistics in the backend response
 
@@ -100,12 +109,39 @@ Counterwatch data is community data and is separate from Blizzard's official her
 
 ### Players
 
-- Player search
-- Competitive ranks
-- Role comparison
-- Hero performance
-- Side-by-side player comparison
+Player profiles are retrieved on demand through OverFast.
+
+Current player tools include:
+
+- BattleTag player search
+- Saved players / favorites
+- PC and Console platform selection
+- Platform-specific career statistics
+- Protection against displaying PC statistics as Console statistics
+- All Modes, Competitive and Quick Play views
+- Competitive season display when available
+- Competitive format selector:
+  - `5v5 · Role Queue`
+  - `6v6 · Open Queue`
+- 5v5 role ranks:
+  - Tank
+  - Damage
+  - Support
+- 6v6 Open Queue rank
+- Overview statistics
+- Performance averages per 10 minutes
+- Role performance
+- Role playtime distribution
+- Best-performing heroes
+- Career totals
+- Advanced career statistics
+- Hero-specific advanced career data
+- Hero performance table
+- Sort by time, games, Win Rate or KDA
+- Player comparison
 - Shared hero analysis
+
+> Detailed career statistics are only separated when the upstream player data source exposes that distinction. OWTracker does not fabricate separate 5v5 / 6v6 career totals when the source only provides aggregate Competitive statistics.
 
 ### Perks
 
@@ -117,11 +153,32 @@ Counterwatch data is community data and is separate from Blizzard's official her
 
 ### Settings
 
+- Interface language
+- Automatic system-language detection
 - Default region
 - Default competitive rank
 - Default role
+- Default competitive format
 - Configurable cache / refresh interval
 - Persistent local preferences
+- Data source information
+- Meta Score methodology
+- Application information
+
+### Languages
+
+OWTracker currently supports:
+
+- English
+- Français
+- Deutsch
+- Español
+- Português (Brasil)
+- 한국어
+- 日本語
+- 简体中文
+- Русский
+- Auto / System language detection
 
 ## Data sources
 
@@ -131,18 +188,44 @@ OWTracker combines several data sources depending on the feature.
 | --- | --- |
 | Global hero statistics | Blizzard official Overwatch statistics |
 | Win / Pick / Ban rates | Blizzard |
+| 5v5 / 6v6 global format data | Blizzard |
 | Hero counter ratings and matchup data | Counterwatch |
-| Player profiles and individual statistics | OverFast |
+| Player profiles | OverFast |
+| Player ranks and individual statistics | OverFast |
+| Player PC / Console career data | OverFast |
+| Player 5v5 role ranks / 6v6 Open Queue rank | OverFast |
 | Perk popularity | Community data |
 | Meta tiers | Calculated locally by OWTracker |
 
 OWTracker does not claim that its generated tier list is an official Blizzard ranking.
 
-Counterwatch matchup data is third-party community data. It is retrieved on demand through the OWTracker Worker and can change as Counterwatch updates its public hero pages.
+Counterwatch and OverFast are third-party services. Their data and availability remain subject to their respective sources.
 
-## Counterwatch integration
+## Cloudflare Worker
 
-The frontend requests matchup data from the OWTracker Worker:
+The web version uses a Cloudflare Worker as a small backend layer between the React frontend and external data sources.
+
+It keeps external API logic, parsing and CORS handling outside the frontend.
+
+### Blizzard statistics
+
+```text
+/api/blizzard
+```
+
+Supported query parameters include:
+
+```text
+region
+tier
+role
+map
+rq
+```
+
+OWTracker uses the Blizzard queue-format parameter to request the selected competitive dataset instead of automatically mixing formats.
+
+### Counterwatch
 
 ```text
 /api/counterwatch?hero=<heroId>
@@ -154,9 +237,9 @@ Example:
 /api/counterwatch?hero=winston
 ```
 
-The Worker retrieves the corresponding Counterwatch hero page, parses the public matchup information and returns normalized JSON to OWTracker.
+The Worker retrieves the corresponding Counterwatch hero page, parses the public matchup information and returns normalized JSON.
 
-The response currently includes:
+The response can include:
 
 ```text
 heroId
@@ -172,7 +255,59 @@ rankStats[]
 sourceUrl
 ```
 
-This keeps Counterwatch-specific parsing outside the React components and gives both the dedicated Counters page and Hero Detail the same normalized data source.
+This keeps Counterwatch-specific parsing outside the React components and gives the dedicated Counters page and Hero Detail the same normalized data source.
+
+### Player summary
+
+```text
+/api/player/<BattleTag>/summary
+```
+
+### Player statistics
+
+```text
+/api/player/<BattleTag>/stats?platform=pc
+/api/player/<BattleTag>/stats?platform=console
+```
+
+Optional game mode:
+
+```text
+gamemode=competitive
+gamemode=quickplay
+```
+
+The Worker forwards the selected platform instead of forcing all requests to PC.
+
+### Advanced player career
+
+```text
+/api/player/<BattleTag>/career
+```
+
+Supported parameters include:
+
+```text
+platform=pc|console
+gamemode=competitive|quickplay
+hero=<heroId>|all-heroes
+```
+
+## Architecture
+
+```text
+Blizzard statistics ───────┐
+                           │
+Counterwatch ──────────────┼──> Cloudflare Worker ──> React / OWTracker
+                           │
+OverFast player API ───────┘
+
+React / TypeScript
+        │
+        ├── Web build → GitHub Pages / owtracker.net
+        │
+        └── Desktop → Tauri 2 / Rust
+```
 
 ## Tech stack
 
@@ -183,6 +318,8 @@ This keeps Counterwatch-specific parsing outside the React components and gives 
 - Vite
 - Lucide React
 - Responsive CSS
+- History API routing
+- LocalStorage preferences and cache
 
 ### Desktop
 
@@ -194,13 +331,14 @@ This keeps Counterwatch-specific parsing outside the React components and gives 
 - Blizzard Overwatch statistics
 - Counterwatch community matchup data
 - OverFast player API
-- Cloudflare Worker
+- Cloudflare Workers
 
 ### Deployment
 
 - GitHub
 - GitHub Pages
 - Cloudflare
+- Custom domain: `owtracker.net`
 
 ## Installation
 
@@ -258,7 +396,9 @@ Build the frontend:
 npm run build
 ```
 
-The production files are generated inside:
+The build runs TypeScript validation, creates the Vite production bundle and generates the SEO routes.
+
+Production files are generated inside:
 
 ```text
 dist/
@@ -271,7 +411,7 @@ Remove-Item .\docs\* -Recurse -Force
 Copy-Item .\dist\* .\docs\ -Recurse -Force
 ```
 
-Then commit and push the generated deployment:
+Then commit and push:
 
 ```bash
 git add .
@@ -279,15 +419,28 @@ git commit -m "Deploy latest OWTracker web build"
 git push
 ```
 
+## Worker deployment
+
+After changing `worker/src/index.ts` or `worker/src/counterwatch.ts`:
+
+```powershell
+cd worker
+npx wrangler deploy
+```
+
+The frontend and Worker deployments are independent. Updating the frontend does not automatically deploy Worker changes.
+
 ## Project structure
 
 ```text
 OWtracker/
 ├── public/
 ├── scripts/
+│   └── generate-seo-routes.mjs
 ├── src/
 │   ├── components/
 │   ├── data/
+│   ├── i18n/
 │   ├── services/
 │   ├── types/
 │   ├── utils/
@@ -295,6 +448,9 @@ OWtracker/
 │   └── main.tsx
 ├── src-tauri/
 ├── worker/
+│   └── src/
+│       ├── index.ts
+│       └── counterwatch.ts
 ├── docs/
 ├── index.html
 ├── package.json
@@ -311,7 +467,7 @@ The interface prioritizes the information that is useful for quickly understandi
 
 ## Disclaimer
 
-OWTracker is an independent project and is not affiliated with, endorsed by, sponsored by, or otherwise associated with Blizzard Entertainment or Counterwatch.
+OWTracker is an independent project and is not affiliated with, endorsed by, sponsored by, or otherwise associated with Blizzard Entertainment, Counterwatch or OverFast.
 
 Overwatch, Blizzard Entertainment and related names, logos, characters and assets are trademarks or intellectual property of their respective owners.
 
