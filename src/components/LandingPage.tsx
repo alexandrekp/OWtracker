@@ -212,6 +212,23 @@ function LandingPage({
           />
         </section>
 
+
+        <section className="landing-seo">
+          <span className="landing-section-eyebrow">
+            OVERWATCH STATS
+          </span>
+
+          <h2>
+            Overwatch hero stats, meta rankings and player comparison.
+          </h2>
+
+          <p>
+            Track hero win rates, pick rates and ban rates, compare the current
+            Overwatch meta, explore hero performance by role and rank, and
+            review player profiles in one focused companion.
+          </p>
+        </section>
+
         <section className="landing-cta">
           <div>
             <span className="landing-section-eyebrow">
