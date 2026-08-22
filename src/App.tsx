@@ -3,6 +3,10 @@ import {
   useState,
 } from "react";
 
+import {
+  isTauri,
+} from "@tauri-apps/api/core";
+
 import "./App.css";
 import "./AppUx.css";
 import "./Responsive.css";
@@ -14,7 +18,7 @@ import HeroesPage from "./components/HeroesPage";
 import PlayersPage from "./components/PlayersPage";
 import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
-
+import LandingPage from "./components/LandingPage";
 
 import AppLoader from "./components/ui/AppLoader";
 import AppErrorBoundary from "./components/ui/AppErrorBoundary";
@@ -50,16 +54,16 @@ function App() {
     setAppReady,
   ] = useState(false);
 
+  const [
+    dashboardOpen,
+    setDashboardOpen,
+  ] =
+    useState(
+      () =>
+        isTauri(),
+    );
+
   useEffect(() => {
-    /*
-      Small startup transition.
-
-      This is intentionally short:
-      we are not faking a long load,
-      just avoiding an abrupt window
-      appearance.
-    */
-
     const timer =
       window.setTimeout(
         () => {
@@ -190,6 +194,25 @@ function App() {
   }
 
   /* ========================================
+     WEB LANDING
+  ======================================== */
+
+  if (
+    !isTauri() &&
+    !dashboardOpen
+  ) {
+    return (
+      <LandingPage
+        onOpenDashboard={() =>
+          setDashboardOpen(
+            true,
+          )
+        }
+      />
+    );
+  }
+
+  /* ========================================
      APP
   ======================================== */
 
@@ -206,11 +229,6 @@ function App() {
         />
 
         <main className="main-content">
-          {/* ===============================
-              PLAYER PAGE
-              Kept mounted intentionally.
-          ================================ */}
-
           {activeSection ===
             "players" && (
             <div
@@ -227,10 +245,6 @@ function App() {
               />
             </div>
           )}
-
-          {/* ===============================
-              HERO DETAIL
-          ================================ */}
 
           {selectedHero && (
             <div
@@ -250,10 +264,6 @@ function App() {
               />
             </div>
           )}
-
-          {/* ===============================
-              NORMAL SECTIONS
-          ================================ */}
 
           {!selectedHero && (
             <>
