@@ -23,6 +23,8 @@ import LandingPage from "./components/LandingPage";
 import SeoIntro from "./components/SeoIntro";
 import DataStatus from "./components/DataStatus";
 
+import I18nDomBridge from "./i18n/I18nDomBridge";
+
 import AppLoader from "./components/ui/AppLoader";
 import AppErrorBoundary from "./components/ui/AppErrorBoundary";
 
@@ -445,7 +447,10 @@ function App() {
 
   if (!appReady) {
     return (
-      <AppLoader />
+      <>
+        <I18nDomBridge />
+        <AppLoader />
+      </>
     );
   }
 
@@ -454,16 +459,22 @@ function App() {
     !dashboardOpen
   ) {
     return (
-      <LandingPage
-        onOpenDashboard={
-          openDashboard
-        }
-      />
+      <>
+        <I18nDomBridge />
+
+        <LandingPage
+          onOpenDashboard={
+            openDashboard
+          }
+        />
+      </>
     );
   }
 
   return (
     <AppErrorBoundary>
+      <I18nDomBridge />
+
       <div className="app-shell app-ready">
         <Sidebar
           activeSection={

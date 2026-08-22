@@ -4,6 +4,14 @@ import type {
   BlizzardTier,
 } from "./blizzardStats";
 
+import {
+  isAppLanguage,
+} from "../i18n/i18n";
+
+import type {
+  AppLanguage,
+} from "../i18n/i18n";
+
 export type RefreshIntervalMinutes =
   | 5
   | 15
@@ -17,6 +25,7 @@ export type AppPreferences = {
   defaultRole: BlizzardRole;
   refreshIntervalMinutes:
     RefreshIntervalMinutes;
+  language: AppLanguage;
 };
 
 export const DEFAULT_APP_PREFERENCES:
@@ -25,6 +34,7 @@ export const DEFAULT_APP_PREFERENCES:
     defaultTier: "All",
     defaultRole: "All",
     refreshIntervalMinutes: 30,
+    language: "auto",
   };
 
 const STORAGE_KEY =
@@ -77,6 +87,13 @@ export function loadAppPreferences():
         )
           ? parsed.refreshIntervalMinutes
           : DEFAULT_APP_PREFERENCES.refreshIntervalMinutes,
+
+      language:
+        isAppLanguage(
+          parsed.language,
+        )
+          ? parsed.language
+          : DEFAULT_APP_PREFERENCES.language,
     };
   } catch {
     return {
@@ -93,6 +110,16 @@ export function saveAppPreferences(
     STORAGE_KEY,
     JSON.stringify(
       preferences,
+    ),
+  );
+
+  window.dispatchEvent(
+    new CustomEvent(
+      "owtracker:preferences-changed",
+      {
+        detail:
+          preferences,
+      },
     ),
   );
 }

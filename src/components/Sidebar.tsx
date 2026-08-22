@@ -7,6 +7,10 @@ import {
   Users,
 } from "lucide-react";
 
+import {
+  useI18n,
+} from "../i18n/i18n";
+
 import type {
   AppSection,
 } from "../types/navigation";
@@ -22,6 +26,10 @@ function Sidebar({
   activeSection,
   onNavigate,
 }: SidebarProps) {
+  const {
+    t,
+  } = useI18n();
+
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -46,7 +54,7 @@ function Sidebar({
           }
         >
           <BarChart3 size={17} />
-          Stats
+          {t("nav.stats")}
         </button>
 
         <button
@@ -60,7 +68,7 @@ function Sidebar({
           }
         >
           <Search size={17} />
-          Players
+          {t("nav.players")}
         </button>
 
         <button
@@ -74,7 +82,7 @@ function Sidebar({
           }
         >
           <Users size={17} />
-          Heroes
+          {t("nav.heroes")}
         </button>
 
         <button
@@ -88,7 +96,7 @@ function Sidebar({
           }
         >
           <Swords size={17} />
-          Counters
+          {t("nav.counters")}
         </button>
 
         <button
@@ -102,7 +110,7 @@ function Sidebar({
           }
         >
           <Sparkles size={17} />
-          Perks
+          {t("nav.perks")}
         </button>
       </nav>
 
@@ -118,7 +126,7 @@ function Sidebar({
           }
         >
           <Settings size={17} />
-          Settings
+          {t("nav.settings")}
         </button>
 
         <div className="version">

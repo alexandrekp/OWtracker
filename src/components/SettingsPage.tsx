@@ -2,6 +2,7 @@ import {
   Activity,
   Database,
   Info,
+  Languages,
   RotateCcw,
   Settings2,
   ShieldCheck,
@@ -31,6 +32,17 @@ import type {
   AppPreferences,
   RefreshIntervalMinutes,
 } from "../services/appPreferences";
+
+import {
+  getLanguageLabel,
+  LANGUAGE_OPTIONS,
+  resolveAppLanguage,
+  useI18n,
+} from "../i18n/i18n";
+
+import type {
+  AppLanguage,
+} from "../i18n/i18n";
 
 const REGIONS:
   BlizzardRegion[] = [
@@ -76,6 +88,10 @@ const GITHUB_URL =
   "https://github.com/alexandrekp/OWtracker";
 
 function SettingsPage() {
+  const {
+    t,
+  } = useI18n();
+
   const [
     preferences,
     setPreferences,
@@ -83,6 +99,11 @@ function SettingsPage() {
     useState<AppPreferences>(
       () =>
         loadAppPreferences(),
+    );
+
+  const resolvedLanguage =
+    resolveAppLanguage(
+      preferences.language,
     );
 
   function updatePreference<
@@ -125,22 +146,93 @@ function SettingsPage() {
           </p>
 
           <h1>
-            Settings
+            {t("settings.title")}
           </h1>
 
           <p className="subtitle">
-            Defaults, refresh behavior,
-            data sources and application
-            information.
+            {t("settings.subtitle")}
           </p>
         </div>
 
         <div className="live-status">
           <span className="status-dot" />
 
-          Saved automatically
+          {t("settings.saved")}
         </div>
       </header>
+
+      {/* ========================================
+          LANGUAGE
+      ======================================== */}
+
+      <section className="settings-section">
+        <div className="settings-section-header">
+          <Languages size={16} />
+
+          <div>
+            <span className="settings-eyebrow">
+              {t("settings.language.eyebrow")}
+            </span>
+
+            <h2>
+              {t("settings.language.title")}
+            </h2>
+          </div>
+        </div>
+
+        <div className="settings-grid">
+          <SettingSelect
+            label={t("settings.language.label")}
+            detail={t("settings.language.detail")}
+            value={
+              preferences.language
+            }
+            onChange={(
+              value,
+            ) =>
+              updatePreference(
+                "language",
+                value as
+                  AppLanguage,
+              )
+            }
+          >
+            {LANGUAGE_OPTIONS.map(
+              (option) => (
+                <option
+                  key={
+                    option.value
+                  }
+                  value={
+                    option.value
+                  }
+                >
+                  {option.label}
+                </option>
+              ),
+            )}
+          </SettingSelect>
+
+          <div className="settings-card">
+            <span className="settings-label">
+              {t("settings.language.active")}
+            </span>
+
+            <strong>
+              {getLanguageLabel(
+                resolvedLanguage,
+              )}
+            </strong>
+
+            <span className="settings-detail">
+              {preferences.language ===
+              "auto"
+                ? t("settings.language.auto")
+                : t("settings.language.manual")}
+            </span>
+          </div>
+        </div>
+      </section>
 
       {/* ========================================
           DEFAULT STATS
@@ -152,19 +244,19 @@ function SettingsPage() {
 
           <div>
             <span className="settings-eyebrow">
-              DEFAULT STATS
+              {t("settings.stats.eyebrow")}
             </span>
 
             <h2>
-              Statistics preferences
+              {t("settings.stats.title")}
             </h2>
           </div>
         </div>
 
         <div className="settings-grid">
           <SettingSelect
-            label="Default region"
-            detail="Used when opening Stats."
+            label={t("settings.stats.region")}
+            detail={t("settings.stats.regionDetail")}
             value={
               preferences.defaultRegion
             }
@@ -191,8 +283,8 @@ function SettingsPage() {
           </SettingSelect>
 
           <SettingSelect
-            label="Default rank"
-            detail="Competitive rank filter."
+            label={t("settings.stats.rank")}
+            detail={t("settings.stats.rankDetail")}
             value={
               preferences.defaultTier
             }
@@ -221,8 +313,8 @@ function SettingsPage() {
           </SettingSelect>
 
           <SettingSelect
-            label="Default role"
-            detail="Hero role loaded by default."
+            label={t("settings.stats.role")}
+            detail={t("settings.stats.roleDetail")}
             value={
               preferences.defaultRole
             }
@@ -262,19 +354,19 @@ function SettingsPage() {
 
           <div>
             <span className="settings-eyebrow">
-              CACHE
+              {t("settings.cache.eyebrow")}
             </span>
 
             <h2>
-              Refresh behavior
+              {t("settings.cache.title")}
             </h2>
           </div>
         </div>
 
         <div className="settings-grid">
           <SettingSelect
-            label="Cache duration"
-            detail="After this delay Stats suggests a refresh."
+            label={t("settings.cache.duration")}
+            detail={t("settings.cache.durationDetail")}
             value={
               String(
                 preferences.refreshIntervalMinutes,
@@ -299,10 +391,10 @@ function SettingsPage() {
                   value={minutes}
                 >
                   {minutes < 60
-                    ? `${minutes} minutes`
+                    ? `${minutes} ${t("settings.minutes")}`
                     : minutes === 60
-                      ? "1 hour"
-                      : "2 hours"}
+                      ? t("settings.hour")
+                      : t("settings.hours2")}
                 </option>
               ),
             )}
@@ -310,7 +402,7 @@ function SettingsPage() {
 
           <div className="settings-card">
             <span className="settings-label">
-              Current behavior
+              {t("settings.cache.current")}
             </span>
 
             <strong>
@@ -319,14 +411,13 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Cached Blizzard data remains
-              valid for this duration.
+              {t("settings.cache.valid")}
             </span>
           </div>
 
           <div className="settings-card">
             <span className="settings-label">
-              Defaults
+              {t("settings.cache.defaults")}
             </span>
 
             <strong>
@@ -338,8 +429,7 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Applied next time you open
-              the Stats page.
+              {t("settings.cache.defaultsDetail")}
             </span>
           </div>
         </div>
@@ -369,7 +459,7 @@ function SettingsPage() {
         >
           <RotateCcw size={14} />
 
-          Reset defaults
+          {t("settings.cache.reset")}
         </button>
       </section>
 
@@ -383,11 +473,11 @@ function SettingsPage() {
 
           <div>
             <span className="settings-eyebrow">
-              APPLICATION
+              {t("settings.app.eyebrow")}
             </span>
 
             <h2>
-              About OWTracker
+              {t("settings.app.title")}
             </h2>
           </div>
         </div>
@@ -395,7 +485,7 @@ function SettingsPage() {
         <div className="settings-grid">
           <div className="settings-card">
             <span className="settings-label">
-              Version
+              {t("settings.app.version")}
             </span>
 
             <strong>
@@ -403,13 +493,13 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Current release
+              {t("settings.app.currentRelease")}
             </span>
           </div>
 
           <div className="settings-card">
             <span className="settings-label">
-              Platform
+              {t("settings.app.platform")}
             </span>
 
             <strong>
@@ -423,7 +513,7 @@ function SettingsPage() {
 
           <div className="settings-card">
             <span className="settings-label">
-              Game
+              {t("settings.app.game")}
             </span>
 
             <strong>
@@ -431,23 +521,23 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              PC statistics
+              {t("settings.app.pcStats")}
             </span>
           </div>
 
           <LinkCard
-            label="Website"
+            label={t("settings.app.website")}
             title="owtracker.net"
-            detail="Public web version."
+            detail={t("settings.app.publicWeb")}
             href={
               WEBSITE_URL
             }
           />
 
           <LinkCard
-            label="Source"
-            title="GitHub repository"
-            detail="Source code and project history."
+            label={t("settings.app.source")}
+            title={t("settings.app.repo")}
+            detail={t("settings.app.repoDetail")}
             href={
               GITHUB_URL
             }
@@ -465,11 +555,11 @@ function SettingsPage() {
 
           <div>
             <span className="settings-eyebrow">
-              DATA
+              {t("settings.data.eyebrow")}
             </span>
 
             <h2>
-              Data sources
+              {t("settings.data.title")}
             </h2>
           </div>
         </div>
@@ -480,7 +570,7 @@ function SettingsPage() {
               <Activity size={16} />
             }
             title="Blizzard statistics"
-            detail="Global hero win, pick and ban rates."
+            detail={t("settings.data.blizzardDetail")}
             status="LIVE"
           />
 
@@ -489,7 +579,7 @@ function SettingsPage() {
               <Database size={16} />
             }
             title="OverFast"
-            detail="Player profiles, competitive ranks and individual statistics."
+            detail={t("settings.data.overfastDetail")}
             status="PLAYER DATA"
           />
 
@@ -498,7 +588,7 @@ function SettingsPage() {
               <Activity size={16} />
             }
             title="Counterwatch"
-            detail="Hero counter ratings, fight swing and community matchup data."
+            detail={t("settings.data.counterwatchDetail")}
             status="MATCHUP DATA"
           />
 
@@ -506,8 +596,8 @@ function SettingsPage() {
             icon={
               <Info size={16} />
             }
-            title="Community perks"
-            detail="Perk popularity and community preference data."
+            title={t("settings.data.perks")}
+            detail={t("settings.data.perksDetail")}
             status="COMMUNITY"
           />
 
@@ -516,7 +606,7 @@ function SettingsPage() {
               <Activity size={16} />
             }
             title="OWTracker Meta Score"
-            detail="Calculated locally from normalized WR 60%, PR 30% and BR 10%."
+            detail={t("settings.data.metaDetail")}
             status="CALCULATED"
           />
 
@@ -524,8 +614,8 @@ function SettingsPage() {
             icon={
               <Database size={16} />
             }
-            title="Local cache"
-            detail="Stores recent datasets and your application preferences."
+            title={t("settings.data.cache")}
+            detail={t("settings.data.cacheDetail")}
             status="ACTIVE"
           />
         </div>
@@ -541,11 +631,11 @@ function SettingsPage() {
 
           <div>
             <span className="settings-eyebrow">
-              META METHOD
+              {t("settings.meta.eyebrow")}
             </span>
 
             <h2>
-              How the ranking works
+              {t("settings.meta.title")}
             </h2>
           </div>
         </div>
@@ -553,7 +643,7 @@ function SettingsPage() {
         <div className="settings-grid">
           <div className="settings-card">
             <span className="settings-label">
-              Win Rate
+              {t("settings.meta.win")}
             </span>
 
             <strong>
@@ -561,13 +651,13 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Main performance signal.
+              {t("settings.meta.winDetail")}
             </span>
           </div>
 
           <div className="settings-card">
             <span className="settings-label">
-              Pick Rate
+              {t("settings.meta.pick")}
             </span>
 
             <strong>
@@ -575,13 +665,13 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Measures current presence.
+              {t("settings.meta.pickDetail")}
             </span>
           </div>
 
           <div className="settings-card">
             <span className="settings-label">
-              Ban Rate
+              {t("settings.meta.ban")}
             </span>
 
             <strong>
@@ -589,7 +679,7 @@ function SettingsPage() {
             </strong>
 
             <span className="settings-detail">
-              Adds competitive pressure.
+              {t("settings.meta.banDetail")}
             </span>
           </div>
         </div>
@@ -604,21 +694,15 @@ function SettingsPage() {
 
           <div>
             <strong>
-              OWTracker ranking
+              {t("settings.meta.ranking")}
             </strong>
 
             <p>
-              Win, pick and ban rates are
-              normalized inside the active
-              dataset before the weighted
-              Meta Score is calculated.
+              {t("settings.meta.explain1")}
             </p>
 
             <p>
-              The resulting tier list is an
-              OWTracker interpretation and
-              is not an official Blizzard
-              ranking.
+              {t("settings.meta.explain2")}
             </p>
           </div>
         </div>
@@ -629,20 +713,15 @@ function SettingsPage() {
 
         <div>
           <strong>
-            Independent project
+            {t("settings.disclaimer.title")}
           </strong>
 
           <p>
-            OWTracker is an independent
-            project and is not affiliated
-            with, endorsed by or sponsored
-            by Blizzard Entertainment.
+            {t("settings.disclaimer.text")}
           </p>
 
           <p>
-            Region, rank, role and cache
-            duration are stored locally in
-            OWTracker using localStorage.
+            {t("settings.disclaimer.storage")}
           </p>
         </div>
       </div>
