@@ -97,7 +97,7 @@ function PerksPage({
     ]);
 
   return (
-    <div className="perks-page">
+    <div className="perks-page perks-v2-page">
       <header className="topbar">
         <div>
           <p className="eyebrow">

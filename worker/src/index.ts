@@ -168,9 +168,16 @@ async function handlePlayer(
       const params =
         new URLSearchParams();
 
+      const platform =
+        url.searchParams.get(
+          "platform",
+        );
+
       params.set(
         "platform",
-        "pc",
+        platform === "console"
+          ? "console"
+          : "pc",
       );
 
       const gamemode =
@@ -194,6 +201,55 @@ async function handlePlayer(
         `${OVERFAST_API}/players/${encodeURIComponent(
           battleTag,
         )}/stats/summary?${params.toString()}`,
+      );
+    }
+
+    if (
+      action ===
+      "career"
+    ) {
+      const gamemode =
+        url.searchParams.get(
+          "gamemode",
+        );
+
+      if (
+        gamemode !== "competitive" &&
+        gamemode !== "quickplay"
+      ) {
+        return json(
+          {
+            error:
+              "Career stats require competitive or quickplay gamemode.",
+          },
+          400,
+        );
+      }
+
+      const platform =
+        url.searchParams.get(
+          "platform",
+        );
+
+      const hero =
+        url.searchParams.get(
+          "hero",
+        ) ?? "all-heroes";
+
+      const params =
+        new URLSearchParams({
+          gamemode,
+          platform:
+            platform === "console"
+              ? "console"
+              : "pc",
+          hero,
+        });
+
+      return proxyOverFast(
+        `${OVERFAST_API}/players/${encodeURIComponent(
+          battleTag,
+        )}/stats/career?${params.toString()}`,
       );
     }
 

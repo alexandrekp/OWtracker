@@ -1,0 +1,529 @@
+/* ========================================
+   OWTRACKER — GLOBAL PAGE POLISH
+   Keeps the existing black/orange design.
+   Loaded after Responsive.css on purpose.
+======================================== */
+
+/* ----------------------------------------
+   1. SEO INTRO = COMPACT CONTEXT STRIP
+---------------------------------------- */
+
+.main-content .seo-intro {
+  min-height: 64px;
+  display: grid;
+  grid-template-columns:
+    minmax(108px, max-content)
+    minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 2px;
+
+  margin: 0 0 16px;
+  padding: 10px 14px;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      105deg,
+      rgba(255, 122, 26, 0.045),
+      transparent 34%
+    ),
+    var(--surface);
+}
+
+.main-content .seo-intro-eyebrow {
+  grid-column: 1;
+  grid-row: 1 / 3;
+
+  margin: 0;
+
+  align-self: center;
+
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  line-height: 1.35;
+}
+
+.main-content .seo-intro h1 {
+  grid-column: 2;
+  grid-row: 1;
+
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.main-content .seo-intro p {
+  grid-column: 2;
+  grid-row: 2;
+
+  max-width: 980px;
+  margin: 0;
+
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+/* ----------------------------------------
+   2. REMOVE THE "DOUBLE INTRO" FEEL
+   SEO already carries the category/description.
+---------------------------------------- */
+
+.seo-intro + .global-page > .topbar .eyebrow,
+.seo-intro + .global-page > .topbar .subtitle,
+.seo-intro + .global-page > .stats-header .eyebrow,
+.seo-intro + .perks-page > .topbar .eyebrow,
+.seo-intro + .perks-page > .topbar .subtitle,
+.seo-intro + .players-page-shell
+  .player-page > .topbar .eyebrow,
+.seo-intro + .players-page-shell
+  .player-page > .topbar .subtitle {
+  display: none;
+}
+
+/* ----------------------------------------
+   3. COMMON PAGE HEADER RHYTHM
+---------------------------------------- */
+
+.seo-intro + .global-page > .topbar,
+.seo-intro + .perks-page > .topbar,
+.seo-intro + .players-page-shell
+  .player-page > .topbar {
+  min-height: 0;
+
+  align-items: center;
+
+  margin: 0 0 18px;
+  padding: 0 1px;
+}
+
+.seo-intro + .global-page > .topbar h1,
+.seo-intro + .perks-page > .topbar h1,
+.seo-intro + .players-page-shell
+  .player-page > .topbar h1 {
+  margin: 0;
+
+  font-size: clamp(32px, 3vw, 42px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.seo-intro + .global-page > .stats-header {
+  margin: 0 0 18px;
+}
+
+.seo-intro + .global-page
+  > .stats-header
+  .stats-header-main {
+  align-items: center;
+}
+
+.seo-intro + .global-page
+  > .stats-header
+  .stats-header-copy h1 {
+  font-size: clamp(32px, 3vw, 42px);
+}
+
+/* Keep data source/action clusters visually aligned. */
+
+.seo-intro + .global-page
+  .stats-header-actions,
+.seo-intro + .global-page
+  .counter-source-stack,
+.seo-intro + .players-page-shell
+  .player-source-stack {
+  align-self: center;
+}
+
+/* ----------------------------------------
+   4. STATS — DATA SOONER ON SCREEN
+---------------------------------------- */
+
+.meta-overview-section {
+  margin-bottom: 20px;
+}
+
+.meta-overview-heading {
+  margin-bottom: 10px;
+}
+
+.meta-overview-heading h2 {
+  font-size: 15px;
+}
+
+.meta-overview-heading p {
+  margin-top: 3px;
+}
+
+.meta-leader-grid {
+  gap: 10px;
+}
+
+.meta-leader-card {
+  min-height: 108px;
+  padding: 11px;
+}
+
+.meta-leader-label {
+  margin-bottom: 8px;
+}
+
+.meta-leader-main {
+  gap: 8px;
+}
+
+.meta-leader-avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.meta-leader-score {
+  top: 31px;
+  right: 11px;
+}
+
+.meta-leader-stats {
+  margin-top: 9px;
+  padding-top: 7px;
+}
+
+/* Stats filter panel gets a clearer compact-toolbar feel. */
+
+.stats-data-filters,
+.stats-controls {
+  border-radius: 10px;
+}
+
+/* ----------------------------------------
+   5. HEROES — CLEANER SUMMARY + TOOLBAR
+---------------------------------------- */
+
+.seo-intro + .global-page
+  > .stats-overview {
+  gap: 10px;
+
+  margin-bottom: 16px;
+}
+
+.seo-intro + .global-page
+  > .stats-overview
+  .summary-card {
+  min-height: 82px;
+
+  padding-top: 13px;
+  padding-bottom: 13px;
+
+  border-radius: 10px;
+}
+
+.seo-intro + .global-page
+  > .stats-overview
+  .summary-card > strong {
+  margin-top: 4px;
+
+  font-size: 22px;
+}
+
+.seo-intro + .global-page
+  > .toolbar {
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+/* ----------------------------------------
+   6. PLAYERS — TIGHTER FLOW
+---------------------------------------- */
+
+.players-page-shell
+  > .players-view-switch {
+  margin-bottom: 14px;
+
+  padding: 3px;
+
+  border-radius: 9px;
+}
+
+.players-view-button {
+  height: 30px;
+
+  padding-inline: 11px;
+}
+
+.player-search-panel {
+  border-radius: 11px;
+}
+
+.player-search-heading {
+  margin-bottom: 12px;
+}
+
+/* ----------------------------------------
+   7. COUNTERS — MORE ROOM FOR MATCHUPS
+---------------------------------------- */
+
+.counter-explainer {
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.counter-explainer-item {
+  min-height: 64px;
+
+  padding: 11px 13px;
+
+  border-radius: 9px;
+}
+
+.counter-explainer-item strong {
+  font-size: 10px;
+}
+
+.counter-explainer-item span {
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.counter-browser {
+  grid-template-columns:
+    240px
+    minmax(0, 1fr);
+
+  gap: 14px;
+}
+
+.counter-hero-picker {
+  padding: 13px;
+
+  border-radius: 10px;
+}
+
+.counter-picker-header h2 {
+  font-size: 16px;
+}
+
+.counter-search {
+  height: 36px;
+
+  margin-top: 11px;
+}
+
+.counter-hero-list {
+  max-height: 520px;
+}
+
+.counter-selected-hero {
+  min-height: 92px;
+
+  padding: 13px 15px;
+}
+
+.counter-selected-main img {
+  width: 60px;
+  height: 60px;
+  flex-basis: 60px;
+}
+
+.counter-selected-main h2 {
+  font-size: 20px;
+}
+
+.counter-columns {
+  gap: 12px;
+
+  margin-top: 12px;
+}
+
+.counter-matchup-list {
+  margin-top: 12px;
+}
+
+.counter-matchup-row {
+  min-height: 68px;
+
+  padding-block: 9px;
+}
+
+/* ----------------------------------------
+   8. PERKS — DENSER, MORE EDITORIAL CARDS
+---------------------------------------- */
+
+.perks-toolbar {
+  margin-bottom: 14px;
+}
+
+.perks-heroes-list {
+  gap: 11px;
+}
+
+.global-perk-hero-card {
+  border-radius: 11px;
+}
+
+.global-perk-hero-header {
+  min-height: 62px;
+
+  padding: 9px 13px;
+}
+
+.global-perk-hero-portrait {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 8px;
+}
+
+.global-perk-hero-portrait img {
+  height: 39px;
+}
+
+.global-perk-hero-main h2 {
+  margin-top: 3px;
+
+  font-size: 14px;
+}
+
+.global-perk-column {
+  padding: 12px;
+}
+
+.global-perk-list {
+  gap: 7px;
+}
+
+.global-perk-item {
+  padding: 9px;
+
+  border-radius: 9px;
+}
+
+.global-perk-item-top {
+  grid-template-columns:
+    38px
+    minmax(0, 1fr)
+    54px;
+
+  gap: 9px;
+}
+
+.global-perk-icon {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 8px;
+}
+
+.global-perk-popularity {
+  margin-top: 8px;
+  padding-top: 7px;
+}
+
+/* ----------------------------------------
+   9. DESKTOP WIDTH / SECTION CONSISTENCY
+---------------------------------------- */
+
+.main-content .global-page,
+.main-content .players-page-shell,
+.main-content .perks-page {
+  min-width: 0;
+}
+
+.detail-panel,
+.summary-card,
+.counter-explainer-item,
+.counter-selected-hero,
+.global-perk-hero-card,
+.player-search-panel {
+  box-shadow:
+    0 1px 0
+    rgba(255, 255, 255, 0.015);
+}
+
+/* ----------------------------------------
+   10. RESPONSIVE
+---------------------------------------- */
+
+@media (max-width: 1050px) {
+  .main-content .seo-intro {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+
+    row-gap: 3px;
+  }
+
+  .main-content .seo-intro-eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .main-content .seo-intro h1 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .main-content .seo-intro p {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .counter-browser {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .main-content .seo-intro {
+    min-height: 0;
+
+    margin-bottom: 13px;
+    padding: 10px 11px;
+  }
+
+  .main-content .seo-intro h1 {
+    font-size: 13px;
+  }
+
+  .main-content .seo-intro p {
+    font-size: 9px;
+  }
+
+  .seo-intro + .global-page > .topbar,
+  .seo-intro + .perks-page > .topbar,
+  .seo-intro + .players-page-shell
+    .player-page > .topbar {
+    align-items: flex-start;
+
+    margin-bottom: 15px;
+  }
+
+  .seo-intro + .global-page > .topbar h1,
+  .seo-intro + .perks-page > .topbar h1,
+  .seo-intro + .players-page-shell
+    .player-page > .topbar h1 {
+    font-size: 32px;
+  }
+
+  .counter-explainer {
+    grid-template-columns: 1fr;
+  }
+
+  .global-perk-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .global-perk-column:first-child {
+    border-right: 0;
+    border-bottom:
+      1px solid
+      var(--border);
+  }
+}

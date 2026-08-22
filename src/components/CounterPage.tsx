@@ -172,7 +172,7 @@ function CounterPage({
   ]);
 
   return (
-    <div className="counter-page global-page">
+    <div className="counter-page global-page counters-v2-page">
       <header className="topbar counter-page-header">
         <div>
           <p className="eyebrow">

@@ -1,0 +1,2053 @@
+/* ========================================
+   OWTRACKER — LAYOUT V2
+   Real structural pass, loaded after PagePolish.css.
+   Data, colors, typography and component behavior stay intact.
+======================================== */
+
+/* ----------------------------------------
+   GLOBAL: make the SEO strip feel like context,
+   not a second full header.
+---------------------------------------- */
+
+.main-content .seo-intro {
+  min-height: 48px;
+  grid-template-columns: 118px minmax(0, 1fr);
+  margin-bottom: 20px;
+  padding: 8px 14px;
+  border-left: 2px solid var(--accent);
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 122, 26, 0.05),
+      transparent 28%
+    ),
+    rgba(16, 19, 25, 0.76);
+}
+
+.main-content .seo-intro h1 {
+  font-size: 13px;
+}
+
+.main-content .seo-intro p {
+  font-size: 8px;
+  opacity: 0.78;
+}
+
+/* ========================================
+   STATS
+   Filters first, then a split dashboard:
+   leaders left / role rankings right.
+======================================== */
+
+.stats-v2-page > .stats-header {
+  margin-bottom: 12px;
+}
+
+.stats-v2-page > .stats-unified-controls {
+  margin: 0 0 18px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(15, 18, 24, 0.74);
+}
+
+.stats-v2-page .stats-unified-top {
+  grid-template-columns:
+    repeat(3, minmax(150px, 1fr))
+    90px;
+  gap: 9px;
+}
+
+.stats-v2-page .stats-data-filter label {
+  margin-bottom: 5px;
+}
+
+.stats-v2-page .stats-data-filter select {
+  height: 36px;
+}
+
+.stats-v2-page .stats-apply-button {
+  width: 90px;
+  min-width: 90px;
+  height: 36px;
+}
+
+/* Actual dashboard split */
+.stats-v2-page > .meta-overview-section {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(360px, 0.85fr);
+  grid-template-areas:
+    "heading heading"
+    "leaders roles";
+  gap: 12px 14px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.stats-v2-page .meta-overview-heading {
+  grid-area: heading;
+  margin: 0 0 2px;
+}
+
+.stats-v2-page .meta-leader-grid {
+  grid-area: leaders;
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stats-v2-page .meta-leader-card {
+  min-height: 126px;
+  padding: 13px;
+}
+
+.stats-v2-page .meta-role-rankings {
+  grid-area: roles;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0;
+}
+
+.stats-v2-page .meta-role-ranking {
+  min-height: 0;
+}
+
+.stats-v2-page .meta-role-ranking-header {
+  min-height: 30px;
+  padding: 0 10px;
+}
+
+.stats-v2-page .meta-role-ranking-row {
+  min-height: 38px;
+  padding: 4px 9px;
+}
+
+.stats-v2-page .meta-role-avatar {
+  width: 27px;
+  height: 27px;
+}
+
+.stats-v2-page > .meta-tier-section {
+  margin-top: 0;
+}
+
+/* ========================================
+   HEROES
+   Overview becomes a real hero dashboard:
+   title/actions left, 3 KPIs right.
+======================================== */
+
+.heroes-v2-page > .heroes-v2-overview-shell {
+  display: grid;
+  grid-template-columns:
+    minmax(280px, 0.72fr)
+    minmax(0, 1.45fr);
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.heroes-v2-overview-shell > .topbar {
+  min-height: 100%;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 122, 26, 0.055),
+      transparent 42%
+    ),
+    rgba(15, 18, 24, 0.76);
+}
+
+.heroes-v2-overview-shell > .topbar h1 {
+  font-size: 38px;
+}
+
+.heroes-v2-overview-shell > .topbar .stats-header-actions {
+  margin-top: auto;
+}
+
+.heroes-v2-overview-shell > .stats-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.heroes-v2-overview-shell .summary-card {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
+}
+
+.heroes-v2-overview-shell .summary-card strong {
+  font-size: 24px;
+}
+
+/* Browser controls become one coherent command bar */
+.heroes-v2-page > .heroes-v2-controls-shell {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(420px, auto);
+  grid-template-areas: "browse sort";
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(15, 18, 24, 0.72);
+}
+
+.heroes-v2-controls-shell > .toolbar {
+  grid-area: browse;
+  margin: 0;
+}
+
+.heroes-v2-controls-shell > .stats-controls {
+  grid-area: sort;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.heroes-v2-controls-shell .stats-control-group {
+  height: 100%;
+  align-items: center;
+}
+
+.heroes-v2-controls-shell .stats-control-label {
+  white-space: nowrap;
+}
+
+.heroes-v2-page > .hero-grid {
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* ========================================
+   PLAYERS
+   Internal section navigation becomes a left rail.
+   Search/compare content owns the full right side.
+======================================== */
+
+.players-v2-page {
+  display: grid;
+  grid-template-columns:
+    156px
+    minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.players-v2-page > .players-view-switch {
+  position: sticky;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  margin: 0;
+  padding: 6px;
+  border-radius: 10px;
+}
+
+.players-v2-page .players-view-button {
+  width: 100%;
+  min-height: 36px;
+  justify-content: flex-start;
+  padding: 0 10px;
+}
+
+.players-v2-page > .player-page,
+.players-v2-page > .player-compare-page {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.players-v2-page .player-page > .topbar,
+.players-v2-page .player-compare-page > .topbar {
+  margin-bottom: 12px;
+}
+
+.players-v2-page .player-search-panel,
+.players-v2-page .compare-search-panel {
+  border-radius: 11px;
+}
+
+.players-v2-page .player-search-panel {
+  padding: 14px 16px;
+}
+
+.players-v2-page .player-search-form {
+  grid-template-columns:
+    minmax(0, 1fr)
+    100px;
+}
+
+.players-v2-page .player-mode-selector {
+  margin-top: 11px;
+  padding-top: 10px;
+}
+
+.players-v2-page .player-favorites {
+  margin-top: 12px;
+}
+
+/* ========================================
+   COUNTERS
+   Header and methodology live side by side.
+   Browser then becomes the main workspace.
+======================================== */
+
+.counters-v2-page {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.78fr)
+    minmax(430px, 1.22fr);
+  grid-template-areas:
+    "header explain"
+    "browser browser";
+  gap: 14px 16px;
+  align-items: start;
+}
+
+.counters-v2-page > .counter-page-header {
+  grid-area: header;
+  min-height: 100%;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 122, 26, 0.055),
+      transparent 44%
+    ),
+    rgba(15, 18, 24, 0.74);
+}
+
+.counters-v2-page > .counter-page-header h1 {
+  font-size: 38px;
+}
+
+.counters-v2-page > .counter-explainer {
+  grid-area: explain;
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.counters-v2-page .counter-explainer-item {
+  min-height: 100%;
+  display: block;
+  padding: 12px;
+}
+
+.counters-v2-page .counter-explainer-item > svg {
+  margin-bottom: 10px;
+}
+
+.counters-v2-page .counter-explainer-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.counters-v2-page > .counter-browser {
+  grid-area: browser;
+  grid-template-columns:
+    250px
+    minmax(0, 1fr);
+  gap: 12px;
+}
+
+.counters-v2-page .counter-hero-picker {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+
+.counters-v2-page .counter-hero-list {
+  max-height: 610px;
+}
+
+.counters-v2-page .counter-selected-hero {
+  min-height: 84px;
+}
+
+.counters-v2-page .counter-columns {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.counters-v2-page .counter-group {
+  min-width: 0;
+}
+
+/* ========================================
+   PERKS
+   Real two-column hero catalogue on desktop.
+======================================== */
+
+.perks-v2-page > .topbar {
+  margin-bottom: 12px;
+}
+
+.perks-v2-page > .perks-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  margin: 0 0 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background:
+    rgba(10, 13, 18, 0.94);
+  backdrop-filter: blur(10px);
+}
+
+.perks-v2-page > .perks-heroes-list {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+.perks-v2-page .global-perk-hero-card {
+  min-width: 0;
+}
+
+.perks-v2-page .global-perk-hero-header {
+  min-height: 54px;
+  padding: 8px 10px;
+}
+
+.perks-v2-page .global-perk-hero-portrait {
+  width: 36px;
+  height: 36px;
+}
+
+.perks-v2-page .global-perk-groups {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.perks-v2-page .global-perk-column {
+  padding: 10px;
+}
+
+.perks-v2-page .global-perk-item {
+  padding: 8px;
+}
+
+.perks-v2-page .global-perk-item-top {
+  grid-template-columns:
+    34px minmax(0, 1fr) 44px;
+  gap: 7px;
+}
+
+.perks-v2-page .global-perk-icon {
+  width: 34px;
+  height: 34px;
+}
+
+.perks-v2-page .global-perk-info p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.perks-v2-page .global-perk-popularity {
+  margin-top: 6px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1320px) {
+  .stats-v2-page > .meta-overview-section {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(330px, 0.72fr);
+  }
+
+  .heroes-v2-page > .heroes-v2-controls-shell {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "browse"
+      "sort";
+  }
+
+  .perks-v2-page > .perks-heroes-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1100px) {
+  .stats-v2-page > .meta-overview-section {
+    display: block;
+  }
+
+  .stats-v2-page .meta-leader-grid {
+    margin-bottom: 10px;
+  }
+
+  .stats-v2-page .meta-role-rankings {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .heroes-v2-page > .heroes-v2-overview-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .players-v2-page {
+    grid-template-columns: 1fr;
+  }
+
+  .players-v2-page > .players-view-switch {
+    position: static;
+    flex-direction: row;
+  }
+
+  .players-v2-page > .player-page,
+  .players-v2-page > .player-compare-page {
+    grid-column: 1;
+  }
+
+  .counters-v2-page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "explain"
+      "browser";
+  }
+}
+
+@media (max-width: 760px) {
+  .stats-v2-page .stats-unified-top {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-v2-page .stats-apply-button {
+    width: 100%;
+  }
+
+  .stats-v2-page .meta-leader-grid,
+  .stats-v2-page .meta-role-rankings,
+  .heroes-v2-overview-shell > .stats-overview,
+  .counters-v2-page > .counter-explainer,
+  .counters-v2-page > .counter-browser,
+  .counters-v2-page .counter-columns,
+  .perks-v2-page .global-perk-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .heroes-v2-page > .heroes-v2-controls-shell {
+    padding: 8px;
+  }
+
+  .players-v2-page > .players-view-switch {
+    overflow-x: auto;
+  }
+
+  .players-v2-page .players-view-button {
+    width: auto;
+    min-width: max-content;
+  }
+
+  .counters-v2-page .counter-hero-picker {
+    position: static;
+  }
+}
+
+
+/* ========================================
+   V2.1 — POSITIONING REFINEMENTS
+   Fixes the remaining alignment/empty-space issues.
+======================================== */
+
+/* ----------------------------------------
+   STATS
+   Remove the large dead zone created by unequal
+   left/right columns. Leaders and role rankings
+   now flow as two compact full-width rows.
+---------------------------------------- */
+
+.stats-v2-page > .meta-overview-section {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.stats-v2-page .meta-overview-heading {
+  margin-bottom: 10px;
+}
+
+.stats-v2-page .meta-leader-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stats-v2-page .meta-leader-card {
+  min-height: 112px;
+}
+
+.stats-v2-page .meta-role-rankings {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stats-v2-page > .meta-tier-section {
+  margin-top: 18px;
+}
+
+/* ----------------------------------------
+   COUNTERS
+   Better balance between the page title and the
+   three methodology cards.
+---------------------------------------- */
+
+.counters-v2-page {
+  grid-template-columns:
+    270px
+    minmax(0, 1fr);
+  gap: 12px;
+}
+
+.counters-v2-page > .counter-page-header {
+  min-height: 106px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 14px;
+}
+
+.counters-v2-page > .counter-page-header h1 {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.counters-v2-page > .counter-page-header
+  .counter-source-stack {
+  margin-top: 9px;
+}
+
+.counters-v2-page > .counter-explainer {
+  align-self: stretch;
+}
+
+.counters-v2-page .counter-explainer-item {
+  min-height: 106px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.counters-v2-page > .counter-browser {
+  margin-top: 2px;
+}
+
+.counters-v2-page .counter-selected-hero {
+  padding-inline: 16px;
+}
+
+.counters-v2-page .counter-columns {
+  align-items: start;
+}
+
+/* ----------------------------------------
+   PERKS
+   Align title/source, toolbar and catalogue to a
+   cleaner vertical rhythm.
+---------------------------------------- */
+
+.perks-v2-page > .topbar {
+  min-height: 50px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-inline: 2px;
+}
+
+.perks-v2-page > .topbar h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.perks-v2-page > .perks-toolbar {
+  top: 8px;
+  margin-bottom: 12px;
+}
+
+.perks-v2-page > .perks-heroes-list {
+  gap: 10px 12px;
+}
+
+.perks-v2-page .global-perk-hero-card {
+  align-self: start;
+}
+
+/* ----------------------------------------
+   HEROES
+   Keep summary cards and controls on the same
+   visual grid.
+---------------------------------------- */
+
+.heroes-v2-page > .heroes-v2-overview-shell,
+.heroes-v2-page > .heroes-v2-controls-shell {
+  margin-bottom: 12px;
+}
+
+.heroes-v2-page > .hero-grid {
+  align-items: start;
+}
+
+/* ----------------------------------------
+   PLAYERS
+   Slightly reduce the empty gap between the
+   view selector and the main search content.
+---------------------------------------- */
+
+.players-v2-page {
+  gap: 12px;
+}
+
+.players-v2-page > .players-view-switch {
+  top: 12px;
+}
+
+/* ----------------------------------------
+   RESPONSIVE OVERRIDES
+---------------------------------------- */
+
+@media (max-width: 1320px) {
+  .stats-v2-page .meta-leader-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .counters-v2-page {
+    grid-template-columns:
+      240px
+      minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .stats-v2-page .meta-role-rankings {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .counters-v2-page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "explain"
+      "browser";
+  }
+
+  .counters-v2-page > .counter-page-header {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .stats-v2-page .meta-leader-grid,
+  .stats-v2-page .meta-role-rankings {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ========================================
+   V2.2 — PERKS IMAGE ALIGNMENT
+======================================== */
+
+/* Hero portrait:
+   V2 reduced the frame to 36x36, while the old image
+   still used a fixed 44px height + absolute positioning.
+   Center the artwork inside the new frame instead. */
+
+.perks-v2-page .global-perk-hero-portrait {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+  flex: 0 0 38px;
+}
+
+.perks-v2-page
+  .global-perk-hero-portrait
+  img {
+  position: static;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+
+  object-fit: contain;
+  object-position: center;
+
+  transform: none;
+}
+
+/* Perk icons:
+   keep every icon centered and at a consistent visual size,
+   regardless of the original PNG dimensions. */
+
+.perks-v2-page .global-perk-icon {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 38px;
+
+  padding: 3px;
+}
+
+.perks-v2-page
+  .global-perk-icon
+  img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Match the content grid to the new 38px image frame. */
+
+.perks-v2-page .global-perk-item-top {
+  grid-template-columns:
+    38px
+    minmax(0, 1fr)
+    46px;
+
+  align-items: center;
+
+  column-gap: 9px;
+}
+
+.perks-v2-page .global-perk-hero-main {
+  align-items: center;
+  gap: 10px;
+}
+
+.perks-v2-page .global-perk-hero-main > div:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.perks-v2-page .global-perk-hero-main h2 {
+  margin-top: 3px;
+  line-height: 1.05;
+}
+
+
+/* ========================================
+   V2.3 — COUNTERS LAYOUT FINAL
+   Full-width header + methodology row.
+   Removes the awkward narrow title card.
+======================================== */
+
+.counters-v2-page {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  grid-template-areas:
+    "header"
+    "explain"
+    "browser";
+
+  gap: 12px;
+
+  align-items: start;
+}
+
+/* Clean page title row */
+
+.counters-v2-page
+  > .counter-page-header {
+  grid-area: header;
+
+  min-height: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 0;
+  padding: 2px 2px 4px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+}
+
+.counters-v2-page
+  > .counter-page-header
+  > div:first-child {
+  min-width: 0;
+}
+
+.counters-v2-page
+  > .counter-page-header
+  h1 {
+  margin: 0;
+
+  font-size: 36px;
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+.counters-v2-page
+  > .counter-page-header
+  .counter-source-stack {
+  margin: 0;
+
+  align-items: flex-end;
+
+  flex: 0 0 auto;
+}
+
+/* Three balanced methodology cards */
+
+.counters-v2-page
+  > .counter-explainer {
+  grid-area: explain;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin: 0;
+}
+
+.counters-v2-page
+  .counter-explainer-item {
+  min-height: 76px;
+
+  display: grid;
+
+  grid-template-columns:
+    24px
+    minmax(0, 1fr);
+
+  grid-template-rows:
+    auto
+    auto;
+
+  column-gap: 10px;
+  row-gap: 3px;
+
+  align-items: center;
+
+  padding: 11px 13px;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > svg {
+  grid-column: 1;
+  grid-row: 1 / 3;
+
+  align-self: start;
+
+  margin: 2px 0 0;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  strong {
+  grid-column: 2;
+  grid-row: 1;
+
+  margin: 0;
+
+  align-self: end;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  span {
+  grid-column: 2;
+  grid-row: 2;
+
+  align-self: start;
+
+  line-height: 1.45;
+}
+
+/* Main workspace */
+
+.counters-v2-page
+  > .counter-browser {
+  grid-area: browser;
+
+  display: grid;
+
+  grid-template-columns:
+    250px
+    minmax(0, 1fr);
+
+  gap: 12px;
+
+  margin: 0;
+}
+
+.counters-v2-page
+  .counter-hero-picker {
+  position: sticky;
+
+  top: 12px;
+
+  align-self: start;
+}
+
+.counters-v2-page
+  .counter-selected-hero {
+  min-height: 84px;
+
+  padding: 12px 14px;
+}
+
+.counters-v2-page
+  .counter-columns {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  align-items: start;
+}
+
+.counters-v2-page
+  .counter-group {
+  min-width: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 1050px) {
+  .counters-v2-page
+    > .counter-explainer {
+    grid-template-columns: 1fr;
+  }
+
+  .counters-v2-page
+    .counter-explainer-item {
+    min-height: 62px;
+  }
+
+  .counters-v2-page
+    > .counter-browser {
+    grid-template-columns: 1fr;
+  }
+
+  .counters-v2-page
+    .counter-hero-picker {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .counters-v2-page
+    > .counter-page-header {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .counters-v2-page
+    > .counter-page-header
+    h1 {
+    font-size: 32px;
+  }
+
+  .counters-v2-page
+    .counter-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ========================================
+   V2.4 — COUNTERS EXPLAINER ALIGNMENT
+   Aligns icons/arrows and text consistently.
+======================================== */
+
+.counters-v2-page
+  .counter-explainer-item {
+  display: grid;
+
+  grid-template-columns:
+    20px
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  column-gap: 10px;
+  row-gap: 0;
+
+  padding: 12px 14px;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > svg {
+  grid-column: 1;
+  grid-row: 1;
+
+  width: 16px;
+  height: 16px;
+
+  margin: 1px 0 0;
+
+  align-self: start;
+  justify-self: start;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div {
+  grid-column: 2;
+  grid-row: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  gap: 4px;
+
+  text-align: left;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div
+  > strong {
+  display: block;
+
+  width: 100%;
+
+  margin: 0;
+
+  text-align: left;
+
+  line-height: 1.2;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div
+  > span {
+  display: block;
+
+  width: 100%;
+
+  margin: 0;
+
+  text-align: left;
+
+  line-height: 1.45;
+}
+
+
+/* ========================================
+   V2.5 — COUNTERS EXPLAINER VERTICAL CENTER
+   Centers icon + text vertically inside each card.
+======================================== */
+
+.counters-v2-page
+  .counter-explainer-item {
+  display: grid;
+
+  grid-template-columns:
+    20px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  column-gap: 10px;
+
+  min-height: 76px;
+
+  padding: 12px 14px;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > svg {
+  grid-column: 1;
+
+  align-self: center;
+  justify-self: start;
+
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div {
+  grid-column: 2;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: flex-start;
+
+  min-height: 100%;
+
+  gap: 4px;
+
+  text-align: left;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div
+  > strong {
+  margin: 0;
+
+  line-height: 1.2;
+}
+
+.counters-v2-page
+  .counter-explainer-item
+  > div
+  > span {
+  margin: 0;
+
+  line-height: 1.45;
+}
+
+
+/* ========================================
+   V2.6 — HEROES COMPACT SUMMARY
+   Makes Heroes consistent with the tighter
+   cards used on Stats / Counters.
+======================================== */
+
+.heroes-v2-page
+  > .heroes-v2-overview-shell {
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 1.05fr)
+    repeat(3, minmax(170px, 0.72fr));
+
+  gap: 10px;
+
+  align-items: stretch;
+
+  margin-bottom: 12px;
+}
+
+/* Main Heroes intro card */
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar {
+  min-height: 104px;
+
+  padding: 14px 16px;
+
+  border-radius: 10px;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar h1 {
+  margin: 4px 0 8px;
+
+  font-size: 32px;
+  line-height: 1;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar .subtitle {
+  max-width: 210px;
+
+  margin: 0;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .topbar
+  .stats-header-actions {
+  gap: 8px;
+}
+
+/* Summary cards */
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  > .stats-overview {
+  display: contents;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card {
+  min-height: 104px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card > span:first-child {
+  margin-bottom: 8px;
+
+  font-size: 9px;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card > strong {
+  margin: 0 0 4px;
+
+  font-size: 21px;
+  line-height: 1;
+}
+
+.heroes-v2-page
+  .heroes-v2-overview-shell
+  .summary-card > span:last-child {
+  font-size: 9px;
+}
+
+/* Compact filter / sort toolbar */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell {
+  min-height: 54px;
+
+  padding: 8px 10px;
+
+  gap: 10px;
+
+  border-radius: 10px;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .toolbar {
+  margin: 0;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .role-filter button,
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .sort-button {
+  min-height: 32px;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .search-box {
+  height: 34px;
+}
+
+/* Keep hero cards visually dominant */
+
+.heroes-v2-page
+  > .hero-grid {
+  margin-top: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 1180px) {
+  .heroes-v2-page
+    > .heroes-v2-overview-shell {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .heroes-v2-page
+    .heroes-v2-overview-shell
+    > .topbar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroes-v2-page
+    > .heroes-v2-overview-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .heroes-v2-page
+    .heroes-v2-overview-shell
+    > .topbar {
+    grid-column: auto;
+  }
+}
+
+
+/* ========================================
+   V2.7 — HEROES FILTER BAR CLEANUP
+   Two clear rows:
+   1) role filters + search
+   2) sort options
+======================================== */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 8px;
+
+  min-height: 0;
+
+  padding: 9px 10px;
+
+  border-radius: 10px;
+}
+
+/* Row 1: roles on the left, search on the right */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  > .toolbar {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(260px, 1fr);
+
+  align-items: center;
+
+  gap: 14px;
+
+  width: 100%;
+
+  margin: 0;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .role-filter {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  flex-wrap: nowrap;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .search-wrapper {
+  width: min(100%, 360px);
+
+  justify-self: end;
+}
+
+/* Row 2: all sort controls grouped together */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  > .stats-controls {
+  width: 100%;
+
+  margin: 0;
+  padding: 8px 0 0;
+
+  border: 0;
+  border-top:
+    1px solid
+    var(--border);
+
+  background: transparent;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .stats-control-group {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 12px;
+
+  width: 100%;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .stats-control-label {
+  flex: 0 0 auto;
+
+  white-space: nowrap;
+}
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .metric-filters {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+}
+
+/* Make both rows visually consistent */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .role-filter button,
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .metric-filter-button,
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  .sort-button {
+  min-height: 32px;
+}
+
+@media (max-width: 900px) {
+  .heroes-v2-page
+    > .heroes-v2-controls-shell
+    > .toolbar {
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+  }
+
+  .heroes-v2-page
+    > .heroes-v2-controls-shell
+    .search-wrapper {
+    width: 100%;
+
+    justify-self: stretch;
+  }
+
+  .heroes-v2-page
+    > .heroes-v2-controls-shell
+    .stats-control-group {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 7px;
+  }
+}
+
+
+/* ========================================
+   V2.8 — HEROES DROPDOWN CONTROLS
+   Clean 3-column control bar:
+   Role dropdown | Search | Sort dropdown
+======================================== */
+
+.heroes-v2-page
+  > .heroes-v2-controls-shell {
+  display: grid;
+
+  grid-template-columns:
+    190px
+    minmax(280px, 1fr)
+    210px;
+
+  align-items: end;
+
+  gap: 10px;
+
+  min-height: 0;
+
+  padding: 10px;
+
+  border-radius: 10px;
+}
+
+.heroes-v2-select-control {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.heroes-v2-select-control label {
+  color: var(--muted);
+
+  font-size: 7px;
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.heroes-v2-select-control select {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 34px 0 11px;
+
+  border:
+    1px solid
+    var(--border);
+  border-radius: 8px;
+
+  color: var(--text);
+
+  background-color:
+    #0d1015;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.heroes-v2-select-control select:hover,
+.heroes-v2-select-control select:focus {
+  border-color:
+    rgba(255, 122, 26, 0.48);
+}
+
+.heroes-v2-page
+  .heroes-v2-search {
+  width: 100%;
+
+  align-self: end;
+
+  height: 36px;
+
+  margin: 0;
+}
+
+.heroes-v2-page
+  .heroes-v2-search input {
+  width: 100%;
+}
+
+/* Neutralize old toolbar/sort layout rules */
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  > .toolbar,
+.heroes-v2-page
+  > .heroes-v2-controls-shell
+  > .stats-controls {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .heroes-v2-page
+    > .heroes-v2-controls-shell {
+    grid-template-columns:
+      1fr
+      1fr;
+  }
+
+  .heroes-v2-page
+    .heroes-v2-search {
+    grid-column:
+      1 / -1;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 620px) {
+  .heroes-v2-page
+    > .heroes-v2-controls-shell {
+    grid-template-columns:
+      1fr;
+  }
+
+  .heroes-v2-page
+    .heroes-v2-search {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+
+/* ========================================
+   V2.9 — PLAYERS POLISH
+   Cleaner single-column dashboard layout.
+======================================== */
+
+.players-v2-page {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  gap: 12px;
+
+  align-items: start;
+}
+
+/* Horizontal view switch under the SEO strip */
+
+.players-v2-page
+  > .players-view-switch {
+  position: static;
+
+  width: fit-content;
+
+  display: inline-flex;
+  flex-direction: row;
+
+  gap: 4px;
+
+  margin: 0;
+  padding: 4px;
+
+  border-radius: 9px;
+}
+
+.players-v2-page
+  .players-view-button {
+  width: auto;
+
+  min-height: 32px;
+
+  justify-content: center;
+
+  padding: 0 12px;
+}
+
+/* Main content spans full width */
+
+.players-v2-page
+  > .player-page,
+.players-v2-page
+  > .player-compare-page {
+  grid-column: 1;
+
+  width: 100%;
+  min-width: 0;
+}
+
+/* Title + data source aligned on one clean row */
+
+.players-v2-page
+  .player-page
+  > .topbar,
+.players-v2-page
+  .player-compare-page
+  > .topbar {
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin: 0 0 12px;
+  padding: 0 2px;
+}
+
+.players-v2-page
+  .player-page
+  > .topbar
+  .eyebrow,
+.players-v2-page
+  .player-page
+  > .topbar
+  .subtitle,
+.players-v2-page
+  .player-compare-page
+  > .topbar
+  .eyebrow,
+.players-v2-page
+  .player-compare-page
+  > .topbar
+  .subtitle {
+  display: none;
+}
+
+.players-v2-page
+  .player-page
+  > .topbar
+  h1,
+.players-v2-page
+  .player-compare-page
+  > .topbar
+  h1 {
+  margin: 0;
+
+  font-size: 34px;
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+.players-v2-page
+  .player-source-stack {
+  margin: 0;
+
+  align-items: flex-end;
+
+  flex: 0 0 auto;
+}
+
+/* Search panel = compact dashboard card */
+
+.players-v2-page
+  .player-search-panel {
+  padding: 14px 16px;
+
+  border-radius: 10px;
+}
+
+.players-v2-page
+  .player-search-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+.players-v2-page
+  .player-search-icon {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+}
+
+.players-v2-page
+  .player-search-heading
+  h2 {
+  margin: 0 0 2px;
+
+  font-size: 14px;
+}
+
+.players-v2-page
+  .player-search-heading
+  p {
+  margin: 0;
+
+  font-size: 8px;
+}
+
+.players-v2-page
+  .player-search-form {
+  grid-template-columns:
+    minmax(0, 1fr)
+    100px;
+
+  gap: 8px;
+}
+
+.players-v2-page
+  .player-search-input,
+.players-v2-page
+  .player-search-button {
+  min-height: 38px;
+}
+
+.players-v2-page
+  .player-search-help {
+  margin: 6px 0 0;
+
+  font-size: 7px;
+}
+
+/* Mode selector integrated more cleanly */
+
+.players-v2-page
+  .player-mode-selector {
+  margin-top: 10px;
+  padding-top: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+.players-v2-page
+  .player-mode-selector
+  > div:first-child {
+  flex: 0 0 auto;
+}
+
+.players-v2-page
+  .player-mode-buttons {
+  margin-left: auto;
+}
+
+/* Favorites: less empty vertical space */
+
+.players-v2-page
+  .player-favorites {
+  margin-top: 10px;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+}
+
+.players-v2-page
+  .player-favorites-header {
+  margin-bottom: 9px;
+}
+
+.players-v2-page
+  .player-favorite-row,
+.players-v2-page
+  .favorite-player-card {
+  min-height: 48px;
+}
+
+/* Compare page follows same width/rhythm */
+
+.players-v2-page
+  .compare-search-panel {
+  border-radius: 10px;
+}
+
+/* Responsive */
+
+@media (max-width: 760px) {
+  .players-v2-page
+    > .players-view-switch {
+    width: 100%;
+  }
+
+  .players-v2-page
+    .players-view-button {
+    flex: 1;
+  }
+
+  .players-v2-page
+    .player-page
+    > .topbar,
+  .players-v2-page
+    .player-compare-page
+    > .topbar {
+    align-items: flex-start;
+  }
+
+  .players-v2-page
+    .player-search-form {
+    grid-template-columns: 1fr;
+  }
+
+  .players-v2-page
+    .player-mode-selector {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .players-v2-page
+    .player-mode-buttons {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+
+/* ========================================
+   V2.10 — PLAYER HERO SECTION GAP
+   PageV2 is loaded after component CSS,
+   so spacing must be enforced here.
+======================================== */
+
+.players-v2-page
+  .player-profile
+  .player-hero-section-top {
+  margin-top: 36px;
+  padding-top: 4px;
+}
+
+
+/* ========================================
+   V2.11 — PLAYER HERO TITLE / TABLE GAP
+======================================== */
+
+.players-v2-page
+  .player-profile
+  .player-hero-section-top {
+  margin-bottom: 14px;
+}

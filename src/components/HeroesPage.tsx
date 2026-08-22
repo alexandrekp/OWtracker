@@ -23,7 +23,6 @@ import type {
 } from "../types/hero";
 
 import HeroCard from "./HeroCard";
-import RoleFilter from "./RoleFilter";
 
 import "./StatsPage.css";
 import "./StatsRefresh.css";
@@ -325,12 +324,13 @@ function HeroesPage({
   }
 
   return (
-    <div className="global-page">
+    <div className="global-page heroes-v2-page">
       {/* ========================================
           HEADER
       ======================================== */}
 
-      <header className="topbar">
+      <section className="heroes-v2-overview-shell">
+        <header className="topbar">
         <div>
           <p className="eyebrow">
             HERO DATABASE
@@ -460,118 +460,89 @@ function HeroesPage({
         </div>
       </section>
 
+      </section>
+
       {/* ========================================
           HERO BROWSER
       ======================================== */}
 
-      <section className="toolbar">
-        <RoleFilter
-          activeRole={
-            activeRole
-          }
-          onChange={
-            setActiveRole
-          }
-        />
+      <section className="heroes-v2-controls-shell">
+        <div className="heroes-v2-select-control">
+          <label htmlFor="heroes-role-filter">
+            Role
+          </label>
 
-        <div className="search-wrapper">
-          <Search
-            size={14}
-          />
+          <select
+            id="heroes-role-filter"
+            value={activeRole}
+            onChange={(event) =>
+              setActiveRole(
+                event.target.value as
+                  "All" | HeroRole,
+              )
+            }
+          >
+            <option value="All">
+              All roles
+            </option>
+            <option value="Tank">
+              Tank
+            </option>
+            <option value="Damage">
+              Damage
+            </option>
+            <option value="Support">
+              Support
+            </option>
+          </select>
+        </div>
+
+        <div className="search-wrapper heroes-v2-search">
+          <Search size={14} />
 
           <input
             type="text"
             placeholder="Search a hero..."
-            value={
-              search
-            }
-            onChange={(
-              event,
-            ) =>
+            value={search}
+            onChange={(event) =>
               setSearch(
                 event.target.value,
               )
             }
           />
         </div>
-      </section>
 
-      {/* ========================================
-          HERO SORT
-      ======================================== */}
+        <div className="heroes-v2-select-control">
+          <label htmlFor="heroes-sort-filter">
+            Sort by
+          </label>
 
-      <section className="stats-controls">
-        <div className="stats-control-group">
-          <span className="stats-control-label">
-            Sort heroes by
-          </span>
-
-          <div className="metric-filters">
-            <MetricButton
-              active={
-                sortBy ===
-                "metaScore"
-              }
-              label="Meta Score"
-              onClick={() =>
-                setSortBy(
-                  "metaScore",
-                )
-              }
-            />
-
-            <MetricButton
-              active={
-                sortBy ===
-                "winRate"
-              }
-              label="Win Rate"
-              onClick={() =>
-                setSortBy(
-                  "winRate",
-                )
-              }
-            />
-
-            <MetricButton
-              active={
-                sortBy ===
-                "pickRate"
-              }
-              label="Pick Rate"
-              onClick={() =>
-                setSortBy(
-                  "pickRate",
-                )
-              }
-            />
-
-            <MetricButton
-              active={
-                sortBy ===
-                "banRate"
-              }
-              label="Ban Rate"
-              onClick={() =>
-                setSortBy(
-                  "banRate",
-                )
-              }
-            />
-
-            <MetricButton
-              active={
-                sortBy ===
-                "name"
-              }
-              label="Name"
-              onClick={() =>
-                setSortBy(
-                  "name",
-                )
-              }
-            />
-          </div>
+          <select
+            id="heroes-sort-filter"
+            value={sortBy}
+            onChange={(event) =>
+              setSortBy(
+                event.target.value as
+                  SortMetric,
+              )
+            }
+          >
+            <option value="metaScore">
+              Meta Score
+            </option>
+            <option value="winRate">
+              Win Rate
+            </option>
+            <option value="pickRate">
+              Pick Rate
+            </option>
+            <option value="banRate">
+              Ban Rate
+            </option>
+            <option value="name">
+              Name
+            </option>
+          </select>
         </div>
       </section>
 
@@ -626,49 +597,6 @@ function HeroesPage({
         </div>
       )}
     </div>
-  );
-}
-
-/* ========================================
-   METRIC BUTTON
-======================================== */
-
-type MetricButtonProps = {
-  active: boolean;
-
-  label: string;
-
-  onClick:
-    () => void;
-};
-
-function MetricButton({
-  active,
-  label,
-  onClick,
-}: MetricButtonProps) {
-  return (
-    <button
-      className={
-        active
-          ? "metric-filter active"
-          : "metric-filter"
-      }
-      onClick={
-        onClick
-      }
-      type="button"
-    >
-      {label}
-
-      {active && (
-        <span className="metric-sort-direction">
-          {label === "Name"
-            ? "A–Z"
-            : "↓"}
-        </span>
-      )}
-    </button>
   );
 }
 

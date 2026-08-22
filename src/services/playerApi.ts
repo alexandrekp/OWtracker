@@ -4,265 +4,180 @@ import type {
   PlayerSummary,
 } from "../types/player";
 
-/* ========================================
-   API
-======================================== */
-
 const API_BASE_URL =
-  import.meta.env
-    .VITE_API_URL ||
+  import.meta.env.VITE_API_URL ||
   "https://worker.akidneyperks.workers.dev";
-
-/* ========================================
-   GAMEMODE
-======================================== */
 
 export type PlayerGamemode =
   | "all"
   | "competitive"
   | "quickplay";
 
-/* ========================================
-   API ERROR
-======================================== */
+export type PlayerPlatform =
+  | "pc"
+  | "console";
 
-type OverFastErrorResponse = {
-  error?: string;
+export type PlayerCareerCategory =
+  Record<
+    string,
+    number | string | null
+  >;
 
-  retry_after?: number;
+export type PlayerCareerHeroStats =
+  Partial<
+    Record<
+      | "assists"
+      | "average"
+      | "best"
+      | "combat"
+      | "game"
+      | "hero_specific",
+      PlayerCareerCategory
+    >
+  >;
 
-  next_check_at?: number;
+export type PlayerCareerStats =
+  Record<
+    string,
+    PlayerCareerHeroStats | null
+  >;
 
-  check_count?: number;
+type PlayerApiErrorOptions = {
+  status: number;
+  retryAfter?: number | null;
+  nextCheckAt?: number | null;
+  checkCount?: number | null;
 };
 
-export class PlayerApiError
-  extends Error {
-  status:
-    number;
-
-  retryAfter:
-    number | null;
-
-  nextCheckAt:
-    number | null;
-
-  checkCount:
-    number | null;
+export class PlayerApiError extends Error {
+  status: number;
+  retryAfter: number | null;
+  nextCheckAt: number | null;
+  checkCount: number | null;
 
   constructor(
-    message:
-      string,
-
-    options: {
-      status:
-        number;
-
-      retryAfter?:
-        number | null;
-
-      nextCheckAt?:
-        number | null;
-
-      checkCount?:
-        number | null;
-    },
+    message: string,
+    options: PlayerApiErrorOptions,
   ) {
-    super(
-      message,
-    );
-
-    this.name =
-      "PlayerApiError";
-
-    this.status =
-      options.status;
-
+    super(message);
+    this.name = "PlayerApiError";
+    this.status = options.status;
     this.retryAfter =
-      options.retryAfter ??
-      null;
-
+      options.retryAfter ?? null;
     this.nextCheckAt =
-      options.nextCheckAt ??
-      null;
-
+      options.nextCheckAt ?? null;
     this.checkCount =
-      options.checkCount ??
-      null;
+      options.checkCount ?? null;
   }
 }
 
-/* ========================================
-   BATTLETAG
-======================================== */
-
-export function normalizeBattleTag(
-  battleTag:
-    string,
+function normalizeBattleTag(
+  battleTag: string,
 ) {
   return battleTag
     .trim()
-    .replace(
-      "#",
-      "-",
-    );
+    .replace("#", "-");
 }
 
-/* ========================================
-   REQUEST
-======================================== */
+type ErrorPayload = {
+  error?: string;
+  retry_after?: number;
+  next_check_at?: number;
+  check_count?: number;
+};
 
-async function requestJson<T>(
-  url:
-    string,
+async function fetchJson<T>(
+  url: string,
 ): Promise<T> {
   const response =
-    await fetch(
-      url,
-    );
+    await fetch(url);
 
-  if (
-    response.ok
-  ) {
-    return response.json();
+  if (response.ok) {
+    return (
+      await response.json()
+    ) as T;
   }
 
-  let apiError:
-    OverFastErrorResponse =
-    {};
+  let payload: ErrorPayload = {};
 
   try {
-    apiError =
+    payload =
       await response.json();
   } catch {
-    // Response body is not JSON.
+    // Keep an empty payload.
   }
 
-  if (
-    response.status ===
-    404
-  ) {
+  const options = {
+    status: response.status,
+    retryAfter:
+      payload.retry_after,
+    nextCheckAt:
+      payload.next_check_at,
+    checkCount:
+      payload.check_count,
+  };
+
+  if (response.status === 404) {
     throw new PlayerApiError(
-      apiError.error ??
+      payload.error ??
         "Player data is currently unavailable.",
-      {
-        status:
-          response.status,
-
-        retryAfter:
-          apiError.retry_after,
-
-        nextCheckAt:
-          apiError.next_check_at,
-
-        checkCount:
-          apiError.check_count,
-      },
+      options,
     );
   }
 
-  if (
-    response.status ===
-    403
-  ) {
+  if (response.status === 403) {
     throw new PlayerApiError(
       "This profile is private.",
-      {
-        status:
-          response.status,
-      },
+      options,
     );
   }
 
   if (
-    response.status ===
-    429
+    response.status === 429 ||
+    response.status === 503
   ) {
     throw new PlayerApiError(
-      "Too many requests. Please try again later.",
-      {
-        status:
-          response.status,
-
-        retryAfter:
-          apiError.retry_after,
-
-        nextCheckAt:
-          apiError.next_check_at,
-
-        checkCount:
-          apiError.check_count,
-      },
+      payload.error ??
+        "The player service is temporarily busy. Please try again later.",
+      options,
     );
   }
 
   throw new PlayerApiError(
-    apiError.error ??
+    payload.error ??
       `Unable to load player data (${response.status}).`,
-    {
-      status:
-        response.status,
-
-      retryAfter:
-        apiError.retry_after,
-
-      nextCheckAt:
-        apiError.next_check_at,
-
-      checkCount:
-        apiError.check_count,
-    },
+    options,
   );
 }
 
-/* ========================================
-   SUMMARY
-======================================== */
-
-export async function getPlayerSummary(
-  battleTag:
-    string,
-): Promise<PlayerSummary> {
+export async function fetchPlayerSummary(
+  battleTag: string,
+) {
   const normalized =
-    normalizeBattleTag(
-      battleTag,
-    );
+    normalizeBattleTag(battleTag);
 
-  if (
-    !normalized
-  ) {
+  if (!normalized) {
     throw new Error(
       "Enter a BattleTag.",
     );
   }
 
-  return requestJson<PlayerSummary>(
+  return fetchJson<PlayerSummary>(
     `${API_BASE_URL}/api/player/${encodeURIComponent(
       normalized,
     )}/summary`,
   );
 }
 
-/* ========================================
-   STATS
-======================================== */
-
-export async function getPlayerStats(
-  battleTag:
-    string,
-
-  gamemode:
-    PlayerGamemode =
-      "all",
-): Promise<PlayerStatsSummary> {
+export async function fetchPlayerStats(
+  battleTag: string,
+  gamemode: PlayerGamemode = "all",
+  platform: PlayerPlatform = "pc",
+) {
   const normalized =
-    normalizeBattleTag(
-      battleTag,
-    );
+    normalizeBattleTag(battleTag);
 
-  if (
-    !normalized
-  ) {
+  if (!normalized) {
     throw new Error(
       "Enter a BattleTag.",
     );
@@ -271,72 +186,104 @@ export async function getPlayerStats(
   const params =
     new URLSearchParams();
 
-  if (
-    gamemode !==
-    "all"
-  ) {
+  if (gamemode !== "all") {
     params.set(
       "gamemode",
       gamemode,
     );
   }
 
-  const query =
-    params.toString();
+  params.set(
+    "platform",
+    platform,
+  );
 
-  const url =
+  return fetchJson<PlayerStatsSummary>(
     `${API_BASE_URL}/api/player/${encodeURIComponent(
       normalized,
-    )}/stats${
-      query
-        ? `?${query}`
-        : ""
-    }`;
-
-  return requestJson<PlayerStatsSummary>(
-    url,
+    )}/stats?${params.toString()}`,
   );
 }
 
-/* ========================================
-   COMPLETE PLAYER
-======================================== */
-
-export async function getPlayerData(
-  battleTag:
-    string,
-
-  gamemode:
-    PlayerGamemode =
-      "all",
-): Promise<PlayerData> {
+export async function getPlayerCareer(
+  battleTag: string,
+  gamemode: Exclude<
+    PlayerGamemode,
+    "all"
+  >,
+  platform: PlayerPlatform = "pc",
+  hero = "all-heroes",
+) {
   const normalized =
-    normalizeBattleTag(
-      battleTag,
-    );
+    normalizeBattleTag(battleTag);
 
-  if (
-    !normalized
-  ) {
+  if (!normalized) {
     throw new Error(
       "Enter a BattleTag.",
     );
   }
 
-  const [
-    summary,
-    stats,
-  ] =
+  const params =
+    new URLSearchParams({
+      gamemode,
+      platform,
+      hero,
+    });
+
+  return fetchJson<PlayerCareerStats>(
+    `${API_BASE_URL}/api/player/${encodeURIComponent(
+      normalized,
+    )}/career?${params.toString()}`,
+  );
+}
+
+export async function getPlayerData(
+  battleTag: string,
+  gamemode: PlayerGamemode = "all",
+  platform: PlayerPlatform = "pc",
+): Promise<PlayerData> {
+  const normalized =
+    normalizeBattleTag(battleTag);
+
+  if (!normalized) {
+    throw new Error(
+      "Enter a BattleTag.",
+    );
+  }
+
+  const [summary, stats] =
     await Promise.all([
-      getPlayerSummary(
+      fetchPlayerSummary(
         normalized,
       ),
-
-      getPlayerStats(
+      fetchPlayerStats(
         normalized,
         gamemode,
+        platform,
       ),
     ]);
+
+  /*
+    OverFast can return an empty stats payload for a
+    platform on which the player has no public career
+    data. Do not let the UI try to read
+    stats.general.time_played in that case.
+  */
+  if (
+    !stats ||
+    !stats.general ||
+    typeof stats.general.time_played !==
+      "number"
+  ) {
+    const platformLabel =
+      platform === "pc"
+        ? "PC"
+        : "Console";
+
+    throw new Error(
+      `No ${platformLabel} statistics are available for this public profile.`,
+    );
+  }
 
   return {
     summary,

@@ -527,7 +527,7 @@ function StatsPage({
   ======================================== */
 
   return (
-    <div className="global-page">
+    <div className="global-page stats-v2-page">
       {/* ===================================
           HEADER
       ==================================== */}
@@ -622,126 +622,6 @@ function StatsPage({
           </div>
         </div>
       </header>
-
-      {/* ===================================
-          META OVERVIEW
-      ==================================== */}
-
-      <section className="meta-overview-section">
-        <div className="meta-overview-heading">
-          <div>
-            <span className="panel-eyebrow">
-              META OVERVIEW
-            </span>
-
-            <h2>
-              Role leaders
-            </h2>
-
-            <p>
-              Best performing heroes
-              in the active Blizzard
-              dataset.
-            </p>
-          </div>
-
-          <div className="meta-tier-counts">
-            <div>
-              <span>
-                S TIER
-              </span>
-
-              <strong>
-                {sTierCount}
-              </strong>
-            </div>
-
-            <div>
-              <span>
-                A TIER
-              </span>
-
-              <strong>
-                {aTierCount}
-              </strong>
-            </div>
-          </div>
-        </div>
-
-        <div className="meta-leader-grid">
-          <MetaLeaderCard
-            label="Best overall"
-            entry={
-              bestOverall
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-
-          <MetaLeaderCard
-            label="Best Tank"
-            entry={
-              bestTank
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-
-          <MetaLeaderCard
-            label="Best Damage"
-            entry={
-              bestDamage
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-
-          <MetaLeaderCard
-            label="Best Support"
-            entry={
-              bestSupport
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-        </div>
-
-        <div className="meta-role-rankings">
-          <MetaRoleRanking
-            title="Tank"
-            entries={
-              topTanks
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-
-          <MetaRoleRanking
-            title="Damage"
-            entries={
-              topDamage
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-
-          <MetaRoleRanking
-            title="Support"
-            entries={
-              topSupports
-            }
-            onOpenHero={
-              onOpenHero
-            }
-          />
-        </div>
-      </section>
 
       {/* ===================================
           TIER LIST FILTERS
@@ -866,6 +746,127 @@ function StatsPage({
                 : "Apply"}
             </button>
           </div>
+        </div>
+      </section>
+
+
+      {/* ===================================
+          META OVERVIEW
+      ==================================== */}
+
+      <section className="meta-overview-section">
+        <div className="meta-overview-heading">
+          <div>
+            <span className="panel-eyebrow">
+              META OVERVIEW
+            </span>
+
+            <h2>
+              Role leaders
+            </h2>
+
+            <p>
+              Best performing heroes
+              in the active Blizzard
+              dataset.
+            </p>
+          </div>
+
+          <div className="meta-tier-counts">
+            <div>
+              <span>
+                S TIER
+              </span>
+
+              <strong>
+                {sTierCount}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                A TIER
+              </span>
+
+              <strong>
+                {aTierCount}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="meta-leader-grid">
+          <MetaLeaderCard
+            label="Best overall"
+            entry={
+              bestOverall
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+
+          <MetaLeaderCard
+            label="Best Tank"
+            entry={
+              bestTank
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+
+          <MetaLeaderCard
+            label="Best Damage"
+            entry={
+              bestDamage
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+
+          <MetaLeaderCard
+            label="Best Support"
+            entry={
+              bestSupport
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+        </div>
+
+        <div className="meta-role-rankings">
+          <MetaRoleRanking
+            title="Tank"
+            entries={
+              topTanks
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+
+          <MetaRoleRanking
+            title="Damage"
+            entries={
+              topDamage
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
+
+          <MetaRoleRanking
+            title="Support"
+            entries={
+              topSupports
+            }
+            onOpenHero={
+              onOpenHero
+            }
+          />
         </div>
       </section>
 

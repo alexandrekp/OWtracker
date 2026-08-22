@@ -10,6 +10,8 @@ import {
 import "./App.css";
 import "./AppUx.css";
 import "./Responsive.css";
+import "./PagePolish.css";
+import "./PageV2.css";
 
 import Sidebar from "./components/Sidebar";
 import HeroDetail from "./components/HeroDetail";

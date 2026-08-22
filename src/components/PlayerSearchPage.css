@@ -1643,3 +1643,274 @@
     justify-content: flex-start;
   }
 }
+/* ========================================
+   PLAYER ADVANCED STATS
+======================================== */
+
+.player-platform-selector {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.player-platform-selector p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.player-platform-buttons {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.player-platform-button {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.player-platform-button:hover:not(:disabled),
+.player-platform-button.active {
+  border-color: rgba(255, 122, 26, 0.5);
+  color: var(--text);
+  background: rgba(255, 122, 26, 0.08);
+}
+
+.player-platform-button.active svg {
+  color: var(--accent);
+}
+
+.player-average-grid {
+  margin-bottom: 6px;
+}
+
+.player-average-card strong {
+  color: var(--accent);
+}
+
+.player-career-note,
+.player-career-state {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.player-career-state.error {
+  color: #ff8f8f;
+}
+
+.player-career-panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.player-career-toolbar {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.player-career-select {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.player-career-select label {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.player-career-select select {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #0d1015;
+  color: var(--text);
+  font: inherit;
+  font-size: 9px;
+}
+
+.player-career-tabs {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.player-career-tab {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.player-career-tab.active {
+  border-color: rgba(255, 122, 26, 0.55);
+  background: rgba(255, 122, 26, 0.09);
+  color: var(--text);
+}
+
+.player-career-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+.player-career-stat {
+  min-height: 66px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.player-career-stat span {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.player-career-stat strong {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .player-career-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .player-career-tabs {
+    justify-content: flex-start;
+  }
+
+  .player-career-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .player-platform-selector {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .player-platform-buttons {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .player-platform-button {
+    flex: 1;
+  }
+
+  .player-career-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ========================================
+   PLAYER — HERO PERFORMANCE SPACING
+======================================== */
+
+.player-hero-section-top {
+  margin-top: 22px;
+}
+
+
+/* ========================================
+   PLAYER — MODE BELOW PROFILE CARD
+======================================== */
+
+.player-profile-mode-selector {
+  margin: 12px 0 22px;
+}
+
+.player-profile-mode-selector
+  .player-mode-selector {
+  margin: 0;
+}
+
+
+/* ========================================
+   PLAYER — MODE INTEGRATED IN PROFILE CARD
+======================================== */
+
+.player-identity {
+  flex-wrap: wrap;
+}
+
+.player-profile-mode-selector {
+  width: 100%;
+  flex: 0 0 100%;
+
+  margin: 2px 0 0;
+  padding-top: 12px;
+
+  border-top:
+    1px solid var(--border);
+}
+
+.player-profile-mode-selector
+  .player-mode-selector {
+  margin: 0;
+  padding: 0;
+
+  border-top: 0;
+}
+
+.player-profile-mode-selector
+  .player-mode-buttons {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 700px) {
+  .player-profile-mode-selector {
+    padding-top: 10px;
+  }
+}

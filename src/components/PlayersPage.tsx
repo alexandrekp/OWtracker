@@ -47,7 +47,7 @@ function PlayersPage({
     );
 
   return (
-    <div className="players-page-shell">
+    <div className="players-page-shell players-v2-page">
       <div className="players-view-switch">
         <button
           className={

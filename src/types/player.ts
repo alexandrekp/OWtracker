@@ -1,47 +1,38 @@
 export type PlayerRank = {
   division: string;
   tier: number;
-
-  role_icon: string;
-  rank_icon: string;
-  tier_icon: string;
+  role_icon?: string | null;
+  rank_icon?: string | null;
+  tier_icon?: string | null;
 };
 
-export type PlayerPlatformCompetitiveRanks = {
-  season: number | null;
-
-  tank: PlayerRank | null;
-  damage: PlayerRank | null;
-  support: PlayerRank | null;
-  open: PlayerRank | null;
-};
-
-export type PlayerCompetitiveRanks = {
-  pc: PlayerPlatformCompetitiveRanks | null;
-  console: PlayerPlatformCompetitiveRanks | null;
+export type PlayerPlatformRanks = {
+  season?: number | null;
+  tank?: PlayerRank | null;
+  damage?: PlayerRank | null;
+  support?: PlayerRank | null;
 };
 
 export type PlayerSummary = {
   username: string;
-
   avatar: string | null;
-
-  namecard: string | null;
-
-  title: string | null;
-
-  endorsement: {
-    level: number;
-    frame: string;
+  namecard?: string | null;
+  title?: string | null;
+  endorsement?: {
+    level?: number | null;
+    frame?: string | null;
   } | null;
-
-  competitive:
-    PlayerCompetitiveRanks | null;
-
-  last_updated_at?: number | null;
+  competitive?: {
+    pc?:
+      | PlayerPlatformRanks
+      | null;
+    console?:
+      | PlayerPlatformRanks
+      | null;
+  } | null;
 };
 
-export type PlayerStatNumbers = {
+export type PlayerStatValues = {
   eliminations: number;
   assists: number;
   deaths: number;
@@ -53,33 +44,24 @@ export type PlayerStatBlock = {
   games_played: number;
   games_won: number;
   games_lost: number;
-
   time_played: number;
-
   winrate: number;
   kda: number;
-
-  total: PlayerStatNumbers;
-  average: PlayerStatNumbers;
+  total: PlayerStatValues;
+  average: PlayerStatValues;
 };
-
-export type PlayerRoleStats = {
-  tank?: PlayerStatBlock;
-  damage?: PlayerStatBlock;
-  support?: PlayerStatBlock;
-};
-
-export type PlayerHeroStats = Record<
-  string,
-  PlayerStatBlock
->;
 
 export type PlayerStatsSummary = {
   general: PlayerStatBlock;
-
-  roles: PlayerRoleStats;
-
-  heroes: PlayerHeroStats;
+  roles: {
+    tank?: PlayerStatBlock;
+    damage?: PlayerStatBlock;
+    support?: PlayerStatBlock;
+  };
+  heroes: Record<
+    string,
+    PlayerStatBlock
+  >;
 };
 
 export type PlayerData = {

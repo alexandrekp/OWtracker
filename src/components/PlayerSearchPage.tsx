@@ -3,6 +3,8 @@ import {
   ArrowRight,
   Clock3,
   HeartPulse,
+  Monitor,
+  Gamepad2,
   Percent,
   RefreshCw,
   Search,
@@ -23,12 +25,15 @@ import {
 } from "react";
 
 import {
+  getPlayerCareer,
   getPlayerData,
   PlayerApiError,
 } from "../services/playerApi";
 
 import type {
+  PlayerCareerStats,
   PlayerGamemode,
+  PlayerPlatform,
 } from "../services/playerApi";
 
 import {
@@ -82,6 +87,14 @@ type HeroSortMetric =
   | "winrate"
   | "kda";
 
+type CareerCategory =
+  | "combat"
+  | "game"
+  | "best"
+  | "average"
+  | "assists"
+  | "hero_specific";
+
 const FAVORITES_STORAGE_KEY =
   "owtracker.favoritePlayers";
 
@@ -117,6 +130,45 @@ function PlayerSearchPage({
     useState<PlayerGamemode>(
       "all",
     );
+
+  const [
+    selectedPlatform,
+    setSelectedPlatform,
+  ] =
+    useState<PlayerPlatform>(
+      "pc",
+    );
+
+  const [
+    activePlatform,
+    setActivePlatform,
+  ] =
+    useState<PlayerPlatform>(
+      "pc",
+    );
+
+  const [
+    careerData,
+    setCareerData,
+  ] =
+    useState<PlayerCareerStats | null>(
+      null,
+    );
+
+  const [
+    careerHero,
+    setCareerHero,
+  ] = useState("all-heroes");
+
+  const [
+    careerLoading,
+    setCareerLoading,
+  ] = useState(false);
+
+  const [
+    careerError,
+    setCareerError,
+  ] = useState<string | null>(null);
 
   const [
     playerData,
@@ -346,6 +398,9 @@ function PlayerSearchPage({
     gamemode:
       PlayerGamemode =
       selectedGamemode,
+    platform:
+      PlayerPlatform =
+      selectedPlatform,
   ) {
     const normalizedValue =
       value.trim();
@@ -380,13 +435,30 @@ function PlayerSearchPage({
         await getPlayerData(
           normalizedValue,
           gamemode,
+          platform,
         );
 
       setPlayerData(result);
       setActiveGamemode(gamemode);
       setSelectedGamemode(gamemode);
+      setActivePlatform(platform);
+      setSelectedPlatform(platform);
+
+      if (gamemode !== "all") {
+        await loadCareer(
+          normalizedValue,
+          gamemode,
+          platform,
+          "all-heroes",
+        );
+      } else {
+        setCareerData(null);
+        setCareerError(null);
+        setCareerHero("all-heroes");
+      }
     } catch (error) {
       setPlayerData(null);
+      setCareerData(null);
 
       if (
         error instanceof
@@ -444,6 +516,7 @@ function PlayerSearchPage({
     await searchPlayer(
       battleTag,
       selectedGamemode,
+      selectedPlatform,
     );
   }
 
@@ -461,6 +534,72 @@ function PlayerSearchPage({
         gamemode,
       );
     }
+  }
+
+  async function handlePlatformChange(
+    platform: PlayerPlatform,
+  ) {
+    setSelectedPlatform(platform);
+
+    if (searchedBattleTag) {
+      await searchPlayer(
+        searchedBattleTag,
+        selectedGamemode,
+        platform,
+      );
+    }
+  }
+
+  async function loadCareer(
+    tag: string,
+    gamemode: Exclude<PlayerGamemode, "all">,
+    platform: PlayerPlatform,
+    hero: string,
+  ) {
+    setCareerLoading(true);
+    setCareerError(null);
+
+    try {
+      const result =
+        await getPlayerCareer(
+          tag,
+          gamemode,
+          platform,
+          hero,
+        );
+
+      setCareerData(result);
+      setCareerHero(hero);
+    } catch (error) {
+      setCareerData(null);
+      setCareerError(
+        error instanceof Error
+          ? error.message
+          : "Advanced career stats are unavailable.",
+      );
+    } finally {
+      setCareerLoading(false);
+    }
+  }
+
+  async function handleCareerHeroChange(
+    hero: string,
+  ) {
+    setCareerHero(hero);
+
+    if (
+      !searchedBattleTag ||
+      activeGamemode === "all"
+    ) {
+      return;
+    }
+
+    await loadCareer(
+      searchedBattleTag,
+      activeGamemode,
+      activePlatform,
+      hero,
+    );
   }
 
   const canRetry =
@@ -573,58 +712,35 @@ function PlayerSearchPage({
           Example: Player#1234
         </p>
 
-        <div className="player-mode-selector">
+        <div className="player-platform-selector">
           <div>
             <span className="player-mode-label">
-              Mode
+              Platform
             </span>
 
             <p>
-              Select which career
-              statistics to display.
+              Load PC or console career data.
             </p>
           </div>
 
-          <div className="player-mode-buttons">
-            <ModeButton
-              label="All modes"
-              active={
-                selectedGamemode ===
-                "all"
-              }
+          <div className="player-platform-buttons">
+            <PlatformButton
+              label="PC"
+              icon={<Monitor size={13} />}
+              active={selectedPlatform === "pc"}
               disabled={loading}
               onClick={() =>
-                handleGamemodeChange(
-                  "all",
-                )
+                handlePlatformChange("pc")
               }
             />
 
-            <ModeButton
-              label="Competitive"
-              active={
-                selectedGamemode ===
-                "competitive"
-              }
+            <PlatformButton
+              label="Console"
+              icon={<Gamepad2 size={13} />}
+              active={selectedPlatform === "console"}
               disabled={loading}
               onClick={() =>
-                handleGamemodeChange(
-                  "competitive",
-                )
-              }
-            />
-
-            <ModeButton
-              label="Quick Play"
-              active={
-                selectedGamemode ===
-                "quickplay"
-              }
-              disabled={loading}
-              onClick={() =>
-                handleGamemodeChange(
-                  "quickplay",
-                )
+                handlePlatformChange("console")
               }
             />
           </div>
@@ -664,6 +780,7 @@ function PlayerSearchPage({
                       searchPlayer(
                         favorite.battleTag,
                         selectedGamemode,
+                        selectedPlatform,
                       )
                     }
                     disabled={loading}
@@ -825,6 +942,33 @@ function PlayerSearchPage({
           gamemode={
             activeGamemode
           }
+          selectedGamemode={
+            selectedGamemode
+          }
+          platform={
+            activePlatform
+          }
+          loading={
+            loading
+          }
+          onGamemodeChange={
+            handleGamemodeChange
+          }
+          careerData={
+            careerData
+          }
+          careerHero={
+            careerHero
+          }
+          careerLoading={
+            careerLoading
+          }
+          careerError={
+            careerError
+          }
+          onCareerHeroChange={
+            handleCareerHeroChange
+          }
           favorite={
             isFavorite(
               searchedBattleTag,
@@ -903,6 +1047,42 @@ function ModeButton({
 }
 
 /* ========================================
+   PLATFORM BUTTON
+======================================== */
+
+type PlatformButtonProps = {
+  label: string;
+  icon: React.ReactNode;
+  active: boolean;
+  disabled: boolean;
+  onClick: () => void;
+};
+
+function PlatformButton({
+  label,
+  icon,
+  active,
+  disabled,
+  onClick,
+}: PlatformButtonProps) {
+  return (
+    <button
+      type="button"
+      className={
+        active
+          ? "player-platform-button active"
+          : "player-platform-button"
+      }
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
+/* ========================================
    PROFILE
 ======================================== */
 
@@ -910,6 +1090,17 @@ type PlayerProfileProps = {
   data: PlayerData;
   battleTag: string;
   gamemode: PlayerGamemode;
+  selectedGamemode: PlayerGamemode;
+  platform: PlayerPlatform;
+  loading: boolean;
+  onGamemodeChange: (
+    gamemode: PlayerGamemode,
+  ) => void | Promise<void>;
+  careerData: PlayerCareerStats | null;
+  careerHero: string;
+  careerLoading: boolean;
+  careerError: string | null;
+  onCareerHeroChange: (hero: string) => void;
   favorite: boolean;
   onAddFavorite: () => void;
   onRemoveFavorite: () => void;
@@ -928,6 +1119,15 @@ function PlayerProfile({
   data,
   battleTag,
   gamemode,
+  selectedGamemode,
+  platform,
+  loading,
+  onGamemodeChange,
+  careerData,
+  careerHero,
+  careerLoading,
+  careerError,
+  onCareerHeroChange,
   favorite,
   onAddFavorite,
   onRemoveFavorite,
@@ -939,7 +1139,7 @@ function PlayerProfile({
   } = data;
 
   const ranks =
-    summary.competitive?.pc;
+    summary.competitive?.[platform];
 
   const [
     heroSortMetric,
@@ -947,6 +1147,19 @@ function PlayerProfile({
   ] =
     useState<HeroSortMetric>(
       "time",
+    );
+
+  const [
+    careerCategory,
+    setCareerCategory,
+  ] = useState<CareerCategory>(
+    "combat",
+  );
+
+  const activeCareerStats =
+    getCareerHeroStats(
+      careerData,
+      careerHero,
     );
 
   const sortedHeroes =
@@ -1087,6 +1300,65 @@ function PlayerProfile({
             </div>
           )}
         </div>
+
+        <div className="player-profile-mode-selector">
+          <div className="player-mode-selector">
+            <div>
+              <span className="player-mode-label">
+                Mode
+              </span>
+
+              <p>
+                Select which career
+                statistics to display.
+              </p>
+            </div>
+
+            <div className="player-mode-buttons">
+              <ModeButton
+                label="All modes"
+                active={
+                  selectedGamemode ===
+                  "all"
+                }
+                disabled={loading}
+                onClick={() =>
+                  onGamemodeChange(
+                    "all",
+                  )
+                }
+              />
+
+              <ModeButton
+                label="Competitive"
+                active={
+                  selectedGamemode ===
+                  "competitive"
+                }
+                disabled={loading}
+                onClick={() =>
+                  onGamemodeChange(
+                    "competitive",
+                  )
+                }
+              />
+
+              <ModeButton
+                label="Quick Play"
+                active={
+                  selectedGamemode ===
+                  "quickplay"
+                }
+                disabled={loading}
+                onClick={() =>
+                  onGamemodeChange(
+                    "quickplay",
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <SectionHeader
@@ -1160,6 +1432,34 @@ function PlayerProfile({
         />
       </div>
 
+      <SectionHeader
+        eyebrow="AVERAGE / 10 MIN"
+        title="Performance pace"
+      />
+
+      <div className="player-combat-grid player-average-grid">
+        <DecimalStat
+          label="Eliminations"
+          value={stats.general.average.eliminations}
+        />
+        <DecimalStat
+          label="Assists"
+          value={stats.general.average.assists}
+        />
+        <DecimalStat
+          label="Deaths"
+          value={stats.general.average.deaths}
+        />
+        <DecimalStat
+          label="Damage"
+          value={stats.general.average.damage}
+        />
+        <DecimalStat
+          label="Healing"
+          value={stats.general.average.healing}
+        />
+      </div>
+
       <div className="player-section-heading">
         <div>
           <span className="panel-eyebrow">
@@ -1167,7 +1467,7 @@ function PlayerProfile({
           </span>
 
           <h3>
-            PC ranks
+            {formatPlatform(platform)} ranks
           </h3>
 
           {ranks?.season !==
@@ -1311,6 +1611,95 @@ function PlayerProfile({
           }
         />
       </div>
+
+      <SectionHeader
+        eyebrow="ADVANCED CAREER"
+        title="Detailed career statistics"
+      />
+
+      {gamemode === "all" ? (
+        <div className="player-career-note">
+          Choose Competitive or Quick Play to load advanced career statistics.
+        </div>
+      ) : (
+        <section className="player-career-panel">
+          <div className="player-career-toolbar">
+            <div className="player-career-select">
+              <label htmlFor="player-career-hero">
+                Hero
+              </label>
+
+              <select
+                id="player-career-hero"
+                value={careerHero}
+                disabled={careerLoading}
+                onChange={(event) =>
+                  onCareerHeroChange(
+                    event.target.value,
+                  )
+                }
+              >
+                <option value="all-heroes">
+                  All heroes
+                </option>
+
+                {sortedHeroes.map(([heroId]) => (
+                  <option
+                    key={heroId}
+                    value={heroId}
+                  >
+                    {getHeroDisplayName(heroId)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="player-career-tabs">
+              {([
+                ["combat", "Combat"],
+                ["game", "Game"],
+                ["best", "Best"],
+                ["average", "Average"],
+                ["assists", "Assists"],
+                ["hero_specific", "Hero specific"],
+              ] as [CareerCategory, string][]).map(
+                ([category, label]) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className={
+                      careerCategory === category
+                        ? "player-career-tab active"
+                        : "player-career-tab"
+                    }
+                    onClick={() =>
+                      setCareerCategory(category)
+                    }
+                  >
+                    {label}
+                  </button>
+                ),
+              )}
+            </div>
+          </div>
+
+          {careerLoading ? (
+            <div className="player-career-state">
+              Loading advanced career stats...
+            </div>
+          ) : careerError ? (
+            <div className="player-career-state error">
+              {careerError}
+            </div>
+          ) : (
+            <CareerStatsGrid
+              stats={
+                activeCareerStats?.[careerCategory]
+              }
+            />
+          )}
+        </section>
+      )}
 
       <div className="player-hero-section-top">
         <SectionHeader
@@ -1731,6 +2120,56 @@ function CombatStat({
   );
 }
 
+type DecimalStatProps = {
+  label: string;
+  value: number;
+};
+
+function DecimalStat({
+  label,
+  value,
+}: DecimalStatProps) {
+  return (
+    <div className="player-combat-card player-average-card">
+      <span>{label}</span>
+      <strong>{formatDecimal(value)}</strong>
+    </div>
+  );
+}
+
+function CareerStatsGrid({
+  stats,
+}: {
+  stats?: Record<string, number | string | null>;
+}) {
+  const entries =
+    Object.entries(stats ?? {})
+      .filter(([, value]) => value !== null)
+      .slice(0, 18);
+
+  if (entries.length === 0) {
+    return (
+      <div className="player-career-state">
+        No statistics available for this category.
+      </div>
+    );
+  }
+
+  return (
+    <div className="player-career-grid">
+      {entries.map(([key, value]) => (
+        <div
+          className="player-career-stat"
+          key={key}
+        >
+          <span>{formatStatLabel(key)}</span>
+          <strong>{formatCareerValue(key, value)}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ========================================
    HERO ROW
 ======================================== */
@@ -1860,6 +2299,96 @@ function HeroStatRow({
 /* ========================================
    HELPERS
 ======================================== */
+
+function getCareerHeroStats(
+  data: PlayerCareerStats | null,
+  hero: string,
+) {
+  if (!data) {
+    return null;
+  }
+
+  return (
+    data[hero] ??
+    data["all-heroes"] ??
+    null
+  );
+}
+
+function getHeroDisplayName(
+  heroId: string,
+) {
+  return (
+    heroes.find(
+      (hero) => hero.id === heroId,
+    )?.name ?? formatHeroName(heroId)
+  );
+}
+
+function formatPlatform(
+  platform: PlayerPlatform,
+) {
+  return platform === "pc"
+    ? "PC"
+    : "Console";
+}
+
+function formatDecimal(
+  value: number,
+) {
+  return new Intl.NumberFormat(
+    "en-US",
+    {
+      maximumFractionDigits: 2,
+    },
+  ).format(value);
+}
+
+function formatStatLabel(
+  value: string,
+) {
+  return value
+    .replace(/_avg_per_10_min$/i, " / 10 min")
+    .replace(/_most_in_game$/i, " best game")
+    .replace(/_best_in_game$/i, " best game")
+    .replace(/_/g, " ")
+    .replace(
+      /\b\w/g,
+      (letter: string) =>
+        letter.toUpperCase(),
+    );
+}
+
+function formatCareerValue(
+  key: string,
+  value: number | string | null,
+) {
+  if (value === null) {
+    return "—";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (
+    key.includes("time") &&
+    value >= 60
+  ) {
+    return formatDuration(value);
+  }
+
+  if (
+    key.includes("accuracy") ||
+    key.includes("percentage") ||
+    key.includes("win_percentage") ||
+    key.includes("rate")
+  ) {
+    return `${formatDecimal(value)}%`;
+  }
+
+  return formatDecimal(value);
+}
 
 function formatGamemode(
   gamemode:
