@@ -26,7 +26,7 @@ function Sidebar({
       <div className="brand">
         <div className="brand-mark">
           <img
-            src={`${import.meta.env.BASE_URL}owtracker-logo.png`}
+            src={`${import.meta.env.BASE_URL}owtracker-logo-v2.png`}
             alt="OWTracker"
             className="brand-logo"
           />
@@ -115,4 +115,5 @@ function Sidebar({
 }
 
 export default Sidebar;
+
 
