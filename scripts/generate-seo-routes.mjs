@@ -2,50 +2,70 @@ import fs from "node:fs";
 import path from "node:path";
 
 const distDir = path.resolve("dist");
-const sourceFile = path.join(distDir, "index.html");
+
+const sourceFile = path.join(
+  distDir,
+  "index.html",
+);
 
 const routes = {
   stats: {
-    title: "Overwatch Stats & Meta — OWTracker",
+    title:
+      "Overwatch Stats & Meta — OWTracker",
     description:
       "Explore Overwatch hero win rates, pick rates, ban rates and OWTracker meta rankings by region, rank and role.",
   },
 
   heroes: {
-    title: "Overwatch Hero Stats — OWTracker",
+    title:
+      "Overwatch Hero Stats — OWTracker",
     description:
       "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking and perks.",
   },
 
   players: {
-    title: "Overwatch Player Stats — OWTracker",
+    title:
+      "Overwatch Player Stats — OWTracker",
     description:
       "Search Overwatch player profiles, inspect competitive ranks and compare hero performance side by side.",
   },
 
   perks: {
-    title: "Overwatch Hero Perks — OWTracker",
+    title:
+      "Overwatch Hero Perks — OWTracker",
     description:
       "Explore Overwatch hero perks, perk popularity and community choices by hero and role.",
   },
 
   settings: {
-    title: "Settings — OWTracker",
+    title:
+      "Settings — OWTracker",
     description:
       "Configure OWTracker statistics defaults, cache behavior and view application data sources.",
   },
 };
 
 if (!fs.existsSync(sourceFile)) {
-  throw new Error("dist/index.html not found. Run npm run build first.");
+  throw new Error(
+    "dist/index.html not found. Run npm run build first.",
+  );
 }
 
-const baseHtml = fs.readFileSync(sourceFile, "utf8");
+const baseHtml =
+  fs.readFileSync(
+    sourceFile,
+    "utf8",
+  );
 
-for (const [route, meta] of Object.entries(routes)) {
-  const canonical = `https://owtracker.net/${route}`;
+for (
+  const [route, meta]
+  of Object.entries(routes)
+) {
+  const canonical =
+    `https://owtracker.net/${route}`;
 
-  let html = baseHtml;
+  let html =
+    baseHtml;
 
   html = html.replace(
     /<title>.*?<\/title>/,
@@ -77,19 +97,96 @@ for (const [route, meta] of Object.entries(routes)) {
     `<link rel="canonical" href="${canonical}">`,
   );
 
-  const routeDir = path.join(distDir, route);
+  const schema = {
+    "@context":
+      "https://schema.org",
 
-  fs.mkdirSync(routeDir, {
-    recursive: true,
-  });
+    "@graph": [
+      {
+        "@type":
+          "WebApplication",
+
+        "@id":
+          "https://owtracker.net/#app",
+
+        name:
+          "OWTracker",
+
+        url:
+          "https://owtracker.net/",
+
+        applicationCategory:
+          "GameApplication",
+
+        operatingSystem:
+          "Web, Windows",
+
+        description:
+          "Overwatch statistics, meta rankings, hero perks and player comparison in one focused companion.",
+
+        isAccessibleForFree:
+          true,
+      },
+
+      {
+        "@type":
+          "WebPage",
+
+        "@id":
+          `${canonical}#webpage`,
+
+        url:
+          canonical,
+
+        name:
+          meta.title,
+
+        description:
+          meta.description,
+
+        isPartOf: {
+          "@id":
+            "https://owtracker.net/#app",
+        },
+      },
+    ],
+  };
+
+  const schemaTag =
+    `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+
+  html = html.replace(
+    "</head>",
+    `  ${schemaTag}\n</head>`,
+  );
+
+  const routeDir =
+    path.join(
+      distDir,
+      route,
+    );
+
+  fs.mkdirSync(
+    routeDir,
+    {
+      recursive: true,
+    },
+  );
 
   fs.writeFileSync(
-    path.join(routeDir, "index.html"),
+    path.join(
+      routeDir,
+      "index.html",
+    ),
     html,
     "utf8",
   );
 
-  console.log(`Generated /${route}`);
+  console.log(
+    `Generated /${route}`,
+  );
 }
 
-console.log("SEO routes generated.");
+console.log(
+  "SEO routes generated.",
+);
