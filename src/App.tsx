@@ -44,7 +44,166 @@ export type PlayerHeroContext = {
     PlayerStatBlock;
 };
 
+const WEB_ROUTES:
+  Partial<Record<AppSection, string>> = {
+    stats: "/stats",
+    heroes: "/heroes",
+    players: "/players",
+    perks: "/perks",
+    settings: "/settings",
+  };
+
+const ROUTE_SECTIONS:
+  Record<string, AppSection> = {
+    "/stats": "stats",
+    "/heroes": "heroes",
+    "/players": "players",
+    "/perks": "perks",
+    "/settings": "settings",
+  };
+
+const PAGE_META:
+  Record<
+    AppSection,
+    {
+      title: string;
+      description: string;
+    }
+  > = {
+    stats: {
+      title:
+        "Overwatch Stats & Meta — OWTracker",
+      description:
+        "Explore Overwatch hero win rates, pick rates, ban rates and OWTracker meta rankings by region, rank and role.",
+    },
+
+    heroes: {
+      title:
+        "Overwatch Hero Stats — OWTracker",
+      description:
+        "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking and perks.",
+    },
+
+    players: {
+      title:
+        "Overwatch Player Stats — OWTracker",
+      description:
+        "Search Overwatch player profiles, inspect competitive ranks and compare hero performance side by side.",
+    },
+
+    perks: {
+      title:
+        "Overwatch Hero Perks — OWTracker",
+      description:
+        "Explore Overwatch hero perks, perk popularity and community choices by hero and role.",
+    },
+
+    settings: {
+      title:
+        "Settings — OWTracker",
+      description:
+        "Configure OWTracker statistics defaults, cache behavior and view application data sources.",
+    },
+  };
+
+function normalizePath(
+  pathname: string,
+) {
+  if (
+    pathname.length > 1 &&
+    pathname.endsWith("/")
+  ) {
+    return pathname.slice(
+      0,
+      -1,
+    );
+  }
+
+  return pathname;
+}
+
+function sectionFromPath():
+  AppSection | null {
+  const path =
+    normalizePath(
+      window.location.pathname,
+    );
+
+  return (
+    ROUTE_SECTIONS[path] ??
+    null
+  );
+}
+
+function updateMeta(
+  section: AppSection | null,
+) {
+  const landingTitle =
+    "OWTracker — Overwatch Stats & Meta";
+
+  const landingDescription =
+    "Overwatch statistics, hero win rates, meta rankings, perks and player comparison in one focused interface.";
+
+  const meta =
+    section
+      ? PAGE_META[section]
+      : {
+          title:
+            landingTitle,
+          description:
+            landingDescription,
+        };
+
+  document.title =
+    meta.title;
+
+  const description =
+    document.querySelector<HTMLMetaElement>(
+      'meta[name="description"]',
+    );
+
+  if (description) {
+    description.content =
+      meta.description;
+  }
+
+  const ogTitle =
+    document.querySelector<HTMLMetaElement>(
+      'meta[property="og:title"]',
+    );
+
+  if (ogTitle) {
+    ogTitle.content =
+      meta.title;
+  }
+
+  const ogDescription =
+    document.querySelector<HTMLMetaElement>(
+      'meta[property="og:description"]',
+    );
+
+  if (ogDescription) {
+    ogDescription.content =
+      meta.description;
+  }
+
+  const canonical =
+    document.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]',
+    );
+
+  if (canonical) {
+    canonical.href =
+      section
+        ? `https://owtracker.net${WEB_ROUTES[section]}`
+        : "https://owtracker.net/";
+  }
+}
+
 function App() {
+  const runningInTauri =
+    isTauri();
+
   /* ========================================
      STARTUP
   ======================================== */
@@ -54,13 +213,19 @@ function App() {
     setAppReady,
   ] = useState(false);
 
+  const initialWebSection =
+    !runningInTauri
+      ? sectionFromPath()
+      : null;
+
   const [
     dashboardOpen,
     setDashboardOpen,
   ] =
     useState(
       () =>
-        isTauri(),
+        runningInTauri ||
+        initialWebSection !== null,
     );
 
   useEffect(() => {
@@ -87,7 +252,8 @@ function App() {
     setActiveSection,
   ] =
     useState<AppSection>(
-      "stats",
+      initialWebSection ??
+        "stats",
     );
 
   const [
@@ -106,6 +272,68 @@ function App() {
       null,
     );
 
+  useEffect(() => {
+    if (runningInTauri) {
+      return;
+    }
+
+    updateMeta(
+      dashboardOpen
+        ? activeSection
+        : null,
+    );
+  }, [
+    runningInTauri,
+    dashboardOpen,
+    activeSection,
+  ]);
+
+  useEffect(() => {
+    if (runningInTauri) {
+      return;
+    }
+
+    function handlePopState() {
+      const section =
+        sectionFromPath();
+
+      setSelectedHero(
+        null,
+      );
+
+      setPlayerHeroContext(
+        null,
+      );
+
+      if (section) {
+        setActiveSection(
+          section,
+        );
+
+        setDashboardOpen(
+          true,
+        );
+      } else {
+        setDashboardOpen(
+          false,
+        );
+      }
+    }
+
+    window.addEventListener(
+      "popstate",
+      handlePopState,
+    );
+
+    return () =>
+      window.removeEventListener(
+        "popstate",
+        handlePopState,
+      );
+  }, [
+    runningInTauri,
+  ]);
+
   /* ========================================
      ACTIONS
   ======================================== */
@@ -122,6 +350,42 @@ function App() {
     setActiveSection(
       section,
     );
+
+    if (!runningInTauri) {
+      const route =
+        WEB_ROUTES[section];
+
+      if (
+        route &&
+        normalizePath(
+          window.location.pathname,
+        ) !== route
+      ) {
+        window.history.pushState(
+          {},
+          "",
+          route,
+        );
+      }
+    }
+  }
+
+  function openDashboard() {
+    setDashboardOpen(
+      true,
+    );
+
+    setActiveSection(
+      "stats",
+    );
+
+    if (!runningInTauri) {
+      window.history.pushState(
+        {},
+        "",
+        "/stats",
+      );
+    }
   }
 
   function openHero(
@@ -198,15 +462,13 @@ function App() {
   ======================================== */
 
   if (
-    !isTauri() &&
+    !runningInTauri &&
     !dashboardOpen
   ) {
     return (
       <LandingPage
-        onOpenDashboard={() =>
-          setDashboardOpen(
-            true,
-          )
+        onOpenDashboard={
+          openDashboard
         }
       />
     );

@@ -1,4 +1,4 @@
-import {
+﻿import {
   invoke,
   isTauri,
 } from "@tauri-apps/api/core";
@@ -72,7 +72,7 @@ export type BlizzardStatsResponse = {
 const API_BASE_URL =
   import.meta.env
     .VITE_API_URL ||
-  "http://127.0.0.1:8787";
+  "https://worker.akidneyperks.workers.dev";
 
 /* ========================================
    TAURI
