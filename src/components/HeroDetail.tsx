@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -29,6 +30,10 @@ import {
   getPerksForHero,
 } from "../data/perks";
 
+import {
+  heroes,
+} from "../data/heroes";
+
 type PlayerHeroContext = {
   username: string;
   battleTag: string;
@@ -48,6 +53,45 @@ type HeroTab =
   | "overview"
   | "perks"
   | "stats";
+
+type MetaTier =
+  | "S"
+  | "A"
+  | "B"
+  | "C"
+  | "D";
+
+type HeroMetaInfo = {
+  score: number;
+  tier: MetaTier;
+  roleRank: number;
+  overallRank: number;
+};
+
+type MetaTrend =
+  | "rising"
+  | "falling"
+  | "stable";
+
+type StoredHeroMeta = {
+  score: number;
+  signature: string;
+  trend?: MetaTrend;
+};
+
+type HeroPositioning = {
+  winRateVsRoster:
+    number | null;
+
+  pickRateLevel:
+    string;
+
+  banRateLevel:
+    string;
+
+  metaStanding:
+    string;
+};
 
 function HeroDetail({
   hero,
@@ -107,6 +151,133 @@ function HeroDetail({
           (b.popularity ?? 0) -
           (a.popularity ?? 0),
       )[0];
+
+  const metaInfo =
+    useMemo(
+      () =>
+        getHeroMetaInfo(
+          hero,
+        ),
+      [hero],
+    );
+
+  const positioning =
+    useMemo(
+      () =>
+        getHeroPositioning(
+          hero,
+          metaInfo,
+        ),
+      [
+        hero,
+        metaInfo,
+      ],
+    );
+
+  const [
+    metaTrend,
+    setMetaTrend,
+  ] =
+    useState<MetaTrend | null>(
+      null,
+    );
+
+  useEffect(() => {
+    if (!metaInfo) {
+      setMetaTrend(
+        null,
+      );
+      return;
+    }
+
+    const storageKey =
+      `owtracker.heroMeta.${hero.id}`;
+
+    const signature =
+      [
+        hero.winRate ?? "na",
+        hero.pickRate ?? "na",
+        hero.banRate ?? "na",
+      ].join("|");
+
+    try {
+      const raw =
+        localStorage.getItem(
+          storageKey,
+        );
+
+      if (!raw) {
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            score:
+              metaInfo.score,
+
+            signature,
+          } satisfies StoredHeroMeta),
+        );
+
+        setMetaTrend(
+          null,
+        );
+        return;
+      }
+
+      const previous =
+        JSON.parse(
+          raw,
+        ) as StoredHeroMeta;
+
+      if (
+        previous.signature ===
+        signature
+      ) {
+        setMetaTrend(
+          previous.trend ??
+            null,
+        );
+        return;
+      }
+
+      const difference =
+        metaInfo.score -
+        previous.score;
+
+      const trend:
+        MetaTrend =
+        difference >= 2
+          ? "rising"
+          : difference <= -2
+            ? "falling"
+            : "stable";
+
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          score:
+            metaInfo.score,
+
+          signature,
+
+          trend,
+        } satisfies StoredHeroMeta),
+      );
+
+      setMetaTrend(
+        trend,
+      );
+    } catch {
+      setMetaTrend(
+        null,
+      );
+    }
+  }, [
+    hero.id,
+    hero.winRate,
+    hero.pickRate,
+    hero.banRate,
+    metaInfo,
+  ]);
 
   return (
     <div className="hero-detail">
@@ -212,6 +383,12 @@ function HeroDetail({
           recommendedMajor={
             recommendedMajor
           }
+          metaInfo={
+            metaInfo
+          }
+          metaTrend={
+            metaTrend
+          }
         />
       )}
 
@@ -235,6 +412,15 @@ function HeroDetail({
           playerContext={
             playerContext
           }
+          metaInfo={
+            metaInfo
+          }
+          metaTrend={
+            metaTrend
+          }
+          positioning={
+            positioning
+          }
         />
       )}
     </div>
@@ -253,6 +439,12 @@ type OverviewTabProps = {
 
   recommendedMinor?: Perk;
   recommendedMajor?: Perk;
+
+  metaInfo:
+    HeroMetaInfo | null;
+
+  metaTrend:
+    MetaTrend | null;
 };
 
 function OverviewTab({
@@ -260,6 +452,8 @@ function OverviewTab({
   playerContext,
   recommendedMinor,
   recommendedMajor,
+  metaInfo,
+  metaTrend,
 }: OverviewTabProps) {
   return (
     <>
@@ -332,6 +526,136 @@ function OverviewTab({
           </div>
         </article>
 
+        <article className="detail-panel">
+          <div className="panel-heading">
+            <div>
+              <span className="panel-eyebrow">
+                META PERFORMANCE
+              </span>
+
+              <h2>
+                Current position
+              </h2>
+            </div>
+
+            <span className="data-source">
+              OWTracker
+            </span>
+          </div>
+
+          <div className="performance-grid">
+            <div>
+              <span>
+                Tier
+              </span>
+
+              <strong>
+                {metaInfo?.tier ??
+                  "—"}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                Meta score
+              </span>
+
+              <strong>
+                {metaInfo
+                  ? metaInfo.score.toFixed(
+                      0,
+                    )
+                  : "—"}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                Role rank
+              </span>
+
+              <strong>
+                {metaInfo
+                  ? `#${metaInfo.roleRank} ${hero.role}`
+                  : "—"}
+              </strong>
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: "18px",
+              paddingTop: "14px",
+              borderTop:
+                "1px solid var(--border, rgba(255,255,255,0.08))",
+              display: "flex",
+              alignItems: "center",
+              justifyContent:
+                "space-between",
+              gap: "14px",
+              flexWrap: "wrap",
+              fontSize: "12px",
+              lineHeight: 1.4,
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                flexWrap: "wrap",
+              }}
+            >
+              <span
+                style={{
+                  opacity: 0.7,
+                }}
+              >
+                Score weighting ·
+              </span>
+
+              <strong
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                }}
+              >
+                WR 60% · PR 30% · BR 10%
+              </strong>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "7px",
+              }}
+            >
+              <span
+                style={{
+                  opacity: 0.7,
+                }}
+              >
+                Trend ·
+              </span>
+
+              <strong
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                }}
+              >
+                {metaTrend
+                  ? formatMetaTrend(
+                      metaTrend,
+                    )
+                  : "Collecting data"}
+              </strong>
+            </div>
+          </div>
+        </article>
+
         <article className="detail-panel overview-perks-panel">
           <div className="panel-heading">
             <div>
@@ -362,6 +686,7 @@ function OverviewTab({
           </div>
         </article>
       </section>
+
     </>
   );
 }
@@ -701,11 +1026,23 @@ type StatsTabProps = {
 
   playerContext?:
     PlayerHeroContext | null;
+
+  metaInfo:
+    HeroMetaInfo | null;
+
+  metaTrend:
+    MetaTrend | null;
+
+  positioning:
+    HeroPositioning;
 };
 
 function StatsTab({
   hero,
   playerContext,
+  metaInfo,
+  metaTrend,
+  positioning,
 }: StatsTabProps) {
   return (
     <>
@@ -718,65 +1055,284 @@ function StatsTab({
         />
       )}
 
-      <section className="detail-panel">
+      <section
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(2, minmax(0, 1fr))",
+          gap: "16px",
+        }}
+      >
+        <article className="detail-panel">
+          <div className="panel-heading">
+            <div>
+              <span className="panel-eyebrow">
+                BLIZZARD STATS
+              </span>
+
+              <h2>
+                Global performance
+              </h2>
+            </div>
+
+            <span className="data-source">
+              Blizzard
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "18px",
+              borderTop:
+                "1px solid var(--border, rgba(255,255,255,0.08))",
+            }}
+          >
+            <StatsTableRow
+              label="Win rate"
+              value={
+                hero.winRate !==
+                undefined
+                  ? `${hero.winRate}%`
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Pick rate"
+              value={
+                hero.pickRate !==
+                undefined
+                  ? `${hero.pickRate}%`
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Ban rate"
+              value={
+                hero.banRate !==
+                undefined
+                  ? `${hero.banRate}%`
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Role"
+              value={hero.role}
+              last
+            />
+          </div>
+        </article>
+
+        <article className="detail-panel">
+          <div className="panel-heading">
+            <div>
+              <span className="panel-eyebrow">
+                META RANKING
+              </span>
+
+              <h2>
+                Current position
+              </h2>
+            </div>
+
+            <span className="data-source">
+              OWTracker
+            </span>
+          </div>
+
+          <div
+            style={{
+              marginTop: "18px",
+              borderTop:
+                "1px solid var(--border, rgba(255,255,255,0.08))",
+            }}
+          >
+            <StatsTableRow
+              label="Meta score"
+              value={
+                metaInfo
+                  ? metaInfo.score.toFixed(
+                      0,
+                    )
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Tier"
+              value={
+                metaInfo?.tier ??
+                "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Overall rank"
+              value={
+                metaInfo
+                  ? `#${metaInfo.overallRank}`
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Role rank"
+              value={
+                metaInfo
+                  ? `#${metaInfo.roleRank} ${hero.role}`
+                  : "—"
+              }
+            />
+
+            <StatsTableRow
+              label="Trend"
+              value={
+                metaTrend
+                  ? formatMetaTrend(
+                      metaTrend,
+                    )
+                  : "Collecting data"
+              }
+              last
+            />
+          </div>
+
+          <div
+            style={{
+              marginTop: "14px",
+              paddingTop: "12px",
+              borderTop:
+                "1px solid var(--border, rgba(255,255,255,0.08))",
+              fontSize: "12px",
+              opacity: 0.72,
+            }}
+          >
+            Score weighting ·{" "}
+            <strong
+              style={{
+                opacity: 1,
+              }}
+            >
+              WR 60% · PR 30% · BR 10%
+            </strong>
+          </div>
+        </article>
+      </section>
+
+      <section
+        className="detail-panel"
+        style={{
+          marginTop: "16px",
+        }}
+      >
         <div className="panel-heading">
           <div>
             <span className="panel-eyebrow">
-              BLIZZARD STATS
+              POSITIONING
             </span>
 
             <h2>
-              Global performance
+              Roster comparison
             </h2>
           </div>
 
           <span className="data-source">
-            PC · Europe · Competitive
+            OWTracker
           </span>
         </div>
 
-        <div className="performance-grid">
-          <div>
-            <span>
-              Win rate
-            </span>
+        <div
+          style={{
+            marginTop: "18px",
+            borderTop:
+              "1px solid var(--border, rgba(255,255,255,0.08))",
+          }}
+        >
+          <StatsTableRow
+            label="Win rate vs roster"
+            value={
+              positioning.winRateVsRoster !==
+              null
+                ? `${positioning.winRateVsRoster >= 0 ? "+" : ""}${positioning.winRateVsRoster.toFixed(
+                    1,
+                  )} pts`
+                : "—"
+            }
+          />
 
-            <strong>
-              {hero.winRate !==
-              undefined
-                ? `${hero.winRate}%`
-                : "—"}
-            </strong>
-          </div>
+          <StatsTableRow
+            label="Pick rate"
+            value={
+              positioning.pickRateLevel
+            }
+          />
 
-          <div>
-            <span>
-              Pick rate
-            </span>
+          <StatsTableRow
+            label="Ban rate"
+            value={
+              positioning.banRateLevel
+            }
+          />
 
-            <strong>
-              {hero.pickRate !==
-              undefined
-                ? `${hero.pickRate}%`
-                : "—"}
-            </strong>
-          </div>
-
-          <div>
-            <span>
-              Ban rate
-            </span>
-
-            <strong>
-              {hero.banRate !==
-              undefined
-                ? `${hero.banRate}%`
-                : "—"}
-            </strong>
-          </div>
+          <StatsTableRow
+            label="Meta standing"
+            value={
+              positioning.metaStanding
+            }
+            last
+          />
         </div>
       </section>
     </>
+  );
+}
+
+type StatsTableRowProps = {
+  label: string;
+  value: string;
+  last?: boolean;
+};
+
+function StatsTableRow({
+  label,
+  value,
+  last = false,
+}: StatsTableRowProps) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns:
+          "minmax(0, 1fr) auto",
+        alignItems: "center",
+        gap: "20px",
+        minHeight: "52px",
+        borderBottom:
+          last
+            ? "none"
+            : "1px solid var(--border, rgba(255,255,255,0.08))",
+      }}
+    >
+      <span
+        style={{
+          fontSize: "13px",
+          opacity: 0.7,
+        }}
+      >
+        {label}
+      </span>
+
+      <strong
+        style={{
+          fontSize: "15px",
+          textAlign: "right",
+        }}
+      >
+        {value}
+      </strong>
+    </div>
   );
 }
 
@@ -1010,6 +1566,455 @@ function PerkGroup({
 /* ========================================
    HELPERS
 ======================================== */
+
+function getHeroPositioning(
+  selectedHero: Hero,
+  metaInfo:
+    HeroMetaInfo | null,
+): HeroPositioning {
+  const validWinRates =
+    heroes
+      .map(
+        (entry) =>
+          entry.id ===
+          selectedHero.id
+            ? selectedHero.winRate
+            : entry.winRate,
+      )
+      .filter(
+        (
+          value,
+        ): value is number =>
+          value !==
+          undefined,
+      );
+
+  const averageWinRate =
+    validWinRates.length > 0
+      ? validWinRates.reduce(
+          (sum, value) =>
+            sum + value,
+          0,
+        ) /
+        validWinRates.length
+      : null;
+
+  const winRateVsRoster =
+    selectedHero.winRate !==
+      undefined &&
+    averageWinRate !==
+      null
+      ? selectedHero.winRate -
+        averageWinRate
+      : null;
+
+  const pickRateLevel =
+    classifyRosterMetric(
+      selectedHero.pickRate,
+      heroes.map(
+        (entry) =>
+          entry.id ===
+          selectedHero.id
+            ? selectedHero.pickRate
+            : entry.pickRate,
+      ),
+    );
+
+  const banRateLevel =
+    classifyRosterMetric(
+      selectedHero.banRate,
+      heroes.map(
+        (entry) =>
+          entry.id ===
+          selectedHero.id
+            ? selectedHero.banRate
+            : entry.banRate,
+      ),
+    );
+
+  const metaStanding =
+    metaInfo
+      ? getMetaStandingLabel(
+          metaInfo.overallRank,
+        )
+      : "—";
+
+  return {
+    winRateVsRoster,
+    pickRateLevel,
+    banRateLevel,
+    metaStanding,
+  };
+}
+
+function classifyRosterMetric(
+  value:
+    number | undefined,
+
+  dataset:
+    Array<
+      number | undefined
+    >,
+) {
+  if (
+    value === undefined
+  ) {
+    return "—";
+  }
+
+  const values =
+    dataset.filter(
+      (
+        entry,
+      ): entry is number =>
+        entry !== undefined,
+    );
+
+  if (
+    values.length === 0
+  ) {
+    return "—";
+  }
+
+  const sorted =
+    [...values].sort(
+      (a, b) =>
+        a - b,
+    );
+
+  const index =
+    sorted.findIndex(
+      (entry) =>
+        entry >= value,
+    );
+
+  const percentile =
+    index < 0
+      ? 1
+      : index /
+        Math.max(
+          sorted.length - 1,
+          1,
+        );
+
+  if (
+    percentile >= 0.75
+  ) {
+    return "Very high";
+  }
+
+  if (
+    percentile >= 0.55
+  ) {
+    return "High";
+  }
+
+  if (
+    percentile <= 0.25
+  ) {
+    return "Low";
+  }
+
+  return "Average";
+}
+
+function getMetaStandingLabel(
+  overallRank: number,
+) {
+  const totalHeroes =
+    heroes.length;
+
+  if (
+    totalHeroes <= 0
+  ) {
+    return "—";
+  }
+
+  const percentile =
+    Math.ceil(
+      (overallRank /
+        totalHeroes) *
+        100,
+    );
+
+  return `Top ${Math.max(
+    1,
+    percentile,
+  )}%`;
+}
+
+function getHeroMetaInfo(
+  selectedHero: Hero,
+): HeroMetaInfo | null {
+  const dataset =
+    heroes.map(
+      (entry) =>
+        entry.id ===
+        selectedHero.id
+          ? selectedHero
+          : entry,
+    );
+
+  const scored =
+    buildMetaScores(
+      dataset,
+    );
+
+  const selected =
+    scored.find(
+      (entry) =>
+        entry.hero.id ===
+        selectedHero.id,
+    );
+
+  if (!selected) {
+    return null;
+  }
+
+  const roleRanking =
+    scored.filter(
+      (entry) =>
+        entry.hero.role ===
+        selectedHero.role,
+    );
+
+  const roleRank =
+    roleRanking.findIndex(
+      (entry) =>
+        entry.hero.id ===
+        selectedHero.id,
+    ) + 1;
+
+  const overallRank =
+    scored.findIndex(
+      (entry) =>
+        entry.hero.id ===
+        selectedHero.id,
+    ) + 1;
+
+  return {
+    score:
+      selected.score,
+
+    tier:
+      getMetaTier(
+        selected.score,
+      ),
+
+    roleRank:
+      roleRank > 0
+        ? roleRank
+        : 1,
+
+    overallRank:
+      overallRank > 0
+        ? overallRank
+        : 1,
+  };
+}
+
+function buildMetaScores(
+  dataset: Hero[],
+) {
+  const validHeroes =
+    dataset.filter(
+      (entry) =>
+        entry.winRate !==
+          undefined ||
+        entry.pickRate !==
+          undefined ||
+        entry.banRate !==
+          undefined,
+    );
+
+  if (
+    validHeroes.length ===
+    0
+  ) {
+    return [];
+  }
+
+  const winRates =
+    validHeroes.map(
+      (entry) =>
+        entry.winRate ?? 0,
+    );
+
+  const pickRates =
+    validHeroes.map(
+      (entry) =>
+        entry.pickRate ?? 0,
+    );
+
+  const banRates =
+    validHeroes.map(
+      (entry) =>
+        entry.banRate ?? 0,
+    );
+
+  const minWin =
+    Math.min(
+      ...winRates,
+    );
+
+  const maxWin =
+    Math.max(
+      ...winRates,
+    );
+
+  const minPick =
+    Math.min(
+      ...pickRates,
+    );
+
+  const maxPick =
+    Math.max(
+      ...pickRates,
+    );
+
+  const minBan =
+    Math.min(
+      ...banRates,
+    );
+
+  const maxBan =
+    Math.max(
+      ...banRates,
+    );
+
+  const rawScores =
+    validHeroes.map(
+      (entry) => {
+        const normalizedWin =
+          normalizeMetaMetric(
+            entry.winRate ??
+              minWin,
+            minWin,
+            maxWin,
+          );
+
+        const normalizedPick =
+          normalizeMetaMetric(
+            entry.pickRate ??
+              minPick,
+            minPick,
+            maxPick,
+          );
+
+        const normalizedBan =
+          normalizeMetaMetric(
+            entry.banRate ??
+              minBan,
+            minBan,
+            maxBan,
+          );
+
+        return {
+          hero: entry,
+
+          rawScore:
+            normalizedWin *
+              0.6 +
+            normalizedPick *
+              0.3 +
+            normalizedBan *
+              0.1,
+        };
+      },
+    );
+
+  const values =
+    rawScores.map(
+      (entry) =>
+        entry.rawScore,
+    );
+
+  const minScore =
+    Math.min(
+      ...values,
+    );
+
+  const maxScore =
+    Math.max(
+      ...values,
+    );
+
+  return rawScores
+    .map(
+      (entry) => ({
+        hero:
+          entry.hero,
+
+        score:
+          normalizeMetaMetric(
+            entry.rawScore,
+            minScore,
+            maxScore,
+          ),
+      }),
+    )
+    .sort(
+      (a, b) =>
+        b.score -
+        a.score,
+    );
+}
+
+function normalizeMetaMetric(
+  value: number,
+  min: number,
+  max: number,
+) {
+  if (max === min) {
+    return 100;
+  }
+
+  return (
+    ((value - min) /
+      (max - min)) *
+    100
+  );
+}
+
+function getMetaTier(
+  score: number,
+): MetaTier {
+  if (score >= 85) {
+    return "S";
+  }
+
+  if (score >= 70) {
+    return "A";
+  }
+
+  if (score >= 55) {
+    return "B";
+  }
+
+  if (score >= 40) {
+    return "C";
+  }
+
+  return "D";
+}
+
+function formatMetaTrend(
+  trend: MetaTrend,
+) {
+  if (
+    trend === "rising"
+  ) {
+    return "↑ Rising";
+  }
+
+  if (
+    trend === "falling"
+  ) {
+    return "↓ Falling";
+  }
+
+  return "→ Stable";
+}
 
 function formatDuration(
   seconds: number,
