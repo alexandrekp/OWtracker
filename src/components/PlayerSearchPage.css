@@ -1595,3 +1595,51 @@
     width: 100%;
   }
 }
+
+.player-source-stack {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.player-source-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.player-source-name {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.player-source-separator {
+  color: var(--border);
+}
+
+.player-source-state {
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 720px) {
+  .player-source-stack {
+    margin-left: 0;
+    align-items: flex-start;
+  }
+
+  .player-source-meta {
+    justify-content: flex-start;
+  }
+}

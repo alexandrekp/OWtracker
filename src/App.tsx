@@ -1,4 +1,4 @@
-import {
+﻿import {
   useEffect,
   useState,
 } from "react";
@@ -20,6 +20,7 @@ import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
 import LandingPage from "./components/LandingPage";
 import SeoIntro from "./components/SeoIntro";
+import DataStatus from "./components/DataStatus";
 
 import AppLoader from "./components/ui/AppLoader";
 import AppErrorBoundary from "./components/ui/AppErrorBoundary";
@@ -73,35 +74,35 @@ const PAGE_META:
   > = {
     stats: {
       title:
-        "Overwatch Stats & Meta — OWTracker",
+        "Overwatch Stats & Meta â€” OWTracker",
       description:
         "Explore Overwatch hero win rates, pick rates, ban rates and OWTracker meta rankings by region, rank and role.",
     },
 
     heroes: {
       title:
-        "Overwatch Hero Stats — OWTracker",
+        "Overwatch Hero Stats â€” OWTracker",
       description:
         "Browse Overwatch heroes and compare meta score, win rate, pick rate, ban rate, role ranking and perks.",
     },
 
     players: {
       title:
-        "Overwatch Player Stats — OWTracker",
+        "Overwatch Player Stats â€” OWTracker",
       description:
         "Search Overwatch player profiles, inspect competitive ranks and compare hero performance side by side.",
     },
 
     perks: {
       title:
-        "Overwatch Hero Perks — OWTracker",
+        "Overwatch Hero Perks â€” OWTracker",
       description:
         "Explore Overwatch hero perks, perk popularity and community choices by hero and role.",
     },
 
     settings: {
       title:
-        "Settings — OWTracker",
+        "Settings â€” OWTracker",
       description:
         "Configure OWTracker statistics defaults, cache behavior and view application data sources.",
     },
@@ -140,7 +141,7 @@ function updateMeta(
   section: AppSection | null,
 ) {
   const landingTitle =
-    "OWTracker — Overwatch Stats & Meta";
+    "OWTracker â€” Overwatch Stats & Meta";
 
   const landingDescription =
     "Overwatch statistics, hero win rates, meta rankings, perks and player comparison in one focused interface.";
@@ -477,6 +478,8 @@ function App() {
                 <SeoIntro section="players" />
               )}
 
+              <DataStatus section="players" />
+
               <PlayersPage
                 onOpenHero={
                   openPlayerHero
@@ -578,3 +581,5 @@ function App() {
 }
 
 export default App;
+
+

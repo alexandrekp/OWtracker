@@ -48,34 +48,6 @@ const CONTENT:
     },
   };
 
-const LINKS:
-  Array<{
-    section: SeoSection;
-    label: string;
-    href: string;
-  }> = [
-    {
-      section: "stats",
-      label: "Stats & Meta",
-      href: "/stats",
-    },
-    {
-      section: "heroes",
-      label: "Heroes",
-      href: "/heroes",
-    },
-    {
-      section: "players",
-      label: "Players",
-      href: "/players",
-    },
-    {
-      section: "perks",
-      label: "Perks",
-      href: "/perks",
-    },
-  ];
-
 function SeoIntro({
   section,
 }: SeoIntroProps) {
@@ -85,40 +57,19 @@ function SeoIntro({
   return (
     <section
       className="seo-intro"
-      aria-label={
-        content.title
-      }
+      aria-label={content.title}
     >
-      <div className="seo-intro-copy">
-        <span className="seo-intro-eyebrow">
-          {content.eyebrow}
-        </span>
+      <span className="seo-intro-eyebrow">
+        {content.eyebrow}
+      </span>
 
-        <h1>
-          {content.title}
-        </h1>
+      <h1>
+        {content.title}
+      </h1>
 
-        <p>
-          {content.description}
-        </p>
-      </div>
-
-      <nav
-        className="seo-intro-links"
-        aria-label="OWTracker sections"
-      >
-        {LINKS.filter(
-          (link) =>
-            link.section !== section,
-        ).map((link) => (
-          <a
-            key={link.section}
-            href={link.href}
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
+      <p>
+        {content.description}
+      </p>
     </section>
   );
 }

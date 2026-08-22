@@ -491,10 +491,26 @@ function PlayerSearchPage({
           </p>
         </div>
 
-        <div className="live-status">
-          <span className="status-dot" />
+        <div className="player-source-stack">
+          <div className="live-status">
+            <span className="status-dot" />
 
-          Player data
+            Player data
+          </div>
+
+          <div className="player-source-meta">
+            <span className="player-source-name">
+              OVERFAST
+            </span>
+
+            <span className="player-source-separator">
+              ·
+            </span>
+
+            <span className="player-source-state">
+              ON DEMAND
+            </span>
+          </div>
         </div>
       </header>
 

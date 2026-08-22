@@ -15,10 +15,6 @@ import {
   refreshBlizzardStats,
 } from "../services/blizzardStats";
 
-import {
-  loadAppPreferences,
-} from "../services/appPreferences";
-
 import type {
   BlizzardRegion,
   BlizzardRole,
@@ -32,6 +28,7 @@ import type {
 import "./StatsPage.css";
 import "./StatsRefresh.css";
 import "./MetaOverview.css";
+import "./DataSourcePlacement.css";
 
 type StatsPageProps = {
   onOpenHero:
@@ -94,14 +91,8 @@ const ROLES:
 const CACHE_PREFIX =
   "owtracker.blizzardStats";
 
-const initialPreferences =
-  loadAppPreferences();
-
 const CACHE_MAX_AGE =
-  initialPreferences
-    .refreshIntervalMinutes *
-  60 *
-  1000;
+  30 * 60 * 1000;
 
 /* ========================================
    PAGE
@@ -119,8 +110,7 @@ function StatsPage({
     setSelectedRegion,
   ] =
     useState<BlizzardRegion>(
-      initialPreferences
-        .defaultRegion,
+      "Europe",
     );
 
   const [
@@ -128,8 +118,7 @@ function StatsPage({
     setSelectedTier,
   ] =
     useState<BlizzardTier>(
-      initialPreferences
-        .defaultTier,
+      "All",
     );
 
   const [
@@ -137,8 +126,7 @@ function StatsPage({
     setSelectedRole,
   ] =
     useState<BlizzardRole>(
-      initialPreferences
-        .defaultRole,
+      "All",
     );
 
   const [
@@ -146,8 +134,7 @@ function StatsPage({
     setActiveRegion,
   ] =
     useState<BlizzardRegion>(
-      initialPreferences
-        .defaultRegion,
+      "Europe",
     );
 
   const [
@@ -155,8 +142,7 @@ function StatsPage({
     setActiveTier,
   ] =
     useState<BlizzardTier>(
-      initialPreferences
-        .defaultTier,
+      "All",
     );
 
   const [
@@ -164,8 +150,7 @@ function StatsPage({
     setActiveRole,
   ] =
     useState<BlizzardRole>(
-      initialPreferences
-        .defaultRole,
+      "All",
     );
 
   /* ========================================
@@ -174,12 +159,9 @@ function StatsPage({
 
   const initialCache =
     loadCachedDataset(
-      initialPreferences
-        .defaultRegion,
-      initialPreferences
-        .defaultTier,
-      initialPreferences
-        .defaultRole,
+      "Europe",
+      "All",
+      "All",
     );
 
   const [
@@ -217,7 +199,51 @@ function StatsPage({
         : null,
     );
 
- 
+  /* ========================================
+     CACHE
+  ======================================== */
+
+  function applySelectedDataset() {
+    const cached =
+      loadCachedDataset(
+        selectedRegion,
+        selectedTier,
+        selectedRole,
+      );
+
+    if (!cached) {
+      return false;
+    }
+
+    setCurrentHeroes(
+      cached.heroes,
+    );
+
+    setActiveRegion(
+      cached.region,
+    );
+
+    setActiveTier(
+      cached.tier,
+    );
+
+    setActiveRole(
+      cached.role,
+    );
+
+    setLastUpdated(
+      new Date(
+        cached.updatedAt,
+      ),
+    );
+
+    setRefreshError(
+      null,
+    );
+
+    return true;
+  }
+
   /* ========================================
      REFRESH
   ======================================== */
@@ -468,6 +494,17 @@ function StatsPage({
     selectedRole !==
       activeRole;
 
+  const selectedCachedDataset =
+    loadCachedDataset(
+      selectedRegion,
+      selectedTier,
+      selectedRole,
+    );
+
+  const selectedHasCache =
+    selectedCachedDataset !==
+    null;
+
   const currentCacheAge =
     lastUpdated
       ? Date.now() -
@@ -504,13 +541,14 @@ function StatsPage({
           </div>
 
           <div className="stats-header-actions">
-            <div className="live-status">
-              <span className="status-dot" />
+            <div className="stats-header-actions-top">
+              <div className="live-status">
+                <span className="status-dot" />
 
-              Blizzard data
-            </div>
+                Blizzard data
+              </div>
 
-            <button
+              <button
               className={
                 filtersChanged ||
                 cacheIsStale
@@ -524,49 +562,60 @@ function StatsPage({
                 refreshing
               }
             >
+              <RefreshCw
+                size={14}
+                className={
+                  refreshing
+                    ? "refresh-spinning"
+                    : ""
+                }
+              />
+
               {refreshing
                 ? "Refreshing..."
-                : cacheIsStale
-                  ? "Refresh data"
-                  : "Refresh"}
+                : filtersChanged
+                  ? "Apply & Refresh"
+                  : cacheIsStale
+                    ? "Refresh data"
+                    : "Refresh"}
             </button>
-          </div>
-        </div>
+            </div>
 
-        <div className="stats-header-bottom">
-          <div className="stats-update-info">
-            {lastUpdated ? (
-              <>
-                <span>
-                  Updated
+            {lastUpdated && (
+              <div
+                className={
+                  cacheIsStale
+                    ? "data-source-meta cached"
+                    : "data-source-meta fresh"
+                }
+              >
+                <span className="data-source-name">
+                  BLIZZARD
                 </span>
 
-                <strong>
+                <span className="data-source-separator">
+                  ·
+                </span>
+
+                <span className="data-source-state">
+                  {cacheIsStale
+                    ? "CACHED"
+                    : "FRESH"}
+                </span>
+
+                <span className="data-source-age">
+                  Updated{" "}
                   {formatRelativeAge(
                     lastUpdated,
-                  )}
-                </strong>
-
-                <span>
-                  ·{" "}
-                  {lastUpdated.toLocaleTimeString(
-                    [],
-                    {
-                      hour:
-                        "2-digit",
-
-                      minute:
-                        "2-digit",
-                    },
-                  )}
+                  )}.
                 </span>
-              </>
-            ) : null}
+              </div>
+            )}
 
             {refreshError && (
-              <strong className="stats-refresh-error">
+              <span className="stats-refresh-error">
                 {refreshError}
-              </strong>
+              </span>
             )}
           </div>
         </div>
@@ -797,50 +846,32 @@ function StatsPage({
               )}
             </select>
           </div>
+        </div>
 
-          <div className="stats-data-filter">
-            <label>
-              &nbsp;
-            </label>
-
-            <button
-              type="button"
-              className={
-                filtersChanged
-                  ? "stats-refresh-button pending"
-                  : "stats-refresh-button"
-              }
-              onClick={
-                handleRefresh
-              }
-              disabled={
-                !filtersChanged ||
-                refreshing
-              }
-              style={{
-                width: "100%",
-                minHeight: "36px",
-                justifyContent:
-                  "center",
-                opacity:
-                  filtersChanged
-                    ? 1
-                    : 0.45,
-              }}
-            >
-              <RefreshCw
-                size={14}
-                className={
-                  refreshing
-                    ? "refresh-spinning"
-                    : ""
-                }
-              />
-
-              {refreshing
-                ? "Applying..."
-                : "Apply"}
-            </button>
+        <div className="stats-unified-bottom">
+          <div className="stats-dataset-status">
+            {filtersChanged ? (
+              selectedHasCache ? (
+                <button
+                  className="stats-load-cache-button"
+                  type="button"
+                  onClick={
+                    applySelectedDataset
+                  }
+                >
+                  Load cached dataset
+                </button>
+              ) : (
+                <small>
+                  No cache · refresh required
+                </small>
+              )
+            ) : (
+              <small className="stats-filter-applied">
+                <span className="status-dot" />
+                Active dataset
+              </small>
+            )}
           </div>
         </div>
       </section>
@@ -873,7 +904,7 @@ function StatsPage({
             </span>
 
             <strong>
-              WR 60% · PR 30% · BR 10%
+              WR 50% · PR 30% · BR 20%
             </strong>
           </div>
         </div>
@@ -1301,9 +1332,9 @@ function buildMetaTierList(
   /* ========================================
      RAW META SCORE
 
-     Win Rate  = 60%
+     Win Rate  = 50%
      Pick Rate = 30%
-     Ban Rate  = 10%
+     Ban Rate  = 20%
   ======================================== */
 
   const rawScores =
@@ -1335,11 +1366,11 @@ function buildMetaTierList(
 
         const rawScore =
           normalizedWin *
-            0.6 +
+            0.5 +
           normalizedPick *
             0.3 +
           normalizedBan *
-            0.1;
+            0.2;
 
         return {
           hero,

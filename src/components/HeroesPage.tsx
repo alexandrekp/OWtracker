@@ -27,6 +27,7 @@ import RoleFilter from "./RoleFilter";
 
 import "./StatsPage.css";
 import "./StatsRefresh.css";
+import "./DataSourcePlacement.css";
 
 type HeroesPageProps = {
   onOpenHero:
@@ -345,22 +346,8 @@ function HeroesPage({
           </p>
         </div>
 
-        <div
-          className="stats-header-actions"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            gap: "6px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
+        <div className="stats-header-actions">
+          <div className="stats-header-actions-top">
             <div className="live-status">
               <span className="status-dot" />
 
@@ -368,62 +355,49 @@ function HeroesPage({
             </div>
 
             <button
-              className="stats-refresh-button"
-              type="button"
-              onClick={
-                handleRefresh
-              }
-              disabled={
+            className="stats-refresh-button"
+            type="button"
+            onClick={
+              handleRefresh
+            }
+            disabled={
+              refreshing
+            }
+          >
+            <RefreshCw
+              size={14}
+              className={
                 refreshing
+                  ? "refresh-spinning"
+                  : ""
               }
-            >
-              <RefreshCw
-                size={14}
-                className={
-                  refreshing
-                    ? "refresh-spinning"
-                    : ""
-                }
-              />
+            />
 
-              {refreshing
-                ? "Refreshing..."
-                : "Refresh"}
-            </button>
+            {refreshing
+              ? "Refreshing..."
+              : "Refresh"}
+          </button>
           </div>
 
           {lastUpdated && (
-            <div
-              className="stats-update-info"
-              style={{
-                justifyContent:
-                  "flex-end",
-                margin: 0,
-                width: "100%",
-              }}
-            >
-              <span>
-                Updated
+            <div className="data-source-meta fresh">
+              <span className="data-source-name">
+                BLIZZARD
               </span>
 
-              <strong>
+              <span className="data-source-separator">
+                ·
+              </span>
+
+              <span className="data-source-state">
+                FRESH
+              </span>
+
+              <span className="data-source-age">
+                Updated{" "}
                 {formatRelativeAge(
                   lastUpdated,
-                )}
-              </strong>
-
-              <span>
-                ·{" "}
-                {lastUpdated.toLocaleTimeString(
-                  [],
-                  {
-                    hour:
-                      "2-digit",
-
-                    minute:
-                      "2-digit",
-                  },
-                )}
+                )}.
               </span>
             </div>
           )}
