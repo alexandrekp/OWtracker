@@ -1282,11 +1282,11 @@ function buildMetaTierList(
 
         const rawScore =
           normalizedWin *
-            0.5 +
+            0.6 +
           normalizedPick *
             0.3 +
           normalizedBan *
-            0.2;
+            0.1;
 
         return {
           hero,
