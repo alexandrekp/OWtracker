@@ -716,6 +716,21 @@ function escapeRegExp(
   );
 }
 
+function getCounterwatchHeroSlug(
+  heroId: string,
+) {
+  const slugAliases:
+    Record<string, string> = {
+      "jetpack-cat":
+        "jetpackcat",
+  };
+
+  return (
+    slugAliases[heroId] ??
+    heroId
+  );
+}
+
 export async function handleCounterwatchRequest(
   request: Request,
 ) {
@@ -775,8 +790,13 @@ export async function handleCounterwatchRequest(
       );
     }
 
+    const sourceSlug =
+      getCounterwatchHeroSlug(
+        hero,
+      );
+
     const sourceUrl =
-      `https://www.counterwatch.gg/stats/overwatch/heroes/${hero}`;
+      `https://www.counterwatch.gg/stats/overwatch/heroes/${sourceSlug}`;
 
     const sourceResponse =
       await fetch(
