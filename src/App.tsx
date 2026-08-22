@@ -21,7 +21,6 @@ import PerksPage from "./components/PerksPage";
 import SettingsPage from "./components/SettingsPage";
 import LandingPage from "./components/LandingPage";
 import SeoIntro from "./components/SeoIntro";
-import DataStatus from "./components/DataStatus";
 
 import I18nDomBridge from "./i18n/I18nDomBridge";
 
@@ -499,8 +498,6 @@ function App() {
                 <SeoIntro section="players" />
               )}
 
-              <DataStatus section="players" />
-
               <PlayersPage
                 onOpenHero={
                   openPlayerHero
@@ -572,6 +569,10 @@ function App() {
                   className="page-transition"
                   key="counters"
                 >
+                  {!runningInTauri && (
+                    <SeoIntro section="counters" />
+                  )}
+
                   <CounterPage
                     onOpenHero={
                       openHero

@@ -1,8 +1,13 @@
 import "./SeoIntro.css";
 
+import {
+  useI18n,
+} from "../i18n/i18n";
+
 type SeoSection =
   | "stats"
   | "heroes"
+  | "counters"
   | "players"
   | "perks";
 
@@ -10,54 +15,66 @@ type SeoIntroProps = {
   section: SeoSection;
 };
 
-const CONTENT:
-  Record<
-    SeoSection,
-    {
-      eyebrow: string;
-      title: string;
-      description: string;
-    }
-  > = {
-    stats: {
-      eyebrow: "OVERWATCH STATS",
-      title: "Overwatch hero stats and meta.",
-      description:
-        "Compare hero win rates, pick rates and ban rates, then explore OWTracker meta rankings by region, competitive rank and role.",
-    },
-
-    heroes: {
-      eyebrow: "HERO DATABASE",
-      title: "Explore Overwatch hero performance.",
-      description:
-        "Browse every hero and compare meta score, win rate, pick rate, ban rate, role ranking and recommended perks.",
-    },
-
-    players: {
-      eyebrow: "PLAYER STATS",
-      title: "Search and compare Overwatch players.",
-      description:
-        "Review competitive ranks, hero performance and role statistics, then compare player profiles side by side.",
-    },
-
-    perks: {
-      eyebrow: "HERO PERKS",
-      title: "Overwatch perk popularity and choices.",
-      description:
-        "Explore Minor and Major hero perks, community popularity and recommended choices by hero and role.",
-    },
-  };
-
 function SeoIntro({
   section,
 }: SeoIntroProps) {
-  const content =
-    CONTENT[section];
+  const {
+    t,
+  } = useI18n();
+
+  const content = {
+    stats: {
+      eyebrow:
+        t("seo.stats.eyebrow"),
+      title:
+        t("seo.stats.title"),
+      description:
+        t("seo.stats.description"),
+    },
+
+    heroes: {
+      eyebrow:
+        t("seo.heroes.eyebrow"),
+      title:
+        t("seo.heroes.title"),
+      description:
+        t("seo.heroes.description"),
+    },
+
+    counters: {
+      eyebrow:
+        t("seo.counters.eyebrow"),
+      title:
+        t("seo.counters.title"),
+      description:
+        t("seo.counters.description"),
+    },
+
+    players: {
+      eyebrow:
+        t("seo.players.eyebrow"),
+      title:
+        t("seo.players.title"),
+      description:
+        t("seo.players.description"),
+    },
+
+    perks: {
+      eyebrow:
+        t("seo.perks.eyebrow"),
+      title:
+        t("seo.perks.title"),
+      description:
+        t("seo.perks.description"),
+    },
+  }[section];
 
   return (
     <section
       className="seo-intro"
-      aria-label={content.title}
+      aria-label={
+        content.title
+      }
     >
       <span className="seo-intro-eyebrow">
         {content.eyebrow}

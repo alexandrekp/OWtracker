@@ -169,6 +169,31 @@ const EN = {
     "OWTracker is an independent project and is not affiliated with, endorsed by or sponsored by Blizzard Entertainment.",
   "settings.disclaimer.storage":
     "Language, region, rank, role and cache duration are stored locally in OWTracker using localStorage.",
+  "seo.stats.eyebrow": "OVERWATCH STATS",
+  "seo.stats.title": "Overwatch hero stats and meta.",
+  "seo.stats.description":
+    "Compare hero win rates, pick rates and ban rates, then explore OWTracker meta rankings by region, competitive rank and role.",
+
+  "seo.heroes.eyebrow": "HERO DATABASE",
+  "seo.heroes.title": "Explore Overwatch hero performance.",
+  "seo.heroes.description":
+    "Browse every hero and compare meta score, win rate, pick rate, ban rate, role ranking and recommended perks.",
+
+  "seo.counters.eyebrow": "HERO COUNTERS",
+  "seo.counters.title": "Explore Overwatch hero counters.",
+  "seo.counters.description":
+    "Review live Counterwatch matchup data, difficult matchups and favorable hero matchups in one focused view.",
+
+  "seo.players.eyebrow": "PLAYER STATS",
+  "seo.players.title": "Search and compare Overwatch players.",
+  "seo.players.description":
+    "Review competitive ranks, hero performance and role statistics, then compare player profiles side by side.",
+
+  "seo.perks.eyebrow": "HERO PERKS",
+  "seo.perks.title": "Overwatch perk popularity and choices.",
+  "seo.perks.description":
+    "Explore Minor and Major hero perks, community popularity and recommended choices by hero and role.",
+
 } as const;
 
 export type TranslationKey =
@@ -281,6 +306,32 @@ const OVERRIDES:
       "OWTracker est un projet indépendant, non affilié, approuvé ou sponsorisé par Blizzard Entertainment.",
     "settings.disclaimer.storage":
       "La langue, la région, le rang, le rôle et la durée du cache sont stockés localement dans OWTracker via localStorage.",
+
+    "seo.stats.eyebrow": "STATISTIQUES OVERWATCH",
+    "seo.stats.title": "Statistiques des héros et méta Overwatch.",
+    "seo.stats.description":
+      "Comparez les taux de victoire, de sélection et de bannissement, puis explorez le classement méta OWTracker par région, rang compétitif et rôle.",
+
+    "seo.heroes.eyebrow": "BASE DE HÉROS",
+    "seo.heroes.title": "Explorez les performances des héros Overwatch.",
+    "seo.heroes.description":
+      "Parcourez tous les héros et comparez le Meta Score, le taux de victoire, le taux de sélection, le taux de bannissement, le classement par rôle et les atouts recommandés.",
+
+    "seo.counters.eyebrow": "CONTRES DES HÉROS",
+    "seo.counters.title": "Explorez les contres des héros Overwatch.",
+    "seo.counters.description":
+      "Consultez les données de matchup Counterwatch en direct, les affrontements difficiles et les matchups favorables dans une vue claire.",
+
+    "seo.players.eyebrow": "STATISTIQUES JOUEURS",
+    "seo.players.title": "Recherchez et comparez des joueurs Overwatch.",
+    "seo.players.description":
+      "Consultez les rangs compétitifs, les performances des héros et les statistiques par rôle, puis comparez les profils côte à côte.",
+
+    "seo.perks.eyebrow": "ATOUTS DES HÉROS",
+    "seo.perks.title": "Popularité et choix des atouts Overwatch.",
+    "seo.perks.description":
+      "Explorez les atouts mineurs et majeurs, leur popularité dans la communauté et les choix recommandés par héros et par rôle.",
+
   },
 
   de: {
