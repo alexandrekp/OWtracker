@@ -516,11 +516,9 @@ function StatsPage({
 
               {refreshing
                 ? "Refreshing..."
-                : filtersChanged
-                  ? "Apply & Refresh"
-                  : cacheIsStale
-                    ? "Refresh data"
-                    : "Refresh"}
+                : cacheIsStale
+                  ? "Refresh data"
+                  : "Refresh"}
             </button>
           </div>
         </div>
@@ -789,7 +787,43 @@ function StatsPage({
               )}
             </select>
           </div>
+
+          <div className="stats-data-filter">
+            <label>
+              &nbsp;
+            </label>
+
+            <button
+              type="button"
+              className={
+                filtersChanged
+                  ? "stats-refresh-button pending"
+                  : "stats-refresh-button"
+              }
+              onClick={
+                handleRefresh
+              }
+              disabled={
+                !filtersChanged ||
+                refreshing
+              }
+              style={{
+                width: "100%",
+                minHeight: "36px",
+                justifyContent:
+                  "center",
+                opacity:
+                  filtersChanged
+                    ? 1
+                    : 0.45,
+              }}
+            >
+              {refreshing
+                ? "Applying..."
+                : "Apply"}
+            </button>
           </div>
+        </div>
       </section>
 
       {/* ===================================
@@ -820,7 +854,7 @@ function StatsPage({
             </span>
 
             <strong>
-              WR 50% · PR 30% · BR 20%
+              WR 60% · PR 30% · BR 10%
             </strong>
           </div>
         </div>
@@ -1248,9 +1282,9 @@ function buildMetaTierList(
   /* ========================================
      RAW META SCORE
 
-     Win Rate  = 50%
+     Win Rate  = 60%
      Pick Rate = 30%
-     Ban Rate  = 20%
+     Ban Rate  = 10%
   ======================================== */
 
   const rawScores =

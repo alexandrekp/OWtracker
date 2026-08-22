@@ -1,3 +1,8 @@
+import {
+  invoke,
+  isTauri,
+} from "@tauri-apps/api/core";
+
 export type BlizzardRegion =
   | "Europe"
   | "Americas"
@@ -70,10 +75,10 @@ const API_BASE_URL =
   "http://127.0.0.1:8787";
 
 /* ========================================
-   BLIZZARD STATS
+   TAURI
 ======================================== */
 
-export async function refreshBlizzardStats(
+async function refreshFromTauri(
   region:
     BlizzardRegion,
 
@@ -83,7 +88,36 @@ export async function refreshBlizzardStats(
   role:
     BlizzardRole,
 
-  map = "all-maps",
+  map:
+    string,
+): Promise<BlizzardStatsResponse> {
+  return invoke<BlizzardStatsResponse>(
+    "refresh_blizzard_stats",
+    {
+      region,
+      tier,
+      role,
+      map,
+    },
+  );
+}
+
+/* ========================================
+   WEB API
+======================================== */
+
+async function refreshFromApi(
+  region:
+    BlizzardRegion,
+
+  tier:
+    BlizzardTier,
+
+  role:
+    BlizzardRole,
+
+  map:
+    string,
 ): Promise<BlizzardStatsResponse> {
   const params =
     new URLSearchParams({
@@ -127,8 +161,7 @@ export async function refreshBlizzardStats(
           ).error;
       }
     } catch {
-      // The API did not
-      // return valid JSON.
+      // Invalid JSON response.
     }
 
     throw new Error(
@@ -136,9 +169,43 @@ export async function refreshBlizzardStats(
     );
   }
 
-  const data =
-    await response.json();
+  return (
+    await response.json()
+  ) as BlizzardStatsResponse;
+}
 
-  return data as
-    BlizzardStatsResponse;
+/* ========================================
+   BLIZZARD STATS
+======================================== */
+
+export async function refreshBlizzardStats(
+  region:
+    BlizzardRegion,
+
+  tier:
+    BlizzardTier,
+
+  role:
+    BlizzardRole,
+
+  map =
+    "all-maps",
+): Promise<BlizzardStatsResponse> {
+  if (
+    isTauri()
+  ) {
+    return refreshFromTauri(
+      region,
+      tier,
+      role,
+      map,
+    );
+  }
+
+  return refreshFromApi(
+    region,
+    tier,
+    role,
+    map,
+  );
 }
